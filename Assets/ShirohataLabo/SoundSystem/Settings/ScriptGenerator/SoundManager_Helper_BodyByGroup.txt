@@ -1,0 +1,59 @@
+        public SoundPlayerGroup #GROUPKEY#Group => FindPlayerGroup("#GROUPKEY#");
+        public SoundPlayer GetUnused#GROUPKEY#Player() => #GROUPKEY#Group.GetUnusedPlayer();
+
+        public SoundPlayer Play#GROUPKEY#(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.Play(audioUnit, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#(Sound sound, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.Play(sound, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#(string soundKey, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.Play(soundKey, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+            return #GROUPKEY#Group.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(Sound sound, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+            return #GROUPKEY#Group.PlayWithFadeIn(sound, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+            return #GROUPKEY#Group.PlayWithFadeIn(soundKey, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public void Stop#GROUPKEY#() {
+            #GROUPKEY#Group.Stop();
+        }
+
+        public void Stop#GROUPKEY#WithFadeOut(float? fadeDuration = null, UnityAction onComplete = null) {
+            #GROUPKEY#Group.StopWithFadeOut(fadeDuration, onComplete);
+        }
+
+        public SoundPlayer Switch#GROUPKEY#(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.Switch(audioUnit, onComplete);
+        }
+
+        public SoundPlayer Switch#GROUPKEY#(Sound sound, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.Switch(sound, onComplete);
+        }
+
+        public SoundPlayer Switch#GROUPKEY#(string soundKey, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.Switch(soundKey, onComplete);
+        }
+
+        public SoundPlayer CrossFade#GROUPKEY#(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+            return #GROUPKEY#Group.CrossFade(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer CrossFade#GROUPKEY#(Sound sound, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+            return #GROUPKEY#Group.CrossFade(sound, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer CrossFade#GROUPKEY#(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+            return #GROUPKEY#Group.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
+        }
+

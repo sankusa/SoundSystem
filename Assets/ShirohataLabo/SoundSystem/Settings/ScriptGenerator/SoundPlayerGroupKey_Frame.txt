@@ -1,0 +1,5 @@
+namespace SoundSystem {
+    public static class SoundPlayerGroupKey {
+#BODY#
+    }
+}

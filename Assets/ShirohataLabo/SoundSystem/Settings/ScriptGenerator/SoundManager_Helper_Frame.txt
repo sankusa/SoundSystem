@@ -1,0 +1,7 @@
+using UnityEngine.Events;
+
+namespace SoundSystem {
+    public partial class SoundManager {
+#BODY#
+    }
+}
