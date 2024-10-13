@@ -73,5 +73,5 @@ crashlytics-build.properties
 
 # Custom
 /Assets/*
-!/Assets/ShirohataLabo/SoundSystem
+!/Assets/ShirohataLabo/SoundSystem/
 .vscode/
