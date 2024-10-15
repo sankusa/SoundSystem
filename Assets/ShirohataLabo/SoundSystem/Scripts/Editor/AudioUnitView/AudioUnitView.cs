@@ -57,9 +57,8 @@ namespace SoundSystem {
 
         public void Reload() {
             _allAudioUnits = EditorUtil.LoadAllAsset<AudioUnit>().ToList();
-            _allcategories = EditorUtil.LoadAllAsset<AudioUnitCategory>().ToList();
 
-            _audioUnitTreeView.Reload(_allAudioUnits, _allcategories);
+            _audioUnitTreeView.Reload(_allAudioUnits);
         }
     }
 }
