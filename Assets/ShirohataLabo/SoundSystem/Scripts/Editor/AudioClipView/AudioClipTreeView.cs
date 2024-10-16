@@ -5,9 +5,8 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace SoundSystem {
-    [System.Serializable]
-    public class AudioUnitTreeView : TreeView {
-        public AudioUnitTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
+    public class AudioClipTreeView : TreeView {
+        public AudioClipTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
             rowHeight = 16;
             // showAlternatingRowBackgrounds = true;
             // showBorder = true;
@@ -20,8 +19,8 @@ namespace SoundSystem {
 
             int id = 0;
 
-            string folderPath = SoundSystemSetting.Instance.AudioUnitFolderRoot;
-            AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(++id, folderPath);
+            string folderPath = SoundSystemSetting.Instance.AudioClipFolderRoot;
+            AudioClipTreeViewItem_Folder folderItem = new AudioClipTreeViewItem_Folder(++id, folderPath);
             root.AddChild(folderItem);
 
             BuildItemRecursive(folderItem, ref id);
@@ -30,7 +29,7 @@ namespace SoundSystem {
             return root;
         }
 
-        void BuildItemRecursive(AudioUnitTreeViewItem_Folder parentFolderItem, ref int id) {
+        void BuildItemRecursive(AudioClipTreeViewItem_Folder parentFolderItem, ref int id) {
             string folderPath = parentFolderItem.FolderPath;
             foreach (string guid in AssetDatabase.FindAssets("", new string[] {folderPath})) {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -39,15 +38,15 @@ namespace SoundSystem {
                 if (assetPath.Substring(folderPath.Length + 1).IndexOf('/') != -1) continue;
 
                 if (AssetDatabase.IsValidFolder(assetPath)) {
-                    AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(++id, assetPath);
+                    AudioClipTreeViewItem_Folder folderItem = new AudioClipTreeViewItem_Folder(++id, assetPath);
                     parentFolderItem.AddChild(folderItem);
                     BuildItemRecursive(folderItem, ref id);
                     continue;
                 }
                 
-                AudioUnit audioUnit = AssetDatabase.LoadAssetAtPath<AudioUnit>(assetPath);
-                if (audioUnit != null) {
-                    parentFolderItem.AddChild(new AudioUnitTreeViewItem_AudioUnit(++id, audioUnit));
+                AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(assetPath);
+                if (clip != null) {
+                    parentFolderItem.AddChild(new AudioClipTreeViewItem_AudioClip(++id, clip));
                 }
             }
         }
@@ -55,7 +54,7 @@ namespace SoundSystem {
         protected override void RowGUI(RowGUIArgs args) {
             Rect backgroundRect = new(args.rowRect) {xMin = args.rowRect.xMin + GetContentIndent(args.item) - 16};
 
-            if (args.item is AudioUnitTreeViewItem_Folder folderItem) {
+            if (args.item is AudioClipTreeViewItem_Folder folderItem) {
                 GUI.Box(backgroundRect, "", GUIStyles.FolderRowBackground);
                 for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
                     Rect cellRect = args.GetCellRect(i);
@@ -71,7 +70,7 @@ namespace SoundSystem {
                     }
                 }
             }
-            else if (args.item is AudioUnitTreeViewItem_AudioUnit unitItem) {
+            else if (args.item is AudioClipTreeViewItem_AudioClip clipItem) {
                 GUI.Box(backgroundRect, "", GUIStyles.SoundRowBackground);
                 for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
                     Rect cellRect = args.GetCellRect(i);
@@ -79,10 +78,10 @@ namespace SoundSystem {
                     switch (columnIndex) {
                         case 0:
                             cellRect.xMin += GetContentIndent(args.item);
-                            string assetPath = AssetDatabase.GetAssetPath(unitItem.AudioUnit);
+                            string assetPath = AssetDatabase.GetAssetPath(clipItem.Clip);
                             Texture icon = AssetDatabase.GetCachedIcon(assetPath);
 
-                            EditorGUI.LabelField(cellRect, new GUIContent(unitItem.AudioUnit.name, icon));
+                            EditorGUI.LabelField(cellRect, new GUIContent(clipItem.Clip.name, icon));
                             break;
                     }
                 }
@@ -91,21 +90,21 @@ namespace SoundSystem {
 
         protected override void SingleClickedItem(int id) {
             TreeViewItem item = FindItem(id, rootItem);
-            if (item is AudioUnitTreeViewItem_Folder folderItem) {
+            if (item is AudioClipTreeViewItem_Folder folderItem) {
                 folderItem.OnSingleClick();
             }
-            else if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                unitItem.OnSingleClick();
+            else if (item is AudioClipTreeViewItem_AudioClip clipItem) {
+                clipItem.OnSingleClick();
             } 
         }
 
         protected override void DoubleClickedItem(int id) {
             TreeViewItem item = FindItem(id, rootItem);
-            if (item is AudioUnitTreeViewItem_Folder folderItem) {
+            if (item is AudioClipTreeViewItem_Folder folderItem) {
                 folderItem.OnDoubleClick();
             }
-            else if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                unitItem.OnDoubleClick();
+            else if (item is AudioClipTreeViewItem_AudioClip clipItem) {
+                clipItem.OnDoubleClick();
             }
         }
 
@@ -121,11 +120,11 @@ namespace SoundSystem {
             Object[] dragObjects = GetRows()
                 .Where(item => args.draggedItemIDs.Contains(item.id))
                 .Select(x => {
-                    if (x is AudioUnitTreeViewItem_Folder folderItem) {
+                    if (x is AudioClipTreeViewItem_Folder folderItem) {
                         return folderItem.FolderAsset as Object;
                     }
-                    if (x is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                        return unitItem.AudioUnit as Object;
+                    if (x is AudioClipTreeViewItem_AudioClip clipItem) {
+                        return clipItem.Clip as Object;
                     }
                     return null;
                 })
@@ -143,28 +142,23 @@ namespace SoundSystem {
 
                 switch (args.dragAndDropPosition) {
                     case DragAndDropPosition.UponItem:
-                        if (args.parentItem is AudioUnitTreeViewItem_Folder parentFolderItem) {
+                        if (args.parentItem is AudioClipTreeViewItem_Folder parentFolderItem) {
                             string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
-                            IEnumerable<AudioUnit> audioUnits = droppedObjects.OfType<AudioUnit>();
-                            EditorUtil.MoveAssetsWithUndo(audioUnits, folderPath);
 
                             IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
                             EditorUtil.MoveAssetsWithUndo(folders, folderPath);
 
                             IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
-                            AudioUnitUtil.CreateAudioUnits(clips, folderPath);
+                            EditorUtil.MoveAssetsWithUndo(clips, folderPath);
                         }
                         if (args.parentItem is AudioUnitTreeViewItem_AudioUnit parentUnitItem) {
                             string audioUnitFolder = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentUnitItem.AudioUnit));
-
-                            IEnumerable<AudioUnit> audioUnits = droppedObjects.OfType<AudioUnit>();
-                            EditorUtil.MoveAssetsWithUndo(audioUnits, audioUnitFolder);
 
                             IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
                             EditorUtil.MoveAssetsWithUndo(folders, audioUnitFolder);
 
                             IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
-                            AudioUnitUtil.CreateAudioUnits(clips, audioUnitFolder);
+                            EditorUtil.MoveAssetsWithUndo(clips, audioUnitFolder);
                         }
                         Reload();
                         break;
