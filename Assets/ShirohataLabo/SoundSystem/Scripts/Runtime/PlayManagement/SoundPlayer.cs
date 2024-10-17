@@ -115,7 +115,7 @@ namespace SoundSystem {
                 _fadeVolume.Value = 1;
             }
 
-            _audioSource.time = _audioUnit.Start;
+            _audioSource.timeSamples = _audioUnit.FromSamples;
 
             UpdateVolume();
             UpdateMute();
@@ -154,7 +154,7 @@ namespace SoundSystem {
             _audioSource.clip = null;
             _audioSource.pitch = 1;
             _audioSource.loop = _groupSetting.DefaultLoop;
-            _audioSource.time = 0;
+            _audioSource.timeSamples = 0;
         }
 
         public void Update(float deltaTime) {
@@ -169,12 +169,9 @@ namespace SoundSystem {
         }
 
         void ClampTime() {
-            if (_audioSource.time < _audioUnit.Start) {
-                _audioSource.time = _audioUnit.Start;
+            if (_audioSource.timeSamples < _audioUnit.FromSamples) {
+                _audioSource.timeSamples = _audioUnit.FromSamples;
             }
-            // else if (_audioSource.time > _audioUnit.End) {
-            //     _audioSource.time = _audioUnit.End;Debug.Log(_audioSource.time + "*" + _audioUnit.End);
-            // }
         }
 
         void UpdateVolume() {
@@ -197,9 +194,9 @@ namespace SoundSystem {
         }
 
         void CheckAndHandleEndOfAudio() {
-            if (_audioSource.time >= _audioUnit.End) {
+            if (_audioSource.timeSamples >= _audioUnit.ToSamples) {
                 if (_audioSource.loop) {
-                    _audioSource.time = _audioUnit.Start;
+                    _audioSource.timeSamples = _audioUnit.FromSamples;
                 }
                 else {
                     Complete();

@@ -14,10 +14,11 @@ namespace SoundSystem {
         }
 
         float ClipLength => AudioSource.clip != null ? AudioSource.clip.length : 0;
+        int ClipSamples => AudioSource.clip != null ? AudioSource.clip.samples : 0;
 
-        bool IsPaused => AudioSource.isPlaying == false && AudioSource.time != 0 && AudioSource.time != ClipLength;
+        bool IsPaused => AudioSource.isPlaying == false && AudioSource.timeSamples != 0 && AudioSource.timeSamples != ClipSamples;
         // AudioSourceの再生位置が終端に達し、自発的に再生を停止した場合(動作確認した限り、停止時にAudioSource.timeが0とAudioSource.clip.lengthのどちらかになる(条件不明))
-        bool IsAudioSourceFinishedPlaying => AudioSource.isPlaying == false && AudioSource.clip != null && (AudioSource.time == 0 || AudioSource.time == ClipLength);
+        bool IsAudioSourceFinishedPlaying => AudioSource.isPlaying == false && AudioSource.clip != null && (AudioSource.timeSamples == 0 || AudioSource.timeSamples == ClipSamples);
 
         AudioUnit _audioUnit;
 
@@ -62,9 +63,9 @@ namespace SoundSystem {
                 return;
             }
 
-            if (AudioSource.time >= _audioUnit.End) {
+            if (AudioSource.timeSamples >= _audioUnit.ToSamples) {
                 if (_loop) {
-                    AudioSource.time = _audioUnit.Start;
+                    AudioSource.timeSamples = _audioUnit.FromSamples;
                 }
                 else {
                     AudioSource.Stop();
@@ -72,7 +73,7 @@ namespace SoundSystem {
             }
 
             // 通常Update処理
-            AudioSource.time = Mathf.Clamp(AudioSource.time, _audioUnit.Start, _audioUnit.End);
+            AudioSource.timeSamples = Mathf.Clamp(AudioSource.timeSamples, _audioUnit.FromSamples, _audioUnit.ToSamples);
             AudioSource.volume = _audioUnit.GetCurrentVolume(AudioSource.time);
             AudioSource.pitch = _audioUnit.Pitch;
         }
@@ -85,7 +86,7 @@ namespace SoundSystem {
             AudioSource.clip = _audioUnit.Clip;
             AudioSource.volume = _audioUnit.GetCurrentVolume(0);
             AudioSource.pitch = _audioUnit.Pitch;
-            AudioSource.time = _audioUnit.Start;
+            AudioSource.timeSamples = _audioUnit.FromSamples;
 
             if (_audioUnit.Clip != null) {
                 AudioSource.Play();
@@ -97,7 +98,7 @@ namespace SoundSystem {
             AudioSource.clip = null;
             AudioSource.volume = 1;
             AudioSource.pitch = 1;
-            AudioSource.time = 0;
+            AudioSource.timeSamples = 0;
         }
 
         static AudioSource CreateAudioSourceObject() {

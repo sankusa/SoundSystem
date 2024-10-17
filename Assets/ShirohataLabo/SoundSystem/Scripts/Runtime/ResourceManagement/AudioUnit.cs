@@ -27,14 +27,14 @@ namespace SoundSystem {
         [SerializeField] AnimationCurve _volumeCurve = new();
         public AnimationCurve VolumeCurve => _volumeCurve;
 
-        [SerializeField] private float _pitch = 1f;
+        [SerializeField] float _pitch = 1f;
         public float Pitch => _pitch;
 
-        [SerializeField] private float _start = 0;
-        public float Start => _start;
+        [SerializeField] int _fromSamples = 0;
+        public int FromSamples => _fromSamples;
 
-        [SerializeField] private float _end = float.MaxValue;
-        public float End => _end;
+        [SerializeField] int _toSamples = int.MaxValue;
+        public int ToSamples => _toSamples;
 
         public float GetCurrentVolume(float time) {
             if (VolumeOption == VolumeType.Constant) {

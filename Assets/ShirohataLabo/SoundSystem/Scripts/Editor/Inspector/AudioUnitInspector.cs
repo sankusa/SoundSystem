@@ -26,8 +26,8 @@ namespace SoundSystem {
             var constantVolumeProp = serializedObject.FindProperty("_constantVolume");
             var volumeCurveProp = serializedObject.FindProperty("_volumeCurve");
             var pitchProp = serializedObject.FindProperty("_pitch");
-            var startProp = serializedObject.FindProperty("_start");
-            var endProp = serializedObject.FindProperty("_end");
+            var fromSamplesProp = serializedObject.FindProperty("_fromSamples");
+            var toSamplesProp = serializedObject.FindProperty("_toSamples");
 
             AudioClip clip = (AudioClip)clipProp.objectReferenceValue;
 
@@ -45,12 +45,12 @@ namespace SoundSystem {
                     volumeCurveProp.animationCurveValue = new AnimationCurve(new Keyframe(0, 1), new Keyframe(clip.length, 1));
                 }
                 pitchProp.floatValue = 1;
-                startProp.floatValue = 0;
+                fromSamplesProp.intValue = 0;
                 if (clip == null) {
-                    endProp.floatValue = 0;
+                    toSamplesProp.intValue = 0;
                 }
                 else {
-                    endProp.floatValue = clip.length;
+                    toSamplesProp.intValue = clip.samples;
                 }
             }
 
@@ -71,8 +71,7 @@ namespace SoundSystem {
 
             EditorGUILayout.LabelField("Play Range");
             EditorGUI.indentLevel++;
-            startProp.floatValue = Mathf.Clamp(EditorGUILayout.FloatField("Start", startProp.floatValue), 0, endProp.floatValue);
-            endProp.floatValue = Mathf.Clamp(EditorGUILayout.FloatField("End", endProp.floatValue), startProp.floatValue, clip == null ? 0 : clip.length);
+
             // PlayRange MinMaxSlider
             using (new EditorGUILayout.HorizontalScope()) {
                 EditorGUI.indentLevel--;
@@ -81,15 +80,65 @@ namespace SoundSystem {
 
                 EditorGUILayout.LabelField("0", GUILayout.Width(12));
 
-                float start = startProp.floatValue;
-                float end = endProp.floatValue;
-                EditorGUILayout.MinMaxSlider(ref start, ref end, 0, clip == null ? 0 : clip.length);
-                startProp.floatValue = start;
-                endProp.floatValue = end;
+                int fromSamples = fromSamplesProp.intValue;
+                int toSamples = toSamplesProp.intValue;
+                float fromTime = clip == null ? 0 : (float)fromSamples / clip.frequency;
+                float toTime = clip == null ? 0 : (float)toSamples / clip.frequency;
+
+                EditorGUI.BeginChangeCheck();
+                EditorGUILayout.MinMaxSlider(ref fromTime, ref toTime, 0, clip == null ? 0 : clip.length);
+                if (EditorGUI.EndChangeCheck()) {
+                    fromSamplesProp.intValue = (int)(fromTime * clip.frequency);
+                    toSamplesProp.intValue = (int)(toTime * clip.frequency);
+                }
 
                 EditorGUILayout.LabelField(clip == null ? "0.0" : clip.length.ToString("0.0"), GUILayout.Width(32));
 
                 EditorGUI.indentLevel++;
+            }
+
+            using (new EditorGUILayout.HorizontalScope()) {
+                EditorGUILayout.LabelField("Time", GUILayout.Width(64));
+                float fromTime = clip == null ? 0 : (float)fromSamplesProp.intValue / clip.frequency;
+                float toTime = clip == null ? 0 : (float)toSamplesProp.intValue / clip.frequency;
+                EditorGUI.BeginChangeCheck();
+                using (new LabelWidthScope(54)) {
+                    float newFromTime = EditorGUILayout.FloatField("[ From", fromTime);
+                    if (EditorGUI.EndChangeCheck()) {
+                        fromSamplesProp.intValue = (int)(Mathf.Clamp(newFromTime, 0, toTime) * clip.frequency);
+                    }
+                }
+                using (new IndentLevelScope(0)) {
+                    using (new LabelWidthScope(28)) {
+                        EditorGUI.BeginChangeCheck();
+                        float newToTime = EditorGUILayout.FloatField("- To ", toTime);
+                        if (EditorGUI.EndChangeCheck()) {
+                            toSamplesProp.intValue = (int)(Mathf.Clamp(newToTime, fromTime, clip == null ? 0 : clip.length) * clip.frequency);
+                        }
+                    }
+                    EditorGUILayout.LabelField("]", GUILayout.Width(8));
+                }
+            }
+
+            using (new EditorGUILayout.HorizontalScope()) {
+                EditorGUILayout.LabelField("Samples", GUILayout.Width(64));
+                EditorGUI.BeginChangeCheck();
+                using (new LabelWidthScope(54)) {
+                    int newFromSamples = EditorGUILayout.IntField("[ From", fromSamplesProp.intValue);
+                    if (EditorGUI.EndChangeCheck()) {
+                        fromSamplesProp.intValue = Mathf.Clamp(newFromSamples, 0, toSamplesProp.intValue);
+                    }
+                }
+                using (new IndentLevelScope(0)) {
+                    using (new LabelWidthScope(28)) {
+                        EditorGUI.BeginChangeCheck();
+                        int newToSamples = EditorGUILayout.IntField("- To ", toSamplesProp.intValue);
+                        if (EditorGUI.EndChangeCheck()) {
+                            toSamplesProp.intValue = Mathf.Clamp(newToSamples, fromSamplesProp.intValue, clip == null ? 0 : clip.samples);
+                        }
+                    }
+                    EditorGUILayout.LabelField("]", GUILayout.Width(8));
+                }
             }
             EditorGUI.indentLevel--;
 
