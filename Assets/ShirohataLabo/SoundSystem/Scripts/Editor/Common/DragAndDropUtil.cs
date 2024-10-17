@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System.IO;
 
 namespace SoundSystem {
     public class DragAndDropUtil {
@@ -63,6 +64,31 @@ namespace SoundSystem {
             Event.current.Use();
 
             return DragAndDrop.GetGenericData(key);
+        }
+
+        public static void CopyDraggingExternalFiles(string destinationFolderPath, string[] acceptExtensions) {
+            string projectPath = Path.GetFullPath(Application.dataPath + "/..");
+
+            int copyCount = 0;
+            foreach (string path in DragAndDrop.paths) {
+                bool isExternalFile = Path.GetFullPath(path).StartsWith(projectPath) == false;
+                if (isExternalFile == false) continue;
+
+                bool validExtension = false;
+                foreach (string extenson in acceptExtensions) {
+                    if (Path.GetExtension(path).ToLower() == extenson) {
+                        validExtension = true;
+                        break;
+                    }
+                }
+                if (validExtension) {;
+                    string fileName = Path.GetFileName(path);
+                    string destinationPath = AssetDatabase.GenerateUniqueAssetPath(destinationFolderPath + "/" + fileName);
+                    File.Copy(path, destinationPath);
+                    copyCount++;
+                }
+            }
+            if (copyCount > 0) AssetDatabase.Refresh();
         }
     }
 }

@@ -3,6 +3,17 @@ using UnityEngine;
 
 namespace SoundSystem {
     public class GUIStyles {
+        static GUIStyle _richTextLabel;
+        public static GUIStyle RichTextLabel {
+            get {
+                if (_richTextLabel == null) {
+                    _richTextLabel = new GUIStyle(EditorStyles.label);
+                    _richTextLabel.richText = true;
+                }
+                return _richTextLabel;
+            }
+        }
+
         static GUIStyle _darkToolbar;
         public static GUIStyle DarkToolbar {
             get {
@@ -46,19 +57,19 @@ namespace SoundSystem {
             }
         }
 
-        static GUIStyle _categoryRowBackground;
-        public static GUIStyle CategoryRowBackground {
+        static GUIStyle _folderRowBackground;
+        public static GUIStyle FolderRowBackground {
             get {
-                if (_categoryRowBackground == null) {
-                    _categoryRowBackground = new GUIStyle("OL box NoExpand");
+                if (_folderRowBackground == null) {
+                    _folderRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
                     backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.6f));
                     backgroundTexture.Apply();
 
-                    _categoryRowBackground.normal.background = backgroundTexture;
+                    _folderRowBackground.normal.background = backgroundTexture;
                 }
-                return _categoryRowBackground;
+                return _folderRowBackground;
             }
         }
 

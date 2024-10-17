@@ -7,22 +7,12 @@ using UnityEngine;
 namespace SoundSystem {
     [System.Serializable]
     public class AudioUnitTreeView : TreeView {
-        const string DragDataKey = nameof(SoundSystem) + "_" + nameof(AudioUnitTreeView) + "_DragData";
-        List<AudioUnit> _audioUnits;
-        List<AudioUnitCategory> _categories;
-
         public AudioUnitTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
-            // rowHeight = 20;
+            rowHeight = 16;
             // showAlternatingRowBackgrounds = true;
             // showBorder = true;
             // enableItemHovering = true;
-            depthIndentWidth = 18;
-        }
-
-        public void Reload(List<AudioUnit> audioUnits, List<AudioUnitCategory> categories) {
-            _audioUnits = audioUnits;
-            _categories = categories;
-            Reload();
+            // depthIndentWidth = 18;
         }
 
         protected override TreeViewItem BuildRoot() {
@@ -30,79 +20,104 @@ namespace SoundSystem {
 
             int id = 0;
 
-            List<AudioUnitTreeViewItem_AudioUnitCategory> categoryItems = new();
-            foreach (AudioUnitCategory category in _categories) {
-                categoryItems.Add(new AudioUnitTreeViewItem_AudioUnitCategory(++id, category));
-            }
-            foreach (AudioUnitTreeViewItem_AudioUnitCategory categoryItem in categoryItems) {
-                if (categoryItem.Category.Parent == null) {
-                    root.AddChild(categoryItem);
-                }
-                else {
-                    categoryItems
-                        .Find(x => x.Category == categoryItem.Category.Parent)
-                        .AddChild(categoryItem);
-                }
-            }
+            string folderPath = SoundSystemSetting.Instance.AudioUnitFolderRoot;
+            AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(++id, folderPath);
+            root.AddChild(folderItem);
 
-            foreach(var group in _audioUnits.GroupBy(x => x.Category)) {
-                if (group.Key == null) {
-                    root.InsertRangeChild(0, group.Select(x => new AudioUnitTreeViewItem_AudioUnit(++id, x)));
-                }
-                else {
-                    AudioUnitTreeViewItem_AudioUnitCategory targetCategoryItem = categoryItems.Find(x => x.Category == group.Key);
-                    targetCategoryItem.InsertRangeChild(0, group.Select(x => new AudioUnitTreeViewItem_AudioUnit(++id, x)));
-                }
-            }
+            BuildItemRecursive(folderItem, ref id);
 
             SetupDepthsFromParentsAndChildren(root);
             return root;
         }
 
+        void BuildItemRecursive(AudioUnitTreeViewItem_Folder parentFolderItem, ref int id) {
+            string folderPath = parentFolderItem.FolderPath;
+            foreach (string guid in AssetDatabase.FindAssets("", new string[] {folderPath})) {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+
+                // フォルダパス以降に'/'が入っていたら直下ではない
+                if (assetPath.Substring(folderPath.Length + 1).IndexOf('/') != -1) continue;
+
+                if (AssetDatabase.IsValidFolder(assetPath)) {
+                    AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(++id, assetPath);
+                    parentFolderItem.AddChild(folderItem);
+                    BuildItemRecursive(folderItem, ref id);
+                    continue;
+                }
+                
+                AudioUnit audioUnit = AssetDatabase.LoadAssetAtPath<AudioUnit>(assetPath);
+                if (audioUnit != null) {
+                    parentFolderItem.AddChild(new AudioUnitTreeViewItem_AudioUnit(++id, audioUnit));
+                }
+            }
+        }
+
         protected override void RowGUI(RowGUIArgs args) {
-            Rect rect = new(args.rowRect) {xMin = args.rowRect.xMin + GetContentIndent(args.item)};
-            if (args.item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                Rect backRect = new Rect(rect) {xMin = rect.xMin - 16};
-                GUI.Box(backRect, "", GUIStyles.AudioUnitRowBackground);
+            Rect backgroundRect = new(args.rowRect) {xMin = args.rowRect.xMin + GetContentIndent(args.item) - 16};
 
-                string assetPath = AssetDatabase.GetAssetPath(unitItem.AudioUnit);
-                Texture icon = AssetDatabase.GetCachedIcon(assetPath);
-                EditorGUI.LabelField(rect, new GUIContent(unitItem.Label, icon));
-            }
-            else if(args.item is AudioUnitTreeViewItem_AudioUnitCategory categoryDataItem) {
-                Rect backRect = new Rect(rect) {xMin = rect.xMin - 16};
-                GUI.Box(backRect, "", GUIStyles.CategoryRowBackground);
+            if (args.item is AudioUnitTreeViewItem_Folder folderItem) {
+                GUI.Box(backgroundRect, "", GUIStyles.FolderRowBackground);
+                for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
+                    Rect cellRect = args.GetCellRect(i);
+                    int columnIndex = args.GetColumn(i);
+                    switch (columnIndex) {
+                        case 0:
+                            cellRect.xMin += GetContentIndent(args.item);
+                            string assetPath = AssetDatabase.GetAssetPath(folderItem.FolderAsset);
+                            Texture icon = AssetDatabase.GetCachedIcon(assetPath);
 
-                string assetPath = AssetDatabase.GetAssetPath(categoryDataItem.Category);
-                Texture icon = AssetDatabase.GetCachedIcon(assetPath);
-                EditorGUI.LabelField(rect, new GUIContent(categoryDataItem.Label, icon));
+                            EditorGUI.LabelField(cellRect, new GUIContent(folderItem.FolderAsset.name, icon));
+                            break;
+                    }
+                }
             }
-            else {
-                base.RowGUI(args);
+            else if (args.item is AudioUnitTreeViewItem_AudioUnit unitItem) {
+                GUI.Box(backgroundRect, "", GUIStyles.SoundRowBackground);
+                for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
+                    Rect cellRect = args.GetCellRect(i);
+                    int columnIndex = args.GetColumn(i);
+                    switch (columnIndex) {
+                        case 0:
+                            cellRect.xMin += GetContentIndent(args.item);
+                            string assetPath = AssetDatabase.GetAssetPath(unitItem.AudioUnit);
+                            Texture icon = AssetDatabase.GetCachedIcon(assetPath);
+
+                            EditorGUI.LabelField(cellRect, new GUIContent(unitItem.AudioUnit.name, icon));
+                            break;
+                    }
+                }
             }
+        }
+
+        protected override bool CanBeParent(TreeViewItem item) {
+            return true;
         }
 
         protected override void SingleClickedItem(int id) {
             TreeViewItem item = FindItem(id, rootItem);
-            if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
+            if (item is AudioUnitTreeViewItem_Folder folderItem) {
+                folderItem.OnSingleClick();
+            }
+            else if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
                 unitItem.OnSingleClick();
-            }
-            else if (item is AudioUnitTreeViewItem_AudioUnitCategory categoryDataItem) {
-                categoryDataItem.OnSingleClick();
-            }
+            } 
         }
 
         protected override void DoubleClickedItem(int id) {
             TreeViewItem item = FindItem(id, rootItem);
-            if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                unitItem.OnDoubleClick();
+            if (item is AudioUnitTreeViewItem_Folder folderItem) {
+                folderItem.OnDoubleClick();
             }
-            else if (item is AudioUnitTreeViewItem_AudioUnitCategory categoryDataItem) {
-                categoryDataItem.OnDoubleClick();
+            else if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
+                unitItem.OnDoubleClick();
             }
         }
 
-        protected override bool CanStartDrag(CanStartDragArgs args) => true;
+        protected override bool CanStartDrag(CanStartDragArgs args) {
+            // TreeViewを1ウィンドウに複数描画＋ドラッグ有効だと一部のSingleClickedItemが呼ばれない事象への対処
+            SingleClickedItem(args.draggedItem.id);
+            return true;
+        }
 
         protected override bool CanMultiSelect(TreeViewItem item) => false;
 
@@ -110,8 +125,8 @@ namespace SoundSystem {
             Object[] dragObjects = GetRows()
                 .Where(item => args.draggedItemIDs.Contains(item.id))
                 .Select(x => {
-                    if (x is AudioUnitTreeViewItem_AudioUnitCategory categoryItem) {
-                        return categoryItem.Category as Object;
+                    if (x is AudioUnitTreeViewItem_Folder folderItem) {
+                        return folderItem.FolderAsset as Object;
                     }
                     if (x is AudioUnitTreeViewItem_AudioUnit unitItem) {
                         return unitItem.AudioUnit as Object;
@@ -132,38 +147,13 @@ namespace SoundSystem {
 
                 switch (args.dragAndDropPosition) {
                     case DragAndDropPosition.UponItem:
-                        // Categoryにドロップ
-                        if (args.parentItem is AudioUnitTreeViewItem_AudioUnitCategory parentCategoryItem) {
-                            foreach (Object obj in droppedObjects) {
-                                if (obj is AudioUnitCategory category) {
-                                    category.SetParentWithUndo(parentCategoryItem.Category);
-                                }
-                                else if (obj is AudioUnit audioUnit) {
-                                    audioUnit.SetCategoryWithUndo(parentCategoryItem.Category);
-                                }
-                            }
+                        if (args.parentItem is AudioUnitTreeViewItem_Folder parentFolderItem) {
+                            string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
+                            HandleDroppedObjects(droppedObjects, folderPath);
                         }
-                        // Categoryにドロップ
-                        else if (args.parentItem is AudioUnitTreeViewItem_AudioUnit parentUnitItem) {
-                            foreach (Object obj in droppedObjects) {
-                                if (obj is AudioUnitCategory category) {
-                                    category.SetParentWithUndo(parentUnitItem.AudioUnit.Category);
-                                }
-                                else if (obj is AudioUnit audioUnit) {
-                                    audioUnit.SetCategoryWithUndo(parentUnitItem.AudioUnit.Category);
-                                }
-                            }
-                        }
-                        Reload();
-                        break;
-                    case DragAndDropPosition.OutsideItems:
-                        foreach (Object obj in droppedObjects) {
-                            if (obj is AudioUnitCategory category) {
-                                category.SetParentWithUndo(null);
-                            }
-                            else if (obj is AudioUnit audioUnit) {
-                                audioUnit.SetCategoryWithUndo(null);
-                            }
+                        if (args.parentItem is AudioUnitTreeViewItem_AudioUnit parentUnitItem) {
+                            string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentUnitItem.AudioUnit));
+                            HandleDroppedObjects(droppedObjects, folderPath);
                         }
                         Reload();
                         break;
@@ -171,22 +161,24 @@ namespace SoundSystem {
                         return DragAndDropVisualMode.None;
                 }
             }
-            else if (isDragging) {
-                if (args.dragAndDropPosition == DragAndDropPosition.UponItem) {
-                    return DragAndDropVisualMode.Move;
-                }
-                else if (args.dragAndDropPosition == DragAndDropPosition.OutsideItems) {
-                    return DragAndDropVisualMode.Move;
-                }
-                else {
-                    return DragAndDropVisualMode.None;
-                }
+
+            if (args.dragAndDropPosition == DragAndDropPosition.UponItem) {
+                return DragAndDropVisualMode.Move;
             }
-            return DragAndDropVisualMode.Move;
+            else {
+                return DragAndDropVisualMode.None;
+            }
         }
 
-        protected override bool CanBeParent(TreeViewItem item) {
-            return true;
+        static void HandleDroppedObjects(Object[] droppedObjects, string folderPath) {
+            IEnumerable<AudioUnit> audioUnits = droppedObjects.OfType<AudioUnit>();
+            EditorUtil.MoveAssetsWithUndo(audioUnits, folderPath);
+
+            IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
+            EditorUtil.MoveAssetsWithUndo(folders, folderPath);
+
+            IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
+            AudioUnitUtil.CreateAudioUnits(clips, folderPath);
         }
     }
 }

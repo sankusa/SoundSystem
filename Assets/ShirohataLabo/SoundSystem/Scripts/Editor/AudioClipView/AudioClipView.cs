@@ -1,14 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace SoundSystem {
     [System.Serializable]
-    public class AudioUnitView {
+    public class AudioClipView {
         [SerializeField] TreeViewState _audioUnitTreeViewState = new();
-        AudioUnitTreeView _audioUnitTreeView;
+        AudioClipTreeView _audioClipTreeView;
 
         SearchField _searchField;
 
@@ -21,39 +19,53 @@ namespace SoundSystem {
                 autoResize = true,
             };
             var descriptionColumn = new MultiColumnHeaderState.Column() {
-                headerContent = new GUIContent("Description"),
+                headerContent = new GUIContent("Import Setting Check"),
                 canSort = false,
-                autoResize = true,
+                width = 8,
             };
             var headerState = new MultiColumnHeaderState(new MultiColumnHeaderState.Column[] {captionColumn, descriptionColumn});
             var multiColumnHeader = new MultiColumnHeader(headerState);
             multiColumnHeader.ResizeToFit();
 
-            _audioUnitTreeView = new AudioUnitTreeView(_audioUnitTreeViewState, multiColumnHeader);
+            _audioClipTreeView = new AudioClipTreeView(_audioUnitTreeViewState, multiColumnHeader);
         }
 
         public void OnGUI() {
             using (new EditorGUILayout.VerticalScope()) {
                 using (new EditorGUILayout.HorizontalScope(GUIStyles.DarkToolbar)) {
-                    EditorGUILayout.LabelField($"{nameof(AudioUnit)}", GUIStyles.CaptionLabel, GUILayout.Width(80));
+                    EditorGUILayout.LabelField($"{nameof(AudioClip)}", GUIStyles.CaptionLabel, GUILayout.Width(80));
                     GUILayout.FlexibleSpace();
-                    _audioUnitTreeView.searchString = _searchField.OnGUI(
+                    _audioClipTreeView.searchString = _searchField.OnGUI(
                         EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(true), GUILayout.Height(EditorGUIUtility.singleLineHeight)),
-                        _audioUnitTreeView.searchString
+                        _audioClipTreeView.searchString
                     );
                     if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
-                        _audioUnitTreeView.Reload();
+                        _audioClipTreeView.Reload();
+                    }
+                    if (GUILayout.Button(new GUIContent(Icons.CommandIcon), EditorStyles.toolbarButton)) {
+                        GenericMenu menu = new();
+                        menu.AddItem(
+                            new GUIContent("Check Import Setting"),
+                            false,
+                            () => _audioClipTreeView.CheckImportSetting()
+                        );
+                        menu.AddItem(
+                            new GUIContent("Apply Import Setting"),
+                            false,
+                            () => _audioClipTreeView.ApplyImportSetting()
+                        );
+                        menu.ShowAsContext();
                     }
                 }
 
-                _audioUnitTreeView.OnGUI(
-                    GUILayoutUtility.GetRect(0, _audioUnitTreeView.totalHeight, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
+                _audioClipTreeView.OnGUI(
+                    GUILayoutUtility.GetRect(0, _audioClipTreeView.totalHeight, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
                 );
             }
         }
 
         public void Reload() {
-            _audioUnitTreeView.Reload();
+            _audioClipTreeView.Reload();
         }
     }
 }

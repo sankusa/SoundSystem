@@ -2,15 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SoundSystem {
     public class EditorUtil {
         public static T CreateAsset<T>(string folderPath, string assetNameWithoutExtension, Action<T> onBeforeCreateAsset = null) where T : ScriptableObject {
             T asset = ScriptableObject.CreateInstance<T>();
             onBeforeCreateAsset?.Invoke(asset);
-            AssetDatabase.CreateAsset(asset, Path.Combine(folderPath, $"{assetNameWithoutExtension}.asset"));
+            string uncheckedPath = Path.Combine(folderPath, $"{assetNameWithoutExtension}.asset");
+            string correctPath = AssetDatabase.GenerateUniqueAssetPath(uncheckedPath);
+            AssetDatabase.CreateAsset(asset, correctPath);
             return asset;
         }
 
@@ -37,6 +41,10 @@ namespace SoundSystem {
                 .Any();
         }
 
+        public static string GetAssetName(string assetPath) {
+            return assetPath.Substring(assetPath.LastIndexOf('/') + 1);
+        }
+
         public static string GetFolderPath(string assetPath) {
             return assetPath.Substring(0, assetPath.LastIndexOf('/'));
         }
@@ -56,6 +64,22 @@ namespace SoundSystem {
                 if (folderPath == null) break;
             }
             return null;
+        }
+
+        public static void RegisterAssetsMoveUndo(string[] paths) {
+            typeof(Undo).GetMethod("RegisterAssetsMoveUndo", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] {paths});
+        }
+
+        public static void MoveAssetsWithUndo(IEnumerable<Object> assets, string toFolderPath) {
+            if (assets.Count() > 0) {
+                RegisterAssetsMoveUndo(assets.Select(x => AssetDatabase.GetAssetPath(x)).ToArray());
+                foreach (Object asset in assets) {
+                    string oldPath = AssetDatabase.GetAssetPath(asset);
+                    string newPath = toFolderPath + "/" + GetAssetName(oldPath);
+                    AssetDatabase.MoveAsset(oldPath, newPath);
+                    AssetDatabase.Refresh();
+                }
+            }
         }
     }
 }

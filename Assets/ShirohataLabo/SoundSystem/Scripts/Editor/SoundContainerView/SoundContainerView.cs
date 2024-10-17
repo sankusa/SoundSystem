@@ -36,12 +36,12 @@ namespace SoundSystem {
         public void OnGUI() {
             using (new EditorGUILayout.VerticalScope()) {
                 using (new EditorGUILayout.HorizontalScope(GUIStyles.DarkToolbar)) {
-                    EditorGUILayout.LabelField($"{nameof(SoundContainer)} List", GUIStyles.CaptionLabel, GUILayout.Width(120));
+                    EditorGUILayout.LabelField($"{nameof(SoundContainer)}", GUIStyles.CaptionLabel, GUILayout.Width(120));
                     GUILayout.FlexibleSpace();
                     // if (GUILayout.Button("+", EditorStyles.toolbarButton)) {
                     //     ScriptGenerator.GenerateSoundKeyScript();
                     // }
-                    if (GUILayout.Button("Reflesh", EditorStyles.toolbarButton)) {
+                    if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
                         _soundContainerTreeView.Reload();
                     }
                 }
