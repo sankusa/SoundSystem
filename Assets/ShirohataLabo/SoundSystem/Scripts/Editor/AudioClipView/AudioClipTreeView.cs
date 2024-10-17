@@ -67,6 +67,14 @@ namespace SoundSystem {
 
                             EditorGUI.LabelField(cellRect, new GUIContent(folderItem.FolderAsset.name, icon));
                             break;
+                        case 1:
+                            if (folderItem.StandardImportSetting == null) break;
+                            string importSettingPath = AssetDatabase.GetAssetPath(folderItem.StandardImportSetting);
+                            Texture importSettingIcon = AssetDatabase.GetCachedIcon(importSettingPath);
+                            if (GUI.Button(cellRect, new GUIContent(importSettingIcon))) {
+                                Selection.activeObject = folderItem.StandardImportSetting;
+                            }
+                            break;
                     }
                 }
             }
@@ -83,9 +91,24 @@ namespace SoundSystem {
 
                             EditorGUI.LabelField(cellRect, new GUIContent(clipItem.Clip.name, icon));
                             break;
+                        case 1:
+                            if (clipItem.ImportSettingCheckResult.HasValue == false) {
+                                EditorGUI.LabelField(cellRect, "-");
+                            }
+                            else if (clipItem.ImportSettingCheckResult.Value) {
+                                EditorGUI.LabelField(cellRect, new GUIContent(Icons.OkIcon));
+                            }
+                            else {
+                                EditorGUI.LabelField(cellRect, new GUIContent(Icons.NgIcon));
+                            }
+                            break;
                     }
                 }
             }
+        }
+
+        protected override bool CanBeParent(TreeViewItem item) {
+            return true;
         }
 
         protected override void SingleClickedItem(int id) {
@@ -105,6 +128,18 @@ namespace SoundSystem {
             }
             else if (item is AudioClipTreeViewItem_AudioClip clipItem) {
                 clipItem.OnDoubleClick();
+            }
+        }
+
+        protected override void ContextClickedItem(int id) {
+            Event.current.Use();
+
+            TreeViewItem item = FindItem(id, rootItem);
+            if (item is AudioClipTreeViewItem_Folder folderItem) {
+                folderItem.OnContextClick();
+            }
+            else if (item is AudioClipTreeViewItem_AudioClip clipItem) {
+                clipItem.OnContextClick();
             }
         }
 
@@ -144,21 +179,11 @@ namespace SoundSystem {
                     case DragAndDropPosition.UponItem:
                         if (args.parentItem is AudioClipTreeViewItem_Folder parentFolderItem) {
                             string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
-
-                            IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
-                            EditorUtil.MoveAssetsWithUndo(folders, folderPath);
-
-                            IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
-                            EditorUtil.MoveAssetsWithUndo(clips, folderPath);
+                            MoveTargetAssetsWithUndo(droppedObjects, folderPath);
                         }
-                        if (args.parentItem is AudioUnitTreeViewItem_AudioUnit parentUnitItem) {
-                            string audioUnitFolder = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentUnitItem.AudioUnit));
-
-                            IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
-                            EditorUtil.MoveAssetsWithUndo(folders, audioUnitFolder);
-
-                            IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
-                            EditorUtil.MoveAssetsWithUndo(clips, audioUnitFolder);
+                        if (args.parentItem is AudioClipTreeViewItem_AudioClip parentClipItem) {
+                            string audioUnitFolder = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentClipItem.Clip));
+                            MoveTargetAssetsWithUndo(droppedObjects, audioUnitFolder);
                         }
                         Reload();
                         break;
@@ -175,8 +200,35 @@ namespace SoundSystem {
             }
         }
 
-        protected override bool CanBeParent(TreeViewItem item) {
-            return true;
+        static void MoveTargetAssetsWithUndo(Object[] droppedObjects, string folderPath) {
+            IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
+            EditorUtil.MoveAssetsWithUndo(folders, folderPath);
+
+            IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
+            EditorUtil.MoveAssetsWithUndo(clips, folderPath);
+
+            IEnumerable<StandardAudioClipImportSettings> importSettings = droppedObjects.OfType<StandardAudioClipImportSettings>();
+            EditorUtil.MoveAssetsWithUndo(importSettings, folderPath);
+        }
+
+        public void CheckImportSetting() {
+            if (rootItem.children == null) return;
+
+            foreach (TreeViewItem item in rootItem.children) {
+                if (item is AudioClipTreeViewItem_Folder folderItem) {
+                    folderItem.CheckImportSettings(null);
+                }
+            }
+        }
+
+        public void ApplyImportSetting() {
+            if (rootItem.children == null) return;
+
+            foreach (TreeViewItem item in rootItem.children) {
+                if (item is AudioClipTreeViewItem_Folder folderItem) {
+                    folderItem.ApplyImportSettings(null);
+                }
+            }
         }
     }
 }

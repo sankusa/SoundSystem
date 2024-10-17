@@ -3,6 +3,17 @@ using UnityEngine;
 
 namespace SoundSystem {
     public class GUIStyles {
+        static GUIStyle _richTextLabel;
+        public static GUIStyle RichTextLabel {
+            get {
+                if (_richTextLabel == null) {
+                    _richTextLabel = new GUIStyle(EditorStyles.label);
+                    _richTextLabel.richText = true;
+                }
+                return _richTextLabel;
+            }
+        }
+
         static GUIStyle _darkToolbar;
         public static GUIStyle DarkToolbar {
             get {

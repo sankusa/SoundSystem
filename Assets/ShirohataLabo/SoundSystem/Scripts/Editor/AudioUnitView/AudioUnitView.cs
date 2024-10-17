@@ -41,7 +41,7 @@ namespace SoundSystem {
                         EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(true), GUILayout.Height(EditorGUIUtility.singleLineHeight)),
                         _audioUnitTreeView.searchString
                     );
-                    if (GUILayout.Button("Reflesh", EditorStyles.toolbarButton)) {
+                    if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
                         _audioUnitTreeView.Reload();
                     }
                 }

@@ -41,7 +41,7 @@ namespace SoundSystem {
                     // if (GUILayout.Button("+", EditorStyles.toolbarButton)) {
                     //     ScriptGenerator.GenerateSoundKeyScript();
                     // }
-                    if (GUILayout.Button("Reflesh", EditorStyles.toolbarButton)) {
+                    if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
                         _soundContainerTreeView.Reload();
                     }
                 }

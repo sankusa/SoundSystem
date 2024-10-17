@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -21,9 +19,9 @@ namespace SoundSystem {
                 autoResize = true,
             };
             var descriptionColumn = new MultiColumnHeaderState.Column() {
-                headerContent = new GUIContent("Description"),
+                headerContent = new GUIContent("Import Setting Check"),
                 canSort = false,
-                autoResize = true,
+                width = 8,
             };
             var headerState = new MultiColumnHeaderState(new MultiColumnHeaderState.Column[] {captionColumn, descriptionColumn});
             var multiColumnHeader = new MultiColumnHeader(headerState);
@@ -41,8 +39,22 @@ namespace SoundSystem {
                         EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(true), GUILayout.Height(EditorGUIUtility.singleLineHeight)),
                         _audioClipTreeView.searchString
                     );
-                    if (GUILayout.Button("Reflesh", EditorStyles.toolbarButton)) {
+                    if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
                         _audioClipTreeView.Reload();
+                    }
+                    if (GUILayout.Button(new GUIContent(Icons.CommandIcon), EditorStyles.toolbarButton)) {
+                        GenericMenu menu = new();
+                        menu.AddItem(
+                            new GUIContent("Check Import Setting"),
+                            false,
+                            () => _audioClipTreeView.CheckImportSetting()
+                        );
+                        menu.AddItem(
+                            new GUIContent("Apply Import Setting"),
+                            false,
+                            () => _audioClipTreeView.ApplyImportSetting()
+                        );
+                        menu.ShowAsContext();
                     }
                 }
 
