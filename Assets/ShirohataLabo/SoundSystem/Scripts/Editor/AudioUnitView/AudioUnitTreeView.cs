@@ -32,6 +32,7 @@ namespace SoundSystem {
 
         void BuildItemRecursive(AudioUnitTreeViewItem_Folder parentFolderItem, ref int id) {
             string folderPath = parentFolderItem.FolderPath;
+            int nextClipItemInsertIndex = 0;
             foreach (string guid in AssetDatabase.FindAssets("", new string[] {folderPath})) {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
 
@@ -47,7 +48,7 @@ namespace SoundSystem {
                 
                 AudioUnit audioUnit = AssetDatabase.LoadAssetAtPath<AudioUnit>(assetPath);
                 if (audioUnit != null) {
-                    parentFolderItem.AddChild(new AudioUnitTreeViewItem_AudioUnit(++id, audioUnit));
+                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new AudioUnitTreeViewItem_AudioUnit(++id, audioUnit));
                 }
             }
         }
