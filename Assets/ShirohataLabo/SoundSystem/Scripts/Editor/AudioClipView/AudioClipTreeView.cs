@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -171,24 +172,36 @@ namespace SoundSystem {
         protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args) {
             if (args.performDrop) {
                 Object[] droppedObjects = DragAndDrop.objectReferences;
-                if (droppedObjects == null || droppedObjects.Length == 0) {
-                    return DragAndDropVisualMode.None;
+                string[] droppedPaths = DragAndDrop.paths;
+                if (droppedObjects != null && droppedObjects.Length > 0) {
+                    switch (args.dragAndDropPosition) {
+                        case DragAndDropPosition.UponItem:
+                            if (args.parentItem is AudioClipTreeViewItem_Folder parentFolderItem) {
+                                string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
+                                MoveTargetAssetsWithUndo(droppedObjects, folderPath);
+                            }
+                            if (args.parentItem is AudioClipTreeViewItem_AudioClip parentClipItem) {
+                                string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentClipItem.Clip));
+                                MoveTargetAssetsWithUndo(droppedObjects, folderPath);
+                            }
+                            Reload();
+                            break;
+                        default:
+                            return DragAndDropVisualMode.None;
+                    }
                 }
-
-                switch (args.dragAndDropPosition) {
-                    case DragAndDropPosition.UponItem:
-                        if (args.parentItem is AudioClipTreeViewItem_Folder parentFolderItem) {
-                            string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
-                            MoveTargetAssetsWithUndo(droppedObjects, folderPath);
-                        }
-                        if (args.parentItem is AudioClipTreeViewItem_AudioClip parentClipItem) {
-                            string audioUnitFolder = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentClipItem.Clip));
-                            MoveTargetAssetsWithUndo(droppedObjects, audioUnitFolder);
-                        }
-                        Reload();
-                        break;
-                    default:
-                        return DragAndDropVisualMode.None;
+                else if (droppedPaths.Length > 0) {
+                    if (args.parentItem is AudioClipTreeViewItem_Folder parentFolderItem) {
+                        string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
+                        AudioClipUtil.ImportDraggingExternalSoundFiles(folderPath);
+                    }
+                    if (args.parentItem is AudioClipTreeViewItem_AudioClip parentClipItem) {
+                        string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentClipItem.Clip));
+                        AudioClipUtil.ImportDraggingExternalSoundFiles(folderPath);
+                    }
+                }
+                else {
+                    return DragAndDropVisualMode.None;
                 }
             }
 

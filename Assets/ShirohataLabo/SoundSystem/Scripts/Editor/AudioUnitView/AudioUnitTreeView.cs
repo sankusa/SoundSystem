@@ -152,8 +152,8 @@ namespace SoundSystem {
                             HandleDroppedObjects(droppedObjects, folderPath);
                         }
                         if (args.parentItem is AudioUnitTreeViewItem_AudioUnit parentUnitItem) {
-                            string audioUnitFolder = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentUnitItem.AudioUnit));
-                            HandleDroppedObjects(droppedObjects, audioUnitFolder);
+                            string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentUnitItem.AudioUnit));
+                            HandleDroppedObjects(droppedObjects, folderPath);
                         }
                         Reload();
                         break;
