@@ -21,7 +21,7 @@ namespace SoundSystem {
             int id = 0;
 
             string folderPath = SoundSystemSetting.Instance.AudioUnitFolderRoot;
-            AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(++id, folderPath);
+            AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(folderPath);
             root.AddChild(folderItem);
 
             BuildItemRecursive(folderItem, ref id);
@@ -40,7 +40,7 @@ namespace SoundSystem {
                 if (assetPath.Substring(folderPath.Length + 1).IndexOf('/') != -1) continue;
 
                 if (AssetDatabase.IsValidFolder(assetPath)) {
-                    AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(++id, assetPath);
+                    AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(assetPath);
                     parentFolderItem.AddChild(folderItem);
                     BuildItemRecursive(folderItem, ref id);
                     continue;
@@ -48,7 +48,7 @@ namespace SoundSystem {
                 
                 AudioUnit audioUnit = AssetDatabase.LoadAssetAtPath<AudioUnit>(assetPath);
                 if (audioUnit != null) {
-                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new AudioUnitTreeViewItem_AudioUnit(++id, audioUnit));
+                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new AudioUnitTreeViewItem_AudioUnit(audioUnit));
                 }
             }
         }

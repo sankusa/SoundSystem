@@ -15,10 +15,11 @@ namespace SoundSystem {
         StandardAudioClipImportSettings _standardImportSettings;
         public StandardAudioClipImportSettings StandardImportSetting => _standardImportSettings;
 
-        public AudioClipTreeViewItem_Folder(int id, string folderPath) : base(id, 0, "") {
+        public AudioClipTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
             _folderPath = folderPath;
             _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(folderPath);
             _standardImportSettings = EditorUtil.LoadAllAsset<StandardAudioClipImportSettings>(_folderPath).FirstOrDefault();
+            id = _folderAsset.GetInstanceID();
         }
 
         public void OnSingleClick() {

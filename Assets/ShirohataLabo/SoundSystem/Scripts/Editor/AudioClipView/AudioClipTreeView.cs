@@ -18,19 +18,17 @@ namespace SoundSystem {
         protected override TreeViewItem BuildRoot() {
             TreeViewItem root = new() {depth = -1};
 
-            int id = 0;
-
             string folderPath = SoundSystemSetting.Instance.AudioClipFolderRoot;
-            AudioClipTreeViewItem_Folder folderItem = new AudioClipTreeViewItem_Folder(++id, folderPath);
+            AudioClipTreeViewItem_Folder folderItem = new AudioClipTreeViewItem_Folder(folderPath);
             root.AddChild(folderItem);
 
-            BuildItemRecursive(folderItem, ref id);
+            BuildItemRecursive(folderItem);
 
             SetupDepthsFromParentsAndChildren(root);
             return root;
         }
 
-        void BuildItemRecursive(AudioClipTreeViewItem_Folder parentFolderItem, ref int id) {
+        void BuildItemRecursive(AudioClipTreeViewItem_Folder parentFolderItem) {
             string folderPath = parentFolderItem.FolderPath;
             int nextClipItemInsertIndex = 0;
             foreach (string guid in AssetDatabase.FindAssets("", new string[] {folderPath})) {
@@ -40,15 +38,15 @@ namespace SoundSystem {
                 if (assetPath.Substring(folderPath.Length + 1).IndexOf('/') != -1) continue;
 
                 if (AssetDatabase.IsValidFolder(assetPath)) {
-                    AudioClipTreeViewItem_Folder folderItem = new AudioClipTreeViewItem_Folder(++id, assetPath);
+                    AudioClipTreeViewItem_Folder folderItem = new AudioClipTreeViewItem_Folder(assetPath);
                     parentFolderItem.AddChild(folderItem);
-                    BuildItemRecursive(folderItem, ref id);
+                    BuildItemRecursive(folderItem);
                     continue;
                 }
                 
                 AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(assetPath);
                 if (clip != null) {
-                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new AudioClipTreeViewItem_AudioClip(++id, clip));
+                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new AudioClipTreeViewItem_AudioClip(clip));
                 }
             }
         }

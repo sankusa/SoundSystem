@@ -9,8 +9,9 @@ namespace SoundSystem {
         bool? _importSettingCheckResult;
         public bool? ImportSettingCheckResult => _importSettingCheckResult;
 
-        public AudioClipTreeViewItem_AudioClip(int id, AudioClip clip) : base(id, 0, clip.name) {
+        public AudioClipTreeViewItem_AudioClip(AudioClip clip) : base(0, 0, clip.name) {
             Clip = clip;
+            id = clip.GetInstanceID();
         }
 
         public void SetImportSettingCheckResult(bool value) {

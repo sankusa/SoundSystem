@@ -7,9 +7,10 @@ namespace SoundSystem {
 
         public string Label => Category.name;
 
-        public AudioUnitTreeViewItem_AudioUnitCategory(int id, AudioUnitCategory category) : base(id) {
+        public AudioUnitTreeViewItem_AudioUnitCategory(AudioUnitCategory category) : base(0) {
             Category = category;
             displayName = category.name;
+            id = category.GetInstanceID();
         }
 
         public void OnSingleClick() {

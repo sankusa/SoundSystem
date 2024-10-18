@@ -9,9 +9,10 @@ namespace SoundSystem {
         DefaultAsset _folderAsset;
         public DefaultAsset FolderAsset => _folderAsset;
 
-        public AudioUnitTreeViewItem_Folder(int id, string folderPath) : base(id, 0, "") {
+        public AudioUnitTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
             _folderPath = folderPath;
             _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(folderPath);
+            id = _folderAsset.GetInstanceID();
         }
 
         public void OnSingleClick() {
