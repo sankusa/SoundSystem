@@ -81,7 +81,7 @@ namespace SoundSystem {
                 }
             }
             else if (args.item is AudioClipTreeViewItem_AudioClip clipItem) {
-                GUI.Box(backgroundRect, "", GUIStyles.SoundRowBackground);
+                GUI.Box(backgroundRect, "", GUIStyles.BasicRowBackground);
                 for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
                     Rect cellRect = args.GetCellRect(i);
                     int columnIndex = args.GetColumn(i);

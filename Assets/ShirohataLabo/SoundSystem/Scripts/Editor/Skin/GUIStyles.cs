@@ -41,19 +41,19 @@ namespace SoundSystem {
             }
         }
 
-        static GUIStyle _audioUnitRowBackground;
-        public static GUIStyle AudioUnitRowBackground {
+        static GUIStyle _basicRowBackground;
+        public static GUIStyle BasicRowBackground {
             get {
-                if (_audioUnitRowBackground == null) {
-                    _audioUnitRowBackground = new GUIStyle("OL box NoExpand");
+                if (_basicRowBackground == null) {
+                    _basicRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
                     backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.3f));
                     backgroundTexture.Apply();
 
-                    _audioUnitRowBackground.normal.background = backgroundTexture;
+                    _basicRowBackground.normal.background = backgroundTexture;
                 }
-                return _audioUnitRowBackground;
+                return _basicRowBackground;
             }
         }
 
@@ -73,6 +73,22 @@ namespace SoundSystem {
             }
         }
 
+        static GUIStyle _soundContainerRowBackground;
+        public static GUIStyle SoundContainerRowBackground {
+            get {
+                if (_soundContainerRowBackground == null) {
+                    _soundContainerRowBackground = new GUIStyle("OL box NoExpand");
+
+                    Texture2D backgroundTexture = new(1, 1);
+                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.3f));
+                    backgroundTexture.Apply();
+
+                    _soundContainerRowBackground.normal.background = backgroundTexture;
+                }
+                return _soundContainerRowBackground;
+            }
+        }
+
         static GUIStyle _soundRowBackground;
         public static GUIStyle SoundRowBackground {
             get {
@@ -80,7 +96,7 @@ namespace SoundSystem {
                     _soundRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
-                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.3f));
+                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.2f));
                     backgroundTexture.Apply();
 
                     _soundRowBackground.normal.background = backgroundTexture;
