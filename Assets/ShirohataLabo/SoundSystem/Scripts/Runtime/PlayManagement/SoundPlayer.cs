@@ -10,11 +10,19 @@ namespace SoundSystem {
         public int ClipSamples => _audioSource.clip != null ? _audioSource.clip.samples : 0;
         public bool IsUsing => _audioSource.clip != null;
         public bool IsPlaying => _audioSource.isPlaying;
-        public bool IsPaused => _audioSource.isPlaying == false && _audioSource.timeSamples != 0 && _audioSource.timeSamples != ClipSamples;
+        public bool IsStopped => _audioSource.isPlaying == false && IsPaused == false;
+        bool _isPaused;
+        public bool IsPaused => _isPaused;
         public float Time {
             get => _audioSource.time;
             set => _audioSource.time = value;
         }
+
+        // ・AudioSource.isPlayingはポーズ時にfalseになってしまう
+        // ・AudioSourceは再生位置が終端に達した場合、SoundPlayerが検知する前に自律的に状態をリセットしてしまう場合がある
+        // 上記理由からフラグを別途定義
+        bool _isPlayStarted;
+        public bool IsPlayStarted => _isPlayStarted;
 
         Sound _sound;
         public Sound Sound => _sound;
@@ -129,6 +137,7 @@ namespace SoundSystem {
             UpdatePitch();
 
             _audioSource.Play();
+            _isPlayStarted = true;
             return this;
         }
 
@@ -144,10 +153,12 @@ namespace SoundSystem {
 
         public void Pause() {
             _audioSource.Pause();
+            _isPaused = true;
         }
 
         public void Resume() {
             _audioSource.UnPause();
+            _isPaused = false;
         }
 
         public void Reset() {
@@ -155,6 +166,7 @@ namespace SoundSystem {
             _audioUnit = null;
             _fadeVolume.Clear();
             _onComplete = null;
+            _isPlayStarted = false;
             
             // Reset AudioSource
             _audioSource.Stop();
@@ -166,7 +178,12 @@ namespace SoundSystem {
 
         public void Update(float deltaTime) {
             if (IsUsing == false) return;
-            if (_audioSource.isPlaying == false) return;
+            if (_isPlayStarted == false) return;
+            // AudioSourceが自律的に停止した場合
+            if (IsStopped) {
+                RestartOrComplete();
+                return;
+            }
             _fadeVolume.Update(deltaTime);
             ClampTime();
             UpdateVolume();
@@ -202,12 +219,16 @@ namespace SoundSystem {
 
         void CheckAndHandleEndOfAudio() {
             if (_audioSource.timeSamples >= _audioUnit.ToSamples) {
-                if (_audioSource.loop) {
-                    _audioSource.timeSamples = _audioUnit.FromSamples;
-                }
-                else {
-                    Complete();
-                }
+                RestartOrComplete();
+            }
+        }
+
+        void RestartOrComplete() {
+            if (_audioSource.loop) {
+                _audioSource.timeSamples = _audioUnit.FromSamples;
+            }
+            else {
+                Complete();
             }
         }
 

@@ -74,7 +74,7 @@ namespace SoundSystem {
                     bool playToggleRet = GUILayout.Toggle(Player.IsPlaying, "", "Button", GUILayout.Width(19), GUILayout.Height(19));
                     EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PlayIcon));
                     if (Player.IsPlaying == false && playToggleRet) {
-                        Player.SetAudioUnit(_audioUnit).SetLoop(_loop).SetFadeIn().Play();
+                        Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
                     }
                     else if (Player.IsPlaying && playToggleRet == false) {
                         Player.Stop();
