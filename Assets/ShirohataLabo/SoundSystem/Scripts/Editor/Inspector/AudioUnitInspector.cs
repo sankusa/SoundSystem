@@ -1,11 +1,10 @@
-using System.Reflection.Emit;
 using UnityEditor;
 using UnityEngine;
 
 namespace SoundSystem {
     [CustomEditor(typeof(AudioUnit))]
     public class AudioUnitInspector : Editor {
-        readonly EditorSoundPlayer _editorSoundPlayer = new();
+        readonly EditorSoundPlayerGUI _editorSoundPlayer = new();
 
         void OnEnable() {
             _editorSoundPlayer.OnEnable();
@@ -122,20 +121,14 @@ namespace SoundSystem {
 
             using (new EditorGUILayout.HorizontalScope()) {
                 EditorGUILayout.LabelField("Samples", GUILayout.Width(64));
-                EditorGUI.BeginChangeCheck();
                 using (new LabelWidthScope(54)) {
                     int newFromSamples = EditorGUILayout.IntField("[ From", fromSamplesProp.intValue);
-                    if (EditorGUI.EndChangeCheck()) {
-                        fromSamplesProp.intValue = Mathf.Clamp(newFromSamples, 0, toSamplesProp.intValue);
-                    }
+                    fromSamplesProp.intValue = Mathf.Clamp(newFromSamples, 0, toSamplesProp.intValue);
                 }
                 using (new IndentLevelScope(0)) {
                     using (new LabelWidthScope(28)) {
-                        EditorGUI.BeginChangeCheck();
                         int newToSamples = EditorGUILayout.IntField("- To ", toSamplesProp.intValue);
-                        if (EditorGUI.EndChangeCheck()) {
-                            toSamplesProp.intValue = Mathf.Clamp(newToSamples, fromSamplesProp.intValue, clip == null ? 0 : clip.samples);
-                        }
+                        toSamplesProp.intValue = Mathf.Clamp(newToSamples, fromSamplesProp.intValue, clip == null ? 0 : clip.samples);
                     }
                     EditorGUILayout.LabelField("]", GUILayout.Width(8));
                 }

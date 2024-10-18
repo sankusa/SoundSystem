@@ -1,32 +1,38 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SoundSystem {
-    public class EditorSoundPlayer {
+    public class EditorSoundPlayer : IDisposable {
         GameObject _playerRoot;
         List<SoundPlayer> _players;
         int _currentPlayerIndex;
+        public int CurrentPlayerIndex => _currentPlayerIndex;
         SoundPlayer Player => _players[_currentPlayerIndex];
         SoundManagerConfig _soundManagerConfig;
-
-        AudioUnit _audioUnit;
-
-        bool _loop;
+        public SoundManagerConfig SoundManagerConfig => _soundManagerConfig;
 
         double _oldTime;
 
-        public void OnEnable() {
+        AudioUnit _audioUnit;
+        bool _loop;
+
+        public EditorSoundPlayer() {
             CreateAudioSourceObject();
             _oldTime = Time.time;
+            SwitchPlayerIndex(0);
         }
 
-        public void OnDisable() {
+        public void Dispose() {
             DestroyAudioSourceObject();
         }
 
-        void Update() {
+        public void Update() {
+            if (Player.AudioUnit != _audioUnit) Player.SetAudioUnit(_audioUnit);
+
             double deltaTime = (float)(EditorApplication.timeSinceStartup - _oldTime);
             Player.Update((float)deltaTime);
             _oldTime = EditorApplication.timeSinceStartup;
@@ -37,13 +43,9 @@ namespace SoundSystem {
             }
         }
 
-        public void Bind(AudioUnit audioUnit) {
-            _audioUnit = audioUnit;
-        }
-
         void CreateAudioSourceObject() {
             _soundManagerConfig = EditorUtil.LoadAllAsset<SoundManagerConfig>().First();
-            _playerRoot = new(nameof(EditorSoundPlayer)) {
+            _playerRoot = new(nameof(EditorSoundPlayerGUI)) {
                 hideFlags = HideFlags.HideAndDontSave
             };
             _players = new();
@@ -58,52 +60,64 @@ namespace SoundSystem {
             Object.DestroyImmediate(_playerRoot);
         }
 
-        public void DrawGUILayout() {
-            Update();
+        public void BindAudioUnit(AudioUnit audioUnit) {
+            _audioUnit = audioUnit;
+            Player.Reset();
+            Player.SetAudioUnit(_audioUnit);
+        }
 
-            using (new EditorGUILayout.VerticalScope(new GUIStyle("GroupBox"))) {
-                using (new EditorGUILayout.HorizontalScope()) {
-                    GUILayout.FlexibleSpace();
+        public void SwitchPlayerIndex(int index) {
+            _currentPlayerIndex = index;
+            Player.Stop();
+        }
 
-                    EditorGUI.BeginChangeCheck();
-                    _currentPlayerIndex = EditorGUILayout.Popup(_currentPlayerIndex, _soundManagerConfig.PlayerGroupSettings.Select(x => x.Key).ToArray(), GUILayout.Width(80));
-                    if (EditorGUI.EndChangeCheck()) {
-                        Player.Stop();
-                    }
+        public void DrawPlayerGroupSelectPopup(params GUILayoutOption[] options) {
+            EditorGUI.BeginChangeCheck();
+            int currentPlayerIndex = EditorGUILayout.Popup(CurrentPlayerIndex, _soundManagerConfig.PlayerGroupSettings.Select(x => new GUIContent(x.Key, "SoundPlayerGroup")).ToArray(), options);
+            if (EditorGUI.EndChangeCheck()) {
+                SwitchPlayerIndex(currentPlayerIndex);
+            }
+        }
 
-                    bool playToggleRet = GUILayout.Toggle(Player.IsPlaying, "", "Button", GUILayout.Width(19), GUILayout.Height(19));
-                    EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PlayIcon));
-                    if (Player.IsPlaying == false && playToggleRet) {
-                        Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
-                    }
-                    else if (Player.IsPlaying && playToggleRet == false) {
-                        Player.Stop();
-                    }
+        public void DrawPlayButton(params GUILayoutOption[] options) {
+            bool playToggleRet = GUILayout.Toggle(Player.IsPlayStarted, "", "Button", options);
+            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PlayIcon));
+            if (Player.IsPlayStarted == false && playToggleRet) {
+                Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
+            }
+            else if (Player.IsPlayStarted && playToggleRet == false) {
+                Player.Stop();
+            }
+        }
 
-                    bool pauseToggleRet = GUILayout.Toggle(Player.IsPaused, "", "Button", GUILayout.Width(19), GUILayout.Height(19));
-                    EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PauseIcon));
-                    if (Player.IsPaused == false && pauseToggleRet) {
-                        Player.Pause();
-                    }
-                    else if (Player.IsPaused && pauseToggleRet == false) {
-                        Player.Resume();
-                    }
+        public void DrawPauseButton(params GUILayoutOption[] options) {
+            bool pauseToggleRet = GUILayout.Toggle(Player.IsPaused, "", "Button", options);
+            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PauseIcon));
+            if (Player.IsPaused == false && pauseToggleRet) {
+                Player.Pause();
+            }
+            else if (Player.IsPaused && pauseToggleRet == false) {
+                Player.Resume();
+            }
+        }
 
-                    EditorGUI.BeginChangeCheck();
-                    _loop = GUILayout.Toggle(_loop, "", "Button", GUILayout.Width(19), GUILayout.Height(19));
-                    if (EditorGUI.EndChangeCheck()) {
-                        Player.SetLoop(_loop);
-                    }
-                    EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.RepeatIcon));
+        public void DrawLoopButton(params GUILayoutOption[] options) {
+            EditorGUI.BeginChangeCheck();
+            _loop = GUILayout.Toggle(_loop, "", "Button", options);
+            if (EditorGUI.EndChangeCheck()) {
+                Player.SetLoop(_loop);
+            }
+            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.RepeatIcon));
+        }
 
-                    EditorGUI.BeginChangeCheck();
-                    float newAudioSourceTime = EditorGUILayout.Slider(Player.Time, 0, Player.ClipLength);
-                    if (EditorGUI.EndChangeCheck()) {
-                        // AudioSource.timeにAudioSource.clip.lengthを設定すると再生位置エラーになる
-                        if (newAudioSourceTime < Player.ClipLength) {
-                            Player.Time = newAudioSourceTime;
-                        }
-                    }
+        public void DrawTimeSlider(params GUILayoutOption[] options) {
+            EditorGUI.BeginChangeCheck();
+            float clipLength = Player.Clip == null ? 0 : Player.Clip.length;
+            float newAudioSourceTime = EditorGUILayout.Slider(Player.Time, 0, clipLength, options);
+            if (EditorGUI.EndChangeCheck()) {
+                // AudioSource.timeにAudioSource.clip.lengthを設定すると再生位置エラーになる
+                if (newAudioSourceTime < clipLength) {
+                    Player.SetTime(newAudioSourceTime);
                 }
             }
         }

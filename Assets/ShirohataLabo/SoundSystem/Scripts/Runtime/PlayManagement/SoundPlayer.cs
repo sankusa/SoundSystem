@@ -6,17 +6,18 @@ using UnityEngine.Events;
 namespace SoundSystem {
     public partial class SoundPlayer {
         readonly AudioSource _audioSource;
-        public float ClipLength => _audioSource.clip != null ? _audioSource.clip.length : 0;
-        public int ClipSamples => _audioSource.clip != null ? _audioSource.clip.samples : 0;
+        public AudioClip Clip => _audioSource.clip;
         public bool IsUsing => _audioSource.clip != null;
         public bool IsPlaying => _audioSource.isPlaying;
         public bool IsStopped => _audioSource.isPlaying == false && IsPaused == false;
         bool _isPaused;
         public bool IsPaused => _isPaused;
-        public float Time {
-            get => _audioSource.time;
-            set => _audioSource.time = value;
+        public int TimeSamples {
+            get => _audioSource.timeSamples;
+            set => _audioSource.timeSamples = value;
         }
+        public float Time => _audioSource.clip == null ? 0 : (float)_audioSource.timeSamples / _audioSource.clip.frequency;
+        public bool Loop => _audioSource.loop;
 
         // ・AudioSource.isPlayingはポーズ時にfalseになってしまう
         // ・AudioSourceは再生位置が終端に達した場合、SoundPlayerが検知する前に自律的に状態をリセットしてしまう場合がある
@@ -120,6 +121,10 @@ namespace SoundSystem {
             return this;
         }
 
+        public void SetTime(float time) {
+            _audioSource.timeSamples = _audioSource.clip == null ? 0 : (int)(time * _audioSource.clip.frequency);
+        }
+
         public SoundPlayer Play() {
             if (_audioSource.clip == null) {
                 Debug.LogWarning($"{nameof(AudioClip)} is null");
@@ -130,8 +135,7 @@ namespace SoundSystem {
                 _fadeVolume.Value = 1;
             }
 
-            _audioSource.timeSamples = _audioUnit.FromSamples;
-
+            ClampTime();
             UpdateVolume();
             UpdateMute();
             UpdatePitch();
@@ -167,6 +171,7 @@ namespace SoundSystem {
             _fadeVolume.Clear();
             _onComplete = null;
             _isPlayStarted = false;
+            _isPaused = false;
             
             // Reset AudioSource
             _audioSource.Stop();
@@ -184,6 +189,7 @@ namespace SoundSystem {
                 RestartOrComplete();
                 return;
             }
+            if (_audioSource.isPlaying == false) return;
             _fadeVolume.Update(deltaTime);
             ClampTime();
             UpdateVolume();
