@@ -28,6 +28,13 @@ namespace SoundSystem {
                 } while (copy.NextVisible(false) && copy.depth == targetDepth);
             }
 
+            if (EditorApplication.isPlaying) {
+                Rect rect = new(position) {height = EditorGUIUtility.singleLineHeight};
+                if (GUI.Button(rect, "Invoke")) {
+                    (property.GetObject() as ISoundCommand).Execute();
+                }
+            }
+
             EditorGUI.indentLevel--;
         }
 
@@ -42,6 +49,10 @@ namespace SoundSystem {
                     float fieldHeight = EditorGUI.GetPropertyHeight(copy) + EditorGUIUtility.standardVerticalSpacing;
                     totalHeight += fieldHeight;
                 } while (copy.NextVisible(false) && copy.depth == targetDepth);
+            }
+
+            if (EditorApplication.isPlaying) {
+                totalHeight += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
             return totalHeight;
         }
