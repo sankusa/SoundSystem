@@ -73,9 +73,31 @@ namespace SoundSystem {
             }
 
             // 通常Update処理
-            AudioSource.timeSamples = Mathf.Clamp(AudioSource.timeSamples, _audioUnit.FromSamples, _audioUnit.ToSamples);
+            ClampTime();
+            UpdateVolume();
+            UpdatePitch();
+            CheckAndHandleEndOfAudio();
+        }
+        void ClampTime() {
+            if (AudioSource.timeSamples < _audioUnit.FromSamples) {
+                AudioSource.timeSamples = _audioUnit.FromSamples;
+            }
+        }
+        void UpdateVolume() {
             AudioSource.volume = _audioUnit.GetCurrentVolume(AudioSource.time);
+        }
+        void UpdatePitch() {
             AudioSource.pitch = _audioUnit.Pitch;
+        }
+        void CheckAndHandleEndOfAudio() {
+            if (AudioSource.timeSamples >= _audioUnit.ToSamples) {
+                if (AudioSource.loop) {
+                    AudioSource.timeSamples = _audioUnit.FromSamples;
+                }
+                else {
+                    AudioSource.Stop();
+                }
+            }
         }
 
         public void Bind(AudioUnit audioUnit) {
