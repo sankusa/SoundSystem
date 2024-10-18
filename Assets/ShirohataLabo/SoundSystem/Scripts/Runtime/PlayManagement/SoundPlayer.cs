@@ -6,7 +6,16 @@ using UnityEngine.Events;
 namespace SoundSystem {
     public partial class SoundPlayer {
         readonly AudioSource _audioSource;
-        
+        public float ClipLength => _audioSource.clip != null ? _audioSource.clip.length : 0;
+        public int ClipSamples => _audioSource.clip != null ? _audioSource.clip.samples : 0;
+        public bool IsUsing => _audioSource.clip != null;
+        public bool IsPlaying => _audioSource.isPlaying;
+        public bool IsPaused => _audioSource.isPlaying == false && _audioSource.timeSamples != 0 && _audioSource.timeSamples != ClipSamples;
+        public float Time {
+            get => _audioSource.time;
+            set => _audioSource.time = value;
+        }
+
         Sound _sound;
         public Sound Sound => _sound;
 
@@ -17,8 +26,6 @@ namespace SoundSystem {
         public IReadOnlyList<Volume> Volumes => _volumes;
 
         readonly Fader _fadeVolume = new();
-
-        public bool IsUsing => _audioSource.clip != null;
 
         SoundPlayerGroupSetting _groupSetting;
 
