@@ -42,5 +42,25 @@ namespace SoundSystem {
                 return _ngIcon;
             }
         }
+
+        static Texture2D _plusIcon;
+        public static Texture2D PlusIcon {
+            get {
+                if (_plusIcon == null) {
+                    _plusIcon = (Texture2D)EditorGUIUtility.Load("d_Toolbar Plus");
+                }
+                return _plusIcon;
+            }
+        }
+
+        static Texture2D _minusIcon;
+        public static Texture2D MinusIcon {
+            get {
+                if (_minusIcon == null) {
+                    _minusIcon = (Texture2D)EditorGUIUtility.Load("d_Toolbar Minus");
+                }
+                return _minusIcon;
+            }
+        }
     }
 }

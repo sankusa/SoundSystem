@@ -14,6 +14,18 @@ namespace SoundSystem {
             }
         }
 
+        static GUIStyle _invisibleButton;
+        public static GUIStyle InvisibleButton {
+            get {
+                if (_invisibleButton == null) {
+                    _invisibleButton = new GUIStyle("RL FooterButton");
+                    _invisibleButton.margin = new RectOffset();
+                    _invisibleButton.padding = new RectOffset();
+                }
+                return _invisibleButton;
+            }
+        }
+
         static GUIStyle _darkToolbar;
         public static GUIStyle DarkToolbar {
             get {

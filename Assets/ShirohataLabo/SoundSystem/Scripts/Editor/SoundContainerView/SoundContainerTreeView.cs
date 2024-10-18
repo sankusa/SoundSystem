@@ -34,21 +34,21 @@ namespace SoundSystem {
 
             if (_containers != null) {
                 foreach (SoundContainer container in _containers) {
-                    SerializedObject serializedObject = new(container);
-                    var item = new SoundContainerTreeViewItem_SoundContainer(container, serializedObject, container.GetInstanceID());
+                    var item = new SoundContainerTreeViewItem_SoundContainer(container);
                     root.AddChild(item);
                     rows.Add(item);
-                    SerializedProperty listProp = serializedObject.FindProperty("_soundDic._list");
-                    if (listProp.arraySize > 0) {
+
+                    SerializedProperty soundListProp = item.SoundListProp;
+                    if (soundListProp.arraySize > 0) {
                         if (IsExpanded(item.id)) {
-                            for (int i = 0; i < listProp.arraySize; i++) {
-                                var soundItem = new SoundContainerTreeViewItem_Sound(listProp.GetArrayElementAtIndex(i), ++id);
+                            for (int i = 0; i < soundListProp.arraySize; i++) {
+                                var soundItem = new SoundContainerTreeViewItem_Sound(soundListProp.GetArrayElementAtIndex(i), ++id);
                                 item.AddChild(soundItem);
                                 rows.Add(soundItem);
                             }
                         }
                         else {
-                            for (int i = 0; i < listProp.arraySize; i++) {
+                            for (int i = 0; i < soundListProp.arraySize; i++) {
                                 id++;
                             }
                             item.children = CreateChildListForCollapsedParent();
@@ -93,10 +93,17 @@ namespace SoundSystem {
                             Texture icon = AssetDatabase.GetCachedIcon(assetPath);
 
                             EditorGUI.LabelField(cellRect, new GUIContent(containerItem.Container.name, icon));
+
+                            Rect addButtonRect = new Rect(cellRect) {xMin = cellRect.xMax - 20, yMin = cellRect.yMin + 1};
+                            if (GUI.Button(addButtonRect, Icons.PlusIcon, GUIStyles.InvisibleButton)) {
+                                containerItem.AddElement();
+                                containerItem.SerializedObject.ApplyModifiedProperties();
+                                Reload();
+                            }
                             break;
                         case 1:
                             bool preload = SoundContainerPreloader.InstanceForEditor.ContainsForEditor(containerItem.Container);
-                            bool newPreload = EditorGUI.ToggleLeft(cellRect, GUIContent.none, preload);
+                            bool newPreload = EditorGUI.Toggle(cellRect, GUIContent.none, preload);
                             if (newPreload != preload) {
                                 SoundContainerPreloader.InstanceForEditor.UpdatePreloadStateForEditor(containerItem.Container, newPreload);
                             }
@@ -105,8 +112,16 @@ namespace SoundSystem {
                 }
             }
             else if (args.item is SoundContainerTreeViewItem_Sound soundItem) {
+                Rect fieldRect = new Rect(rowRect) {xMax = rowRect.xMax - 20};
                 GUI.Box(backgroundRect, "", GUIStyles.SoundRowBackground);
-                soundItem.RowGUI(rowRect);
+                soundItem.RowGUI(fieldRect);
+
+                Rect removeButtonRect = new Rect(rowRect) {xMin = rowRect.xMax - 20, yMin = rowRect.yMin + 5};
+                if (GUI.Button(removeButtonRect, Icons.MinusIcon, GUIStyles.InvisibleButton)) {
+                    soundItem.SoundWithKeyProperty.DeleteCommand();
+                    soundItem.SoundWithKeyProperty.serializedObject.ApplyModifiedProperties();
+                    Reload();
+                }
             }
         }
 
