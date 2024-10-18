@@ -42,13 +42,17 @@ namespace SoundSystem {
                 }
                 if(_fadeTimer >= _fadeDuration) {
                     _onComplete.Invoke();
-                    Clear();
+                    ClearWithoutValue();
                 }
             }
         }
 
         public void Clear() {
+            ClearWithoutValue();
             Value = 0;
+        }
+
+        void ClearWithoutValue() {
             IsFading = false;
             _fadeFrom = 0;
             _fadeTo = 0;
