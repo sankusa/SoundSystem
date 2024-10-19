@@ -13,6 +13,7 @@ namespace SoundSystem {
             // showBorder = true;
             // enableItemHovering = true;
             // depthIndentWidth = 18;
+            useScrollView = false;
         }
 
         protected override TreeViewItem BuildRoot() {

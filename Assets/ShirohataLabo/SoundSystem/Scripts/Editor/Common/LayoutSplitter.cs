@@ -80,7 +80,6 @@ namespace SoundSystem {
             else {
                 _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.ExpandHeight(true));
             }
-            
         }
 
         public void End() {

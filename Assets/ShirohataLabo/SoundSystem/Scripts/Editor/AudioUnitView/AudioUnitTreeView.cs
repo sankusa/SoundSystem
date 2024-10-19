@@ -7,12 +7,15 @@ using UnityEngine;
 namespace SoundSystem {
     [System.Serializable]
     public class AudioUnitTreeView : TreeView {
+        public bool ShowingHorizontalScrollBar => showingHorizontalScrollBar;
+
         public AudioUnitTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
             rowHeight = 16;
             // showAlternatingRowBackgrounds = true;
             // showBorder = true;
             // enableItemHovering = true;
             // depthIndentWidth = 18;
+            useScrollView = false;
         }
 
         protected override TreeViewItem BuildRoot() {
