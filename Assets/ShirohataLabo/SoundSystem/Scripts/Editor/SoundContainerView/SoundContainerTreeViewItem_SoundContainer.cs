@@ -19,10 +19,11 @@ namespace SoundSystem {
         }
 
         public void OnSingleClick() {
-            AssetDatabase.OpenAsset(Container);
+            
         }
 
         public void OnDoubleClick() {
+            AssetDatabase.OpenAsset(Container);
             EditorGUIUtility.PingObject(Container);
         }
     }

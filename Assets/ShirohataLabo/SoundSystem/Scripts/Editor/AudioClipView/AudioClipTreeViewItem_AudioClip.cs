@@ -19,10 +19,11 @@ namespace SoundSystem {
         }
 
         public void OnSingleClick() {
-            Selection.activeObject = Clip;
+            
         }
 
         public void OnDoubleClick() {
+            Selection.activeObject = Clip;
             EditorGUIUtility.PingObject(Clip);
         }
 

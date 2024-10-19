@@ -14,10 +14,11 @@ namespace SoundSystem {
         }
 
         public void OnSingleClick() {
-            AssetDatabase.OpenAsset(AudioUnit);
+            
         }
 
         public void OnDoubleClick() {
+            AssetDatabase.OpenAsset(AudioUnit);
             EditorGUIUtility.PingObject(AudioUnit);
         }
     }
