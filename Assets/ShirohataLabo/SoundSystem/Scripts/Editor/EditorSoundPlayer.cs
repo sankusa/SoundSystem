@@ -65,7 +65,9 @@ namespace SoundSystem {
         public void BindAudioUnit(AudioUnit audioUnit) {
             _audioUnit = audioUnit;
             Player.Reset();
-            Player.SetAudioUnit(_audioUnit);
+            if (audioUnit != null) {
+                Player.SetAudioUnit(_audioUnit);
+            }
         }
 
         public void SwitchPlayerIndex(int index) {
