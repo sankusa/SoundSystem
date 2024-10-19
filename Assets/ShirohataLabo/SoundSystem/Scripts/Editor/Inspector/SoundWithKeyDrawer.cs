@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKey))]
     public class SoundWithKeyDrawer : PropertyDrawer {
-        static readonly RectUtil.LayoutLength[] _columnWidths = new RectUtil.LayoutLength[] {new(1), new(2)};
+        static readonly RectUtil.LayoutLength[] _columnWidths = new RectUtil.LayoutLength[] {new(1), new(1)};
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             SerializedProperty labelProp = property.FindPropertyRelative("_key");

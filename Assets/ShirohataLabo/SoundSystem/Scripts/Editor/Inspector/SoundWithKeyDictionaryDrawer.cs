@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKeyDictionary))]
     public class SoundWithKeyDictionaryDrawer : PropertyDrawer {
-        static readonly RectUtil.LayoutLength[] _columnWidths = new RectUtil.LayoutLength[] {new(1), new(2)};
+        static readonly RectUtil.LayoutLength[] _columnWidths = new RectUtil.LayoutLength[] {new(1), new(1)};
 
         ReorderableList _soundList;
 
