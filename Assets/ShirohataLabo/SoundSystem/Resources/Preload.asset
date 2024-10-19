@@ -13,10 +13,4 @@ MonoBehaviour:
   m_Name: Preload
   m_EditorClassIdentifier: 
   _soundDic:
-    _list:
-    - _key: BGM12
-      _sound:
-        _audioUnit: {fileID: 11400000, guid: bfaea733ede798a47aaeb19dfa470770, type: 2}
-    - _key: BGM2
-      _sound:
-        _audioUnit: {fileID: 11400000, guid: a674b8ee1f6178141873ce27c2c81193, type: 2}
+    _list: []

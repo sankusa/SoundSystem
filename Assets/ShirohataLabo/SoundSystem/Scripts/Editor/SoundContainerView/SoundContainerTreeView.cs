@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine;
 namespace SoundSystem {
     public class SoundContainerTreeView : TreeView {
         List<SoundContainer> _containers;
+
+        const string DragAndDropKey = nameof(SoundContainerTreeView) + "_DragAndDrop";
 
         public SoundContainerTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
             rowHeight = 16;
@@ -42,7 +45,8 @@ namespace SoundSystem {
                     if (soundListProp.arraySize > 0) {
                         if (IsExpanded(item.id)) {
                             for (int i = 0; i < soundListProp.arraySize; i++) {
-                                var soundItem = new SoundContainerTreeViewItem_Sound(soundListProp.GetArrayElementAtIndex(i), ++id);
+                                SerializedProperty soundWithKeyProp = soundListProp.GetArrayElementAtIndex(i);
+                                var soundItem = new SoundContainerTreeViewItem_Sound(soundWithKeyProp, ++id);
                                 item.AddChild(soundItem);
                                 rows.Add(soundItem);
                             }
@@ -70,12 +74,10 @@ namespace SoundSystem {
         }
 
         protected override void AfterRowsGUI() {
-            foreach (TreeViewItem item in GetRows()) {
-                if (item is SoundContainerTreeViewItem_SoundContainer containerItem) {
-                    containerItem.SerializedObject.ApplyModifiedProperties();
-                }
-            }
+            ApplyModifiedPropertiesToAllContainer();
         }
+
+
 
         protected override void RowGUI(RowGUIArgs args) {
             Rect rowRect = new Rect(args.rowRect) {xMin = args.rowRect.xMin + GetContentIndent(args.item)};
@@ -143,6 +145,83 @@ namespace SoundSystem {
             var item = FindItem(id, rootItem);
             if (item is SoundContainerTreeViewItem_SoundContainer containerItem) {
                 containerItem.OnDoubleClick();
+            }
+        }
+
+        protected override bool CanBeParent(TreeViewItem item) {
+            return true;
+        }
+
+        protected override bool CanStartDrag(CanStartDragArgs args) {
+            return args.draggedItem is SoundContainerTreeViewItem_Sound;
+        }
+
+        protected override void SetupDragAndDrop(SetupDragAndDropArgs args) {
+            SoundContainerTreeViewItem_Sound[] draggedSoundItem = GetRows()
+                .Where(item => args.draggedItemIDs.Contains(item.id))
+                .OfType<SoundContainerTreeViewItem_Sound>()
+                .ToArray();
+            DragAndDropUtil.SendGenericObject(DragAndDropKey, draggedSoundItem);
+        }
+
+        protected override DragAndDropVisualMode HandleDragAndDrop(DragAndDropArgs args) {
+            if (args.performDrop) {
+                SoundContainerTreeViewItem_Sound[] draggedSoundItems = DragAndDrop.GetGenericData(DragAndDropKey) as SoundContainerTreeViewItem_Sound[];
+                if (draggedSoundItems == null || draggedSoundItems.Length == 0) {
+                    return DragAndDropVisualMode.None;
+                }
+
+                switch (args.dragAndDropPosition) {
+                    case DragAndDropPosition.UponItem:
+                    case DragAndDropPosition.BetweenItems:
+                        if (args.parentItem is SoundContainerTreeViewItem_SoundContainer containerItem) {
+                            int insertIndex = args.insertAtIndex;
+                            if (insertIndex == -1) insertIndex = containerItem.SoundListProp.arraySize; // UponItemの場合
+                            foreach (SoundContainerTreeViewItem_Sound draggedSoundItem in draggedSoundItems) {
+                                // 挿入前のインデックスを保存
+                                int sourceIndex = draggedSoundItem.SoundWithKeyProperty.GetArrayElementIndex();
+                                var parentContainerItem = draggedSoundItem.parent as SoundContainerTreeViewItem_SoundContainer;
+
+                                // 挿入→削除の順番のため、同じコンテナ内で元より小さいインデックスに挿入する場合、削除するインデックスがずれる
+                                if (containerItem.Container == parentContainerItem.Container && sourceIndex > insertIndex) sourceIndex++;
+
+                                containerItem.SoundListProp.InsertArrayElementAtIndex(insertIndex);
+
+                                // 最新のインデックスで再取得
+                                // (TreeViewItemが持つSerializedPropertyをそのまま使うとCopyFrom内で元のインデックスを参照して処理が行われてしまう)
+                                SerializedProperty draggedDoundProp = parentContainerItem.SoundListProp.GetArrayElementAtIndex(sourceIndex);
+                                containerItem.SoundListProp.GetArrayElementAtIndex(insertIndex).CopyFrom(draggedDoundProp);
+                                insertIndex++;
+                                parentContainerItem.SoundListProp.DeleteArrayElementAtIndex(sourceIndex);
+                            }
+                            ApplyModifiedPropertiesToAllContainer();
+                        }
+                        Reload();
+                        break;
+                    default:
+                        return DragAndDropVisualMode.None;
+                }
+            }
+
+            if (DragAndDrop.GetGenericData(DragAndDropKey) == null) {
+                return DragAndDropVisualMode.None;
+            }
+
+            if (args.parentItem is SoundContainerTreeViewItem_SoundContainer &&
+                (args.dragAndDropPosition == DragAndDropPosition.UponItem ||
+                 args.dragAndDropPosition == DragAndDropPosition.BetweenItems)
+            ) {
+                return DragAndDropVisualMode.Move;
+            }
+
+            return DragAndDropVisualMode.None;
+        }
+
+        void ApplyModifiedPropertiesToAllContainer() {
+            foreach (TreeViewItem item in GetRows()) {
+                if (item is SoundContainerTreeViewItem_SoundContainer containerItem) {
+                    containerItem.SerializedObject.ApplyModifiedProperties();
+                }
             }
         }
     }
