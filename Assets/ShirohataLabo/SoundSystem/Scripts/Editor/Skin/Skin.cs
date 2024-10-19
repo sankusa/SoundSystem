@@ -16,14 +16,5 @@ namespace SoundSystem {
 
         [SerializeField] Texture2D _mainIcon;
         public Texture2D MainIcon => _mainIcon;
-
-        [SerializeField] Texture2D _playIcon;
-        public Texture2D PlayIcon => _playIcon;
-
-        [SerializeField] Texture2D _pauseIcon;
-        public Texture2D PauseIcon => _pauseIcon;
-
-        [SerializeField] Texture2D _repeatIcon;
-        public Texture2D RepeatIcon => _repeatIcon;
     }
 }

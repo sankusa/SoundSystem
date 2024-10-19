@@ -62,5 +62,35 @@ namespace SoundSystem {
                 return _minusIcon;
             }
         }
+        
+        static Texture2D _playIcon;
+        public static Texture2D PlayIcon {
+            get {
+                if (_playIcon == null) {
+                    _playIcon = (Texture2D)EditorGUIUtility.Load("d_PlayButton");
+                }
+                return _playIcon;
+            }
+        }
+
+        static Texture2D _pauseIcon;
+        public static Texture2D PauseIcon {
+            get {
+                if (_pauseIcon == null) {
+                    _pauseIcon = (Texture2D)EditorGUIUtility.Load("d_PauseButton");
+                }
+                return _pauseIcon;
+            }
+        }
+
+        static Texture2D _repeatIcon;
+        public static Texture2D RepeatIcon {
+            get {
+                if (_repeatIcon == null) {
+                    _repeatIcon = (Texture2D)EditorGUIUtility.Load("d_RotateTool");
+                }
+                return _repeatIcon;
+            }
+        }
     }
 }

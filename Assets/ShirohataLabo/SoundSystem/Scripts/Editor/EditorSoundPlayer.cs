@@ -81,7 +81,7 @@ namespace SoundSystem {
 
         public void DrawPlayButton(params GUILayoutOption[] options) {
             bool playToggleRet = GUILayout.Toggle(Player.IsPlayStarted, "", "Button", options);
-            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PlayIcon));
+            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Icons.PlayIcon));
             if (Player.IsPlayStarted == false && playToggleRet) {
                 Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
             }
@@ -92,7 +92,7 @@ namespace SoundSystem {
 
         public void DrawPauseButton(params GUILayoutOption[] options) {
             bool pauseToggleRet = GUILayout.Toggle(Player.IsPaused, "", "Button", options);
-            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.PauseIcon));
+            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Icons.PauseIcon));
             if (Player.IsPaused == false && pauseToggleRet) {
                 Player.Pause();
             }
@@ -107,7 +107,7 @@ namespace SoundSystem {
             if (EditorGUI.EndChangeCheck()) {
                 Player.SetLoop(_loop);
             }
-            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Skin.Instance.RepeatIcon));
+            EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Icons.RepeatIcon));
         }
 
         public void DrawTimeSlider(params GUILayoutOption[] options) {
