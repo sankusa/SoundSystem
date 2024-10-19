@@ -14,6 +14,18 @@ namespace SoundSystem {
             }
         }
 
+        static GUIStyle _simpleBox;
+        public static GUIStyle SimpleBox {
+            get {
+                if (_simpleBox == null) {
+                    _simpleBox = new GUIStyle("GroupBox");
+                    _simpleBox.margin = new RectOffset();
+                    _simpleBox.padding = new RectOffset(6, 6, 6, 6);
+                }
+                return _simpleBox;
+            }
+        }
+
         static GUIStyle _invisibleButton;
         public static GUIStyle InvisibleButton {
             get {

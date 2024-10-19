@@ -20,7 +20,7 @@ namespace SoundSystem {
         public void DrawGUILayout() {
             _editorPlayer.Update();
 
-            using (new EditorGUILayout.VerticalScope(new GUIStyle("GroupBox"))) {
+            using (new EditorGUILayout.VerticalScope(GUIStyles.SimpleBox)) {
                 using (new EditorGUILayout.HorizontalScope()) {
                     _editorPlayer.DrawPlayerGroupSelectPopup(GUILayout.Width(80));
                     _editorPlayer.DrawPlayButton(GUILayout.Width(19), GUILayout.Height(19));

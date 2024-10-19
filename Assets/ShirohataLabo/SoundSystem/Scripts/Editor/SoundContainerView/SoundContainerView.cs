@@ -38,16 +38,13 @@ namespace SoundSystem {
                 using (new EditorGUILayout.HorizontalScope(GUIStyles.DarkToolbar)) {
                     EditorGUILayout.LabelField($"{nameof(SoundContainer)}", GUIStyles.CaptionLabel, GUILayout.Width(120));
                     GUILayout.FlexibleSpace();
-                    // if (GUILayout.Button("+", EditorStyles.toolbarButton)) {
-                    //     ScriptGenerator.GenerateSoundKeyScript();
-                    // }
                     if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
                         _soundContainerTreeView.Reload();
                     }
                 }
 
                 _soundContainerTreeView.OnGUI(
-                    GUILayoutUtility.GetRect(0, _soundContainerTreeView.totalHeight, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
+                    GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
                 );
             }
         }

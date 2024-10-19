@@ -11,6 +11,11 @@ namespace SoundSystem {
 
         Rect _availableArea;
 
+        RectOffset _resizeHandleMouseAcceptRectOffset = new RectOffset(1, 1, 1, 1);
+        public RectOffset ResizeHandleMouseAcceptRectOffset {
+            set => _resizeHandleMouseAcceptRectOffset = value;
+        }
+
         public float Length {
             get {
                 if (_horizontalSplit) {
@@ -22,25 +27,28 @@ namespace SoundSystem {
             }
         }
 
-        readonly float _minSize1;
-        readonly float _minSize2;
+        float _minSize1 = 100;
+        public float MinSize1 {
+            set => _minSize1 = value;
+        }
+        float _minSize2 = 100;
+        public float MinSize2 {
+            set => _minSize2 = value;
+        }
+
         readonly string _sessionStateKey;
         Color _handleColor = Color.white;
+        public Color HandleColor {
+            set => _handleColor = value;
+        }
 
         const float _handleWidth = 2;
 
-        public LayoutSplitter(bool horizontalSplit = false, float defaultSplitRate = 0.5f, float minSize1 = 100, float minSize2 = 100, string sessionStateKey = "", Color handleColor = default) {
+        public LayoutSplitter(bool horizontalSplit = false, float defaultSplitRate = 0.5f, string sessionStateKey = "") {
             _horizontalSplit = horizontalSplit;
             _splitRate = defaultSplitRate;
-            _minSize1 = minSize1;
-            _minSize2 = minSize2;
             _sessionStateKey = sessionStateKey;
-            if (handleColor == default) {
-                _handleColor = Color.white;
-            }
-            else {
-                _handleColor = handleColor;
-            }
+
             // 比率を復元
             if (!string.IsNullOrEmpty(_sessionStateKey)) {
                 _splitRate = SessionState.GetFloat(_sessionStateKey, _splitRate);
@@ -105,7 +113,7 @@ namespace SoundSystem {
                 resizeHandleRect = new Rect(_availableArea.x, _availableArea.y + _availableArea.height * _splitRate, _availableArea.width, _handleWidth);
             }
 
-            Rect mouseAcceptRect = new Rect(resizeHandleRect.x - 1, resizeHandleRect.y - 1, resizeHandleRect.width + 2, resizeHandleRect.height + 2);
+            Rect mouseAcceptRect = _resizeHandleMouseAcceptRectOffset.Add(resizeHandleRect);
 
             // カーソル変更
             if (_horizontalSplit) {

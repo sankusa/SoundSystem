@@ -27,8 +27,14 @@ namespace SoundSystem {
             _audioUnitView.OnEnable();
             _soundContainerView.OnEnable();
 
-            _splitter1 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter1", handleColor: Color.gray);
-            _splitter2 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter2", handleColor: Color.gray);
+            _splitter1 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter1") {
+                ResizeHandleMouseAcceptRectOffset = new RectOffset(),
+                HandleColor = Color.gray,
+            };
+            _splitter2 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter2") {
+                ResizeHandleMouseAcceptRectOffset = new RectOffset(),
+                HandleColor = Color.gray,
+            };
 
             OnProjectChanged();
 
@@ -36,6 +42,8 @@ namespace SoundSystem {
         }
 
         void OnDisable() {
+            _audioUnitView.OnDisable();
+
             EditorApplication.projectChanged -= OnProjectChanged;
         }
 

@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SoundSystem {
-    [System.Serializable]
+    [Serializable]
     public class AudioUnitTreeView : TreeView {
-        public bool ShowingHorizontalScrollBar => showingHorizontalScrollBar;
+        public Action<IEnumerable<AudioUnit>> onSelectedAudioUnitChanged;
 
         public AudioUnitTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
             rowHeight = 16;
@@ -15,7 +17,6 @@ namespace SoundSystem {
             // showBorder = true;
             // enableItemHovering = true;
             // depthIndentWidth = 18;
-            useScrollView = false;
         }
 
         protected override TreeViewItem BuildRoot() {
@@ -183,6 +184,16 @@ namespace SoundSystem {
 
             IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
             AudioUnitUtil.CreateAudioUnits(clips, folderPath);
+        }
+
+        protected override void SelectionChanged(IList<int> selectedIds) {
+            base.SelectionChanged(selectedIds);
+            onSelectedAudioUnitChanged?.Invoke(
+                selectedIds
+                    .Select(id => FindItem(id, rootItem))
+                    .OfType<AudioUnitTreeViewItem_AudioUnit>()
+                    .Select(x => x.AudioUnit)
+            );
         }
     }
 }

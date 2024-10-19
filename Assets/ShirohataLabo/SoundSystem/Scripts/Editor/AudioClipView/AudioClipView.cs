@@ -59,7 +59,7 @@ namespace SoundSystem {
                 }
 
                 _audioClipTreeView.OnGUI(
-                    GUILayoutUtility.GetRect(0, _audioClipTreeView.totalHeight, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
+                    GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
                 );
             }
         }

@@ -11,13 +11,15 @@ namespace SoundSystem {
         List<SoundPlayer> _players;
         int _currentPlayerIndex;
         public int CurrentPlayerIndex => _currentPlayerIndex;
-        SoundPlayer Player => _players[_currentPlayerIndex];
+        public SoundPlayer Player => _players[_currentPlayerIndex];
         SoundManagerConfig _soundManagerConfig;
         public SoundManagerConfig SoundManagerConfig => _soundManagerConfig;
 
         double _oldTime;
 
         AudioUnit _audioUnit;
+        public AudioUnit AudioUnit => _audioUnit;
+
         bool _loop;
 
         public EditorSoundPlayer() {
@@ -45,7 +47,7 @@ namespace SoundSystem {
 
         void CreateAudioSourceObject() {
             _soundManagerConfig = EditorUtil.LoadAllAsset<SoundManagerConfig>().First();
-            _playerRoot = new(nameof(EditorSoundPlayerGUI)) {
+            _playerRoot = new(nameof(EditorSoundPlayer)) {
                 hideFlags = HideFlags.HideAndDontSave
             };
             _players = new();
@@ -71,6 +73,11 @@ namespace SoundSystem {
             Player.Stop();
         }
 
+        public void Play() {
+            if (_audioUnit == null) return;
+            Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
+        }
+
         public void DrawPlayerGroupSelectPopup(params GUILayoutOption[] options) {
             EditorGUI.BeginChangeCheck();
             int currentPlayerIndex = EditorGUILayout.Popup(CurrentPlayerIndex, _soundManagerConfig.PlayerGroupSettings.Select(x => new GUIContent(x.Key, "SoundPlayerGroup")).ToArray(), options);
@@ -83,7 +90,7 @@ namespace SoundSystem {
             bool playToggleRet = GUILayout.Toggle(Player.IsPlayStarted, "", "Button", options);
             EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Icons.PlayIcon));
             if (Player.IsPlayStarted == false && playToggleRet) {
-                Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
+                Play();
             }
             else if (Player.IsPlayStarted && playToggleRet == false) {
                 Player.Stop();

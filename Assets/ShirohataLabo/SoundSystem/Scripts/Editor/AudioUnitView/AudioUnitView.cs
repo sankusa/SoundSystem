@@ -12,6 +12,8 @@ namespace SoundSystem {
 
         SearchField _searchField;
 
+        EditorSoundPlayerGUIForAudioUnitView _editorSoundPlayerGUI = new();
+
         public void OnEnable() {
             _searchField = new();
 
@@ -30,6 +32,13 @@ namespace SoundSystem {
             multiColumnHeader.ResizeToFit();
 
             _audioUnitTreeView = new AudioUnitTreeView(_audioUnitTreeViewState, multiColumnHeader);
+            _audioUnitTreeView.onSelectedAudioUnitChanged = audioUnits => {_editorSoundPlayerGUI.Bind(audioUnits.FirstOrDefault());};
+
+            _editorSoundPlayerGUI.OnEnable();
+        }
+
+        public void OnDisable() {
+            _editorSoundPlayerGUI.OnDisable();
         }
 
         public void OnGUI() {
@@ -47,8 +56,10 @@ namespace SoundSystem {
                 }
 
                 _audioUnitTreeView.OnGUI(
-                    GUILayoutUtility.GetRect(0, _audioUnitTreeView.totalHeight, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
+                    GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
                 );
+
+                _editorSoundPlayerGUI.DrawGUILayout();
             }
         }
 

@@ -14,7 +14,6 @@ namespace SoundSystem {
             rowHeight = 16;
             // enableItemHovering = true;
             // showAlternatingRowBackgrounds = true;
-            useScrollView = false;
         }
 
         public void Reload(List<SoundContainer> containers) {
