@@ -199,15 +199,18 @@ namespace SoundSystem {
         }
 
         void ClampTime() {
-            if (_audioSource.timeSamples < _audioUnit.FromSamples) {
-                _audioSource.timeSamples = _audioUnit.FromSamples;
+            PlayRange playRange = _audioUnit.PlayRange;
+            if (playRange.Enable) {
+                if (_audioSource.timeSamples < playRange.FromSamples) {
+                    _audioSource.timeSamples = playRange.FromSamples;
+                }
             }
         }
 
         void UpdateVolume() {
             float volume = 1f;
             if (_audioUnit != null) {
-                volume *= _audioUnit.GetCurrentVolume(_audioSource.time);
+                volume *= _audioUnit.GetVolumeMultiplier(_audioSource.time);
             }
             volume *= Volume.MultiplyVolume(_volumes);
             volume *= _fadeVolume.Value;
@@ -220,18 +223,30 @@ namespace SoundSystem {
         }
 
         void UpdatePitch() {
-            _audioSource.pitch = _audioUnit.Pitch;
+            _audioSource.pitch = _audioUnit.GetPitchMultiplier();
         }
 
         void CheckAndHandleEndOfAudio() {
-            if (_audioSource.timeSamples >= _audioUnit.ToSamples) {
-                RestartOrComplete();
+            if (_audioUnit.PlayRange.Enable) {
+                if (_audioSource.timeSamples >= _audioUnit.PlayRange.ToSamples) {
+                    RestartOrComplete();
+                }
+            }
+            else {
+                if (_audioSource.timeSamples >= _audioSource.clip.samples) {
+                    RestartOrComplete();
+                }
             }
         }
 
         void RestartOrComplete() {
-            if (_audioSource.loop) {
-                _audioSource.timeSamples = _audioUnit.FromSamples;
+            if (Loop) {
+                if (_audioUnit.PlayRange.Enable) {
+                    _audioSource.timeSamples = _audioUnit.PlayRange.FromSamples;
+                }
+                else {
+                    _audioSource.timeSamples = 0;
+                }
             }
             else {
                 Complete();

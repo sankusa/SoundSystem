@@ -1,3 +1,5 @@
+using System;
+using SoundSystem.AudioUnitEffects;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,32 +20,24 @@ namespace SoundSystem {
             set => _clip = value;
         }
 
-        [SerializeField] VolumeType _volumeOption = VolumeType.Constant;
-        public VolumeType VolumeOption => _volumeOption;
+        [SerializeField] VolumeMultiplier _volumeMultiplier;
 
-        [SerializeField, Range(0, 1)] float _constantVolume = 1f;
-        public float ConstantVolume => _constantVolume;
+        [SerializeField] VolumeMultiplierCurve _volumeMultiplierCurve;
 
-        [SerializeField] AnimationCurve _volumeCurve = new();
-        public AnimationCurve VolumeCurve => _volumeCurve;
+        [SerializeField] PitchMultiplier _pitchMultiplier;
 
-        [SerializeField] float _pitch = 1f;
-        public float Pitch => _pitch;
+        [SerializeField] PlayRange _playRange;
+        public PlayRange PlayRange => _playRange;
 
-        [SerializeField] int _fromSamples = 0;
-        public int FromSamples => _fromSamples;
+        public float GetVolumeMultiplier(float time) {
+            float volume = 1;
+            if (_volumeMultiplier.Enable) volume *= _volumeMultiplier.Value;
+            if (_volumeMultiplierCurve.Enable) volume *= _volumeMultiplierCurve.Curve.Evaluate(time);
+            return Mathf.Clamp01(volume);
+        }
 
-        [SerializeField] int _toSamples = int.MaxValue;
-        public int ToSamples => _toSamples;
-
-        public float GetCurrentVolume(float time) {
-            if (VolumeOption == VolumeType.Constant) {
-                return _constantVolume;
-            }
-            else if (VolumeOption == VolumeType.Curve) {
-                return _volumeCurve.Evaluate(time);
-            }
-            return 1;
+        public float GetPitchMultiplier() {
+            return _pitchMultiplier.Enable ? _pitchMultiplier.Value : 1;
         }
 
 #if UNITY_EDITOR
