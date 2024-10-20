@@ -18,7 +18,7 @@ namespace SoundSystem {
                 return _sound;
             }
             else if (_selectType == SelectType.SoundKey) {
-                return SoundCache.Instance.FindSoundByKey(_soundKey);
+                return SoundCache.Instance.FindSound(_soundKey);
             }
             throw new InvalidOperationException("Invalid SelectType");
         }

@@ -17,6 +17,30 @@ namespace SoundSystem {
             return BgmGroup.Play(soundKey, onComplete);
         }
 
+        public SoundPlayer PlayBgmIfNotPlaying(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return BgmGroup.PlayIfNotPlaying(audioUnit, onComplete);
+        }
+
+        public SoundPlayer PlayBgmIfNotPlaying(Sound sound, UnityAction onComplete = null) {
+            return BgmGroup.PlayIfNotPlaying(sound, onComplete);
+        }
+
+        public SoundPlayer PlayBgmIfNotPlaying(string soundKey, UnityAction onComplete = null) {
+            return BgmGroup.PlayIfNotPlaying(soundKey, onComplete);
+        }
+
+        public SoundPlayer PlayBgmAsRestart(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return BgmGroup.PlayAsRestart(audioUnit, onComplete);
+        }
+
+        public SoundPlayer PlayBgmAsRestart(Sound sound, UnityAction onComplete = null) {
+            return BgmGroup.PlayAsRestart(sound, onComplete);
+        }
+
+        public SoundPlayer PlayBgmAsRestart(string soundKey, UnityAction onComplete = null) {
+            return BgmGroup.PlayAsRestart(soundKey, onComplete);
+        }
+
         public SoundPlayer PlayBgmWithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
             return BgmGroup.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
         }
@@ -31,6 +55,18 @@ namespace SoundSystem {
 
         public void StopBgm() {
             BgmGroup.Stop();
+        }
+
+        public void StopBgm(AudioUnit audioUnit) {
+            BgmGroup.Stop(audioUnit);
+        }
+
+        public void StopBgm(Sound sound) {
+            BgmGroup.Stop(sound);
+        }
+
+        public void StopBgm(string soundKey) {
+            BgmGroup.Stop(soundKey);
         }
 
         public void StopBgmWithFadeOut(float? fadeDuration = null, UnityAction onComplete = null) {
@@ -61,6 +97,18 @@ namespace SoundSystem {
             return BgmGroup.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
         }
 
+        public SoundPlayer FindPlayingBgmPlayer(AudioUnit audioUnit) {
+            return BgmGroup.FindPlayingPlayer(audioUnit);
+        }
+
+        public SoundPlayer FindPlayingBgmPlayer(Sound sound) {
+            return BgmGroup.FindPlayingPlayer(sound);
+        }
+
+        public SoundPlayer FindPlayingBgmPlayer(string soundKey) {
+            return BgmGroup.FindPlayingPlayer(soundKey);
+        }
+
         public SoundPlayerGroup SeGroup => FindPlayerGroup("Se");
         public SoundPlayer GetUnusedSePlayer() => SeGroup.GetUnusedPlayer();
 
@@ -74,6 +122,30 @@ namespace SoundSystem {
 
         public SoundPlayer PlaySe(string soundKey, UnityAction onComplete = null) {
             return SeGroup.Play(soundKey, onComplete);
+        }
+
+        public SoundPlayer PlaySeIfNotPlaying(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return SeGroup.PlayIfNotPlaying(audioUnit, onComplete);
+        }
+
+        public SoundPlayer PlaySeIfNotPlaying(Sound sound, UnityAction onComplete = null) {
+            return SeGroup.PlayIfNotPlaying(sound, onComplete);
+        }
+
+        public SoundPlayer PlaySeIfNotPlaying(string soundKey, UnityAction onComplete = null) {
+            return SeGroup.PlayIfNotPlaying(soundKey, onComplete);
+        }
+
+        public SoundPlayer PlaySeAsRestart(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return SeGroup.PlayAsRestart(audioUnit, onComplete);
+        }
+
+        public SoundPlayer PlaySeAsRestart(Sound sound, UnityAction onComplete = null) {
+            return SeGroup.PlayAsRestart(sound, onComplete);
+        }
+
+        public SoundPlayer PlaySeAsRestart(string soundKey, UnityAction onComplete = null) {
+            return SeGroup.PlayAsRestart(soundKey, onComplete);
         }
 
         public SoundPlayer PlaySeWithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
@@ -90,6 +162,18 @@ namespace SoundSystem {
 
         public void StopSe() {
             SeGroup.Stop();
+        }
+
+        public void StopSe(AudioUnit audioUnit) {
+            SeGroup.Stop(audioUnit);
+        }
+
+        public void StopSe(Sound sound) {
+            SeGroup.Stop(sound);
+        }
+
+        public void StopSe(string soundKey) {
+            SeGroup.Stop(soundKey);
         }
 
         public void StopSeWithFadeOut(float? fadeDuration = null, UnityAction onComplete = null) {
@@ -118,6 +202,18 @@ namespace SoundSystem {
 
         public SoundPlayer CrossFadeSe(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
             return SeGroup.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer FindPlayingSePlayer(AudioUnit audioUnit) {
+            return SeGroup.FindPlayingPlayer(audioUnit);
+        }
+
+        public SoundPlayer FindPlayingSePlayer(Sound sound) {
+            return SeGroup.FindPlayingPlayer(sound);
+        }
+
+        public SoundPlayer FindPlayingSePlayer(string soundKey) {
+            return SeGroup.FindPlayingPlayer(soundKey);
         }
 
         public Volume MasterVolume => FindVolume("Master");

@@ -13,6 +13,30 @@
             return #GROUPKEY#Group.Play(soundKey, onComplete);
         }
 
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.PlayIfNotPlaying(audioUnit, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(Sound sound, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.PlayIfNotPlaying(sound, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(string soundKey, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.PlayIfNotPlaying(soundKey, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#AsRestart(AudioUnit audioUnit, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.PlayAsRestart(audioUnit, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#AsRestart(Sound sound, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.PlayAsRestart(sound, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#AsRestart(string soundKey, UnityAction onComplete = null) {
+            return #GROUPKEY#Group.PlayAsRestart(soundKey, onComplete);
+        }
+
         public SoundPlayer Play#GROUPKEY#WithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
             return #GROUPKEY#Group.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
         }
@@ -27,6 +51,18 @@
 
         public void Stop#GROUPKEY#() {
             #GROUPKEY#Group.Stop();
+        }
+
+        public void Stop#GROUPKEY#(AudioUnit audioUnit) {
+            #GROUPKEY#Group.Stop(audioUnit);
+        }
+
+        public void Stop#GROUPKEY#(Sound sound) {
+            #GROUPKEY#Group.Stop(sound);
+        }
+
+        public void Stop#GROUPKEY#(string soundKey) {
+            #GROUPKEY#Group.Stop(soundKey);
         }
 
         public void Stop#GROUPKEY#WithFadeOut(float? fadeDuration = null, UnityAction onComplete = null) {
@@ -55,5 +91,17 @@
 
         public SoundPlayer CrossFade#GROUPKEY#(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
             return #GROUPKEY#Group.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer FindPlaying#GROUPKEY#Player(AudioUnit audioUnit) {
+            return #GROUPKEY#Group.FindPlayingPlayer(audioUnit);
+        }
+
+        public SoundPlayer FindPlaying#GROUPKEY#Player(Sound sound) {
+            return #GROUPKEY#Group.FindPlayingPlayer(sound);
+        }
+
+        public SoundPlayer FindPlaying#GROUPKEY#Player(string soundKey) {
+            return #GROUPKEY#Group.FindPlayingPlayer(soundKey);
         }
 

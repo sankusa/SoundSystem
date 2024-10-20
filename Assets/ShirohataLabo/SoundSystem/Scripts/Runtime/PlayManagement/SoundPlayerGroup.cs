@@ -49,7 +49,7 @@ namespace SoundSystem {
             return target;
         }
 
-        public Volume FindVolumeByKey(string volumeKey) {
+        public Volume FindVolume(string volumeKey) {
             return _volumes.Find(x => x.Key == volumeKey);
         }
     }

@@ -80,7 +80,7 @@ namespace SoundSystem {
                 return this;
             }
 
-            Sound sound = SoundCache.Instance.FindSoundByKey(soundKey);
+            Sound sound = SoundCache.Instance.FindSound(soundKey);
             return SetSound(sound);
         }
 
@@ -253,7 +253,7 @@ namespace SoundSystem {
             }
         }
 
-        public Volume FindVolumeByKey(string volumeKey) {
+        public Volume FindVolume(string volumeKey) {
             return _volumes.Find(x => x.Key == volumeKey);
         }
     }

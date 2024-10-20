@@ -14,6 +14,36 @@ namespace SoundSystem {
             return GetUnusedPlayer().Play(soundKey, onComplete);
         }
 
+        public SoundPlayer PlayIfNotPlaying(AudioUnit audioUnit, UnityAction onComplete = null) {
+            if (FindPlayingPlayer(audioUnit) != null) return null;
+            return Play(audioUnit, onComplete);
+        }
+
+        public SoundPlayer PlayIfNotPlaying(Sound sound, UnityAction onComplete = null) {
+            if (FindPlayingPlayer(sound) != null) return null;
+            return Play(sound, onComplete);
+        }
+
+        public SoundPlayer PlayIfNotPlaying(string soundKey, UnityAction onComplete = null) {
+            if (FindPlayingPlayer(soundKey) != null) return null;
+            return Play(soundKey, onComplete);
+        }
+
+        public SoundPlayer PlayAsRestart(AudioUnit audioUnit, UnityAction onComplete = null) {
+            Stop(audioUnit);
+            return Play(audioUnit);
+        }
+
+        public SoundPlayer PlayAsRestart(Sound sound, UnityAction onComplete = null) {
+            Stop(sound);
+            return Play(sound);
+        }
+
+        public SoundPlayer PlayAsRestart(string soundKey, UnityAction onComplete = null) {
+            Stop(soundKey);
+            return Play(soundKey);
+        }
+
         public SoundPlayer PlayWithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
             return GetUnusedPlayer().PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
         }
@@ -30,6 +60,25 @@ namespace SoundSystem {
             foreach (SoundPlayer player in _players) {
                 player.Stop();
             }
+        }
+
+        public void Stop(AudioUnit audioUnit) {
+            if (audioUnit == null) return;
+            foreach (SoundPlayer player in _players) {
+                if (player.AudioUnit == audioUnit) player.Stop();
+            }
+        }
+
+        public void Stop(Sound sound) {
+            if (sound == null) return;
+            foreach (SoundPlayer player in _players) {
+                if (player.Sound == sound) player.Stop();
+            }
+        }
+
+        public void Stop(string soundKey) {
+            Sound sound = SoundCache.Instance.FindSound(soundKey);
+            Stop(sound);
         }
 
         public void StopWithFadeOut(float? fadeDuration = null, UnityAction onComplete = null) {
@@ -85,6 +134,27 @@ namespace SoundSystem {
         public SoundPlayer CrossFade(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
             StopWithFadeOut(fadeDuration);
             return PlayWithFadeIn(soundKey, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer FindPlayingPlayer(AudioUnit audioUnit) {
+            if (audioUnit == null) return null;
+            foreach (SoundPlayer player in _players) {
+                if (player.AudioUnit == audioUnit) return player;
+            }
+            return null;
+        }
+
+        public SoundPlayer FindPlayingPlayer(Sound sound) {
+            if (sound == null) return null;
+            foreach (SoundPlayer player in _players) {
+                if (player.Sound == sound) return player;
+            }
+            return null;
+        }
+
+        public SoundPlayer FindPlayingPlayer(string soundKey) {
+            Sound sound = SoundCache.Instance.FindSound(soundKey);
+            return FindPlayingPlayer(sound);
         }
     }
 }

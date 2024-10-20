@@ -27,7 +27,7 @@ namespace SoundSystem {
             }
         }
 
-        public Sound FindSoundByKey(string soundKey) {
+        public Sound FindSound(string soundKey) {
             // 他コンテナに重複するキーがある場合、後に追加されたコンテナから取得
             for (int i = _soundContainers.Count - 1; i >= 0; i--) {
                 Sound sound = _soundContainers[i].FindSoundByKey(soundKey);
