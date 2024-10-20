@@ -43,6 +43,7 @@ namespace SoundSystem {
 
         void OnDisable() {
             _audioUnitView.OnDisable();
+            _soundContainerView.OnDisable();
 
             EditorApplication.projectChanged -= OnProjectChanged;
         }

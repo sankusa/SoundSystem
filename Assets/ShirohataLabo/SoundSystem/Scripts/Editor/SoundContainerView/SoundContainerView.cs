@@ -31,6 +31,12 @@ namespace SoundSystem {
             multiColumnHeader.ResizeToFit();
 
             _soundContainerTreeView = new SoundContainerTreeView(_soundContainerTreeViewState, multiColumnHeader);
+
+            Undo.undoRedoPerformed += _soundContainerTreeView.Reload;
+        }
+
+        public void OnDisable() {
+            Undo.undoRedoPerformed += _soundContainerTreeView.Reload;
         }
         
         public void OnGUI() {
