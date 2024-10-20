@@ -195,5 +195,20 @@ namespace SoundSystem {
                     .Select(x => x.AudioUnit)
             );
         }
+
+        protected override bool CanRename(TreeViewItem item) => true;
+
+        protected override void RenameEnded(RenameEndedArgs args) {
+            if (args.acceptedRename == false) return;
+            TreeViewItem item = FindItem(args.itemID, rootItem);
+            if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
+                string assetPath = AssetDatabase.GetAssetPath(unitItem.AudioUnit);
+                AssetDatabase.RenameAsset(assetPath, args.newName);
+            }
+            else if (item is AudioUnitTreeViewItem_Folder folderItem) {
+                string assetPath = AssetDatabase.GetAssetPath(folderItem.FolderAsset);
+                AssetDatabase.RenameAsset(assetPath, args.newName);
+            }
+        }
     }
 }

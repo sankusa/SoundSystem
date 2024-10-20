@@ -224,5 +224,18 @@ namespace SoundSystem {
                 }
             }
         }
+
+        protected override bool CanRename(TreeViewItem item) {
+            return item is SoundContainerTreeViewItem_SoundContainer;
+        }
+
+        protected override void RenameEnded(RenameEndedArgs args) {
+            if (args.acceptedRename == false) return;
+            TreeViewItem item = FindItem(args.itemID, rootItem);
+            if (item is SoundContainerTreeViewItem_SoundContainer containerItem) {
+                string assetPath = AssetDatabase.GetAssetPath(containerItem.Container);
+                AssetDatabase.RenameAsset(assetPath, args.newName);
+            }
+        }
     }
 }

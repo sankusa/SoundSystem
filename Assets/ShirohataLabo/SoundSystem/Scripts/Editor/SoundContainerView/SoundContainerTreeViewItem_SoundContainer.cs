@@ -12,6 +12,7 @@ namespace SoundSystem {
             SerializedObject = new SerializedObject(Container);
             SoundListProp = SerializedObject.FindProperty("_soundDic._list");
             id = Container.GetInstanceID();
+            displayName = container.name;
         }
 
         public void AddElement() {
