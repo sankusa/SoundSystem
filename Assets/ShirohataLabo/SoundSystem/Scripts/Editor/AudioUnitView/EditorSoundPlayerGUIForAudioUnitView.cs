@@ -39,17 +39,17 @@ namespace SoundSystem {
                     _editorPlayer.DrawPlayButton(GUILayout.Width(19), GUILayout.Height(19));
                     _editorPlayer.DrawPauseButton(GUILayout.Width(19), GUILayout.Height(19));
                     _editorPlayer.DrawLoopButton(GUILayout.Width(19), GUILayout.Height(19));
-                    GUILayout.FlexibleSpace();
 
                     EditorGUI.BeginChangeCheck();
-                    using (new LabelWidthScope(32)) {
-                        _playAuto = EditorGUILayout.Toggle("Auto", _playAuto);
-                    }
+                    _playAuto = GUILayout.Toggle(_playAuto, "", "Button", GUILayout.Width(19));
+                    EditorGUI.LabelField(GUILayoutUtility.GetLastRect(), new GUIContent(Icons.AutoPlayIcon));
                     if (EditorGUI.EndChangeCheck()) {
                         if (_playAuto && _editorPlayer.Player.IsPlayStarted == false) {
                             _editorPlayer.Play();
                         }
                     }
+
+                    GUILayout.FlexibleSpace();
                 }
             }
         }

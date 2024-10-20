@@ -67,7 +67,7 @@ namespace SoundSystem {
         public static Texture2D PlayIcon {
             get {
                 if (_playIcon == null) {
-                    _playIcon = (Texture2D)EditorGUIUtility.Load("d_PlayButton");
+                    _playIcon = (Texture2D)EditorGUIUtility.IconContent("PlayButton").image;
                 }
                 return _playIcon;
             }
@@ -77,7 +77,7 @@ namespace SoundSystem {
         public static Texture2D PauseIcon {
             get {
                 if (_pauseIcon == null) {
-                    _pauseIcon = (Texture2D)EditorGUIUtility.Load("d_PauseButton");
+                    _pauseIcon = (Texture2D)EditorGUIUtility.IconContent("PauseButton").image;
                 }
                 return _pauseIcon;
             }
@@ -87,9 +87,19 @@ namespace SoundSystem {
         public static Texture2D RepeatIcon {
             get {
                 if (_repeatIcon == null) {
-                    _repeatIcon = (Texture2D)EditorGUIUtility.Load("d_RotateTool");
+                    _repeatIcon = (Texture2D)EditorGUIUtility.IconContent("preAudioLoopOff").image;
                 }
                 return _repeatIcon;
+            }
+        }
+
+        static Texture2D _autoPlayIcon;
+        public static Texture2D AutoPlayIcon {
+            get {
+                if (_autoPlayIcon == null) {
+                    _autoPlayIcon = (Texture2D)EditorGUIUtility.IconContent("preAudioAutoPlayOff").image;
+                }
+                return _autoPlayIcon;
             }
         }
     }
