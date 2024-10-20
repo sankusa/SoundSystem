@@ -8,7 +8,7 @@ namespace SoundSystem {
     public class SoundManagementWindow : EditorWindow {
         [MenuItem(nameof(SoundSystem) + "/" + nameof(SoundManagementWindow))]
         static void Open() {
-            GetWindow<SoundManagementWindow>().titleContent = new GUIContent(nameof(SoundSystem), Skin.Instance.MainIcon);
+            GetWindow<SoundManagementWindow>();
         }
         
         [SerializeField] AudioClipView _audioClipView = new();
@@ -23,17 +23,21 @@ namespace SoundSystem {
         LayoutSplitter _splitter2;
 
         void OnEnable() {
+            titleContent = new GUIContent(nameof(SoundSystem), Skin.Instance.MainIcon);
+
             _audioClipView.OnEnable();
             _audioUnitView.OnEnable();
             _soundContainerView.OnEnable();
 
             _splitter1 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter1") {
-                ResizeHandleMouseAcceptRectOffset = new RectOffset(),
-                HandleColor = Color.gray,
+                ResizeHandleMouseAcceptRectOffset = new RectOffset(2, 2, 0, 0),
+                HandleColor = new Color(0.1f, 0.1f, 0.1f),
+                HandleWidth = 1,
             };
             _splitter2 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter2") {
-                ResizeHandleMouseAcceptRectOffset = new RectOffset(),
-                HandleColor = Color.gray,
+                ResizeHandleMouseAcceptRectOffset = new RectOffset(2, 2, 0, 0),
+                HandleColor = new Color(0.1f, 0.1f, 0.1f),
+                HandleWidth = 1,
             };
 
             OnProjectChanged();
@@ -50,9 +54,9 @@ namespace SoundSystem {
 
         void OnGUI() {
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar)) {
-                _showAudioClipView = GUILayout.Toggle(_showAudioClipView, "AudioClip Tree", EditorStyles.toolbarButton);
-                _showAudioUnitView = GUILayout.Toggle(_showAudioUnitView, "AudioUnit Tree", EditorStyles.toolbarButton);
-                _showSoundContainerView = GUILayout.Toggle(_showSoundContainerView, "SoundContainer List", EditorStyles.toolbarButton);
+                _showAudioClipView = GUILayout.Toggle(_showAudioClipView, new GUIContent(Icons.AudioClipIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
+                _showAudioUnitView = GUILayout.Toggle(_showAudioUnitView, new GUIContent(Skin.Instance.AudioUnitIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
+                _showSoundContainerView = GUILayout.Toggle(_showSoundContainerView, new GUIContent(Skin.Instance.SoundContainerIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Command", EditorStyles.toolbarButton)) {
                     GenericMenu menu = new GenericMenu();

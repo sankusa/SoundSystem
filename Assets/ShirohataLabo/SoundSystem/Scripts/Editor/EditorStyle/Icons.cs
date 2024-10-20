@@ -3,6 +3,16 @@ using UnityEngine;
 
 namespace SoundSystem {
     public static class Icons {
+        static Texture2D _audioClipIcon;
+        public static Texture2D AudioClipIcon {
+            get {
+                if (_audioClipIcon == null) {
+                    _audioClipIcon = (Texture2D)EditorGUIUtility.IconContent("d_AudioClip Icon").image;
+                }
+                return _audioClipIcon;
+            }
+        }
+
         static Texture2D _refleshIcon;
         public static Texture2D RefleshIcon {
             get {

@@ -42,7 +42,10 @@ namespace SoundSystem {
             set => _handleColor = value;
         }
 
-        const float _handleWidth = 2;
+        float _handleWidth = 2;
+        public float HandleWidth {
+            set => _handleWidth = value;
+        }
 
         public LayoutSplitter(bool horizontalSplit = false, float defaultSplitRate = 0.5f, string sessionStateKey = "") {
             _horizontalSplit = horizontalSplit;
@@ -132,6 +135,7 @@ namespace SoundSystem {
             // ハンドルの矩形内のマウス押下でサイズ変更開始
             if (Event.current.type == EventType.MouseDown && mouseAcceptRect.Contains(Event.current.mousePosition)) {
                 _resizing = true;
+                Event.current.Use();
             }
 
             // サイズ変形終了

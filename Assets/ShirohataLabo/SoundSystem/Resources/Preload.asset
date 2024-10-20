@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: Preload
   m_EditorClassIdentifier: 
   _soundDic:
-    _list:
-    - _key: SE_Button
-      _sound:
-        _audioUnit: {fileID: 11400000, guid: b9083624206b8b44083f73f54fb2aebe, type: 2}
+    _list: []

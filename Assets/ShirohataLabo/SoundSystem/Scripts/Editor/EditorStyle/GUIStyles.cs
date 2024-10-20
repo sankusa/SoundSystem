@@ -45,7 +45,7 @@ namespace SoundSystem {
                     _darkToolbar = new GUIStyle("ContentToolbar"/*EditorStyles.toolbar*/);
 
                     Texture2D backgroundTexture = new(1, 1);
-                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.5f));
+                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.4f));
                     backgroundTexture.Apply();
 
                     _darkToolbar.normal.background = backgroundTexture;
@@ -59,7 +59,7 @@ namespace SoundSystem {
             get {
                 if (_captionLabel == null) {
                     _captionLabel = new GUIStyle(EditorStyles.label);
-                    _captionLabel.normal.textColor = new Color(0.9647059f, 0.4901961f, 0.0627451f);
+                    _captionLabel.normal.textColor = Colors.ThemeColor;
                 }
                 return _captionLabel;
             }
@@ -72,7 +72,7 @@ namespace SoundSystem {
                     _basicRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
-                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.3f));
+                    backgroundTexture.SetPixel(0, 0, new Color(0.05f, 0.05f, 0.05f, 0.2f));
                     backgroundTexture.Apply();
 
                     _basicRowBackground.normal.background = backgroundTexture;
@@ -88,7 +88,7 @@ namespace SoundSystem {
                     _folderRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
-                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.6f));
+                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.4f));
                     backgroundTexture.Apply();
 
                     _folderRowBackground.normal.background = backgroundTexture;
@@ -104,7 +104,7 @@ namespace SoundSystem {
                     _soundContainerRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
-                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.3f));
+                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.4f));
                     backgroundTexture.Apply();
 
                     _soundContainerRowBackground.normal.background = backgroundTexture;
@@ -120,7 +120,7 @@ namespace SoundSystem {
                     _soundRowBackground = new GUIStyle("OL box NoExpand");
 
                     Texture2D backgroundTexture = new(1, 1);
-                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.2f));
+                    backgroundTexture.SetPixel(0, 0, new Color(0.05f, 0.05f, 0.05f, 0.2f));
                     backgroundTexture.Apply();
 
                     _soundRowBackground.normal.background = backgroundTexture;

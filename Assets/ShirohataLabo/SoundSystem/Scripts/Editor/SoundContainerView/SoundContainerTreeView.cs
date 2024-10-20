@@ -84,7 +84,7 @@ namespace SoundSystem {
             Rect backgroundRect = new(rowRect) {xMin = rowRect.xMin - 16};
 
             if (args.item is SoundContainerTreeViewItem_SoundContainer containerItem) {
-                GUI.Box(backgroundRect, "", GUIStyles.FolderRowBackground);
+                GUI.Box(backgroundRect, "", GUIStyles.SoundContainerRowBackground);
                 for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
                     Rect cellRect = args.GetCellRect(i);
                     int columnIndex = args.GetColumn(i);
