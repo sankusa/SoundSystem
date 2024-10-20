@@ -15,7 +15,7 @@ MonoBehaviour:
   _playerGroupSettings:
   - _key: Bgm
     _playerCount: 2
-    _outputAudioMixerGroup: {fileID: -4344737674193940890, guid: 06b5a1f188d3b7044801210078ff1c10, type: 2}
+    _outputAudioMixerGroup: {fileID: 3295476876179166976, guid: 7a2048eed356e694cad4ccf995bc1a17, type: 2}
     _defaultLoop: 1
     _defaultFadeDuration: 0.5
     _volumeKeys:
@@ -23,7 +23,7 @@ MonoBehaviour:
     - Bgm
   - _key: Se
     _playerCount: 16
-    _outputAudioMixerGroup: {fileID: 0}
+    _outputAudioMixerGroup: {fileID: 6996166398427576605, guid: 7a2048eed356e694cad4ccf995bc1a17, type: 2}
     _defaultLoop: 0
     _defaultFadeDuration: 0.5
     _volumeKeys:
