@@ -48,9 +48,5 @@ namespace SoundSystem {
             _players.Add(target);
             return target;
         }
-
-        public Volume FindVolume(string volumeKey) {
-            return _volumes.Find(x => x.Key == volumeKey);
-        }
     }
 }

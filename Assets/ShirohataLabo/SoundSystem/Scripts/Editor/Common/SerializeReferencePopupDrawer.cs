@@ -3,16 +3,17 @@ using UnityEditor;
 using System;
 using System.Reflection;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SerializeReferencePopupAttribute))]
     public class SerializeReferencePopupDrawer : PropertyDrawer {
-        Type[] _subclasses;
+        List<Type> _subclasses;
         string[] _subclassFullNames;
         string[] _subclassDisplayNames;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-            InitializeIfNeed(property);
+            InitializeIfNeeded(property);
 
             Rect popupRect = new(position);
             popupRect.height = EditorGUIUtility.singleLineHeight;
@@ -24,27 +25,23 @@ namespace SoundSystem {
                 Type selectedType = _subclasses[selectedIndex];
                 property.managedReferenceValue = selectedType == null ? null : Activator.CreateInstance(selectedType);
             }
-            
-            EditorGUI.PropertyField(position, property, label, true);
+
+            EditorGUI.PropertyField(position, property, label, true); 
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
             return EditorGUI.GetPropertyHeight(property, label, true);
         }
 
-        void InitializeIfNeed(SerializedProperty property) {
+        void InitializeIfNeeded(SerializedProperty property) {
             if (_subclasses != null) return;
 
             string[] fieldTypeName = property.managedReferenceFieldTypename.Split(' ');
-            Assembly assembly = Assembly.Load(fieldTypeName[0]);
-            Type baseType = assembly.GetType(fieldTypeName[1]);
-            _subclasses = AppDomain
-                .CurrentDomain
-                .GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => baseType.IsAssignableFrom(type) && type.IsClass && type.IsAbstract == false)
-                .Prepend(null)
-                .ToArray();
+            Type fieldType = Assembly.Load(fieldTypeName[0]).GetType(fieldTypeName[1]);
+
+            _subclasses = new List<Type>() {null};
+            _subclasses.AddRange(TypeCache.GetTypesDerivedFrom(fieldType));
+
             _subclassFullNames = _subclasses
                 .Select(type => type == null ? "" : $"{type.Assembly.FullName.Split(',')[0]} {type.FullName}")
                 .ToArray();

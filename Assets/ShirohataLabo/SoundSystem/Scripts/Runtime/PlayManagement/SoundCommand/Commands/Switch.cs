@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,7 +9,12 @@ namespace SoundSystem {
         [SerializeField] UnityEvent _onComplete;
 
         public void Execute() {
-            SoundManager.Instance.FindPlayerGroup(_groupKey).Switch(_sound.Resolve(), () => _onComplete?.Invoke());
+            Action onComplete = _onComplete.GetPersistentEventCount() == 0 ? null : () => _onComplete.Invoke();
+
+            SoundManager
+                .Instance
+                .FindPlayerGroup(_groupKey)
+                .Switch(_sound.Resolve(), onComplete);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,14 +12,17 @@ namespace SoundSystem {
         [SerializeField] UnityEvent _onFadeComplete;
 
         public void Execute() {
+            Action onComplete = _onComplete.GetPersistentEventCount() == 0 ? null : () => _onComplete.Invoke();
+            Action onFadeComplete = _onFadeComplete.GetPersistentEventCount() == 0 ? null : () => _onFadeComplete.Invoke();
+
             SoundManager
                 .Instance
                 .FindPlayerGroup(_groupKey)
                 .PlayWithFadeIn(
                     _sound.Resolve(),
                     _setFadeDuration ? _fadeDuration: null,
-                    () => _onComplete?.Invoke(),
-                    () => _onFadeComplete?.Invoke()
+                    onComplete,
+                    onFadeComplete
                 );
         }
     }

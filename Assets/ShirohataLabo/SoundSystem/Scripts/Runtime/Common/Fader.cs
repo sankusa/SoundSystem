@@ -12,9 +12,9 @@ namespace SoundSystem {
         float _fadeDuration;
         float _fadeTimer;
 
-        readonly UnityEvent _onComplete = new();
+        event Action _onComplete;
         
-        public void Fade(float from, float to, float duration, UnityAction onComplete = null) {
+        public void Fade(float from, float to, float duration, Action onComplete = null) {
             Clear();
             Value = from;
             IsFading = true;
@@ -23,11 +23,11 @@ namespace SoundSystem {
             _fadeDuration = duration;
             _fadeTimer = 0;
             if (onComplete != null) {
-                _onComplete.AddListener(onComplete);
+                _onComplete += onComplete;
             }
         }
 
-        public void Fade(float to, float duration, UnityAction onComplete = null) {
+        public void Fade(float to, float duration, Action onComplete = null) {
             Fade(Value, to, duration, onComplete);
         }
 
@@ -41,8 +41,9 @@ namespace SoundSystem {
                     Value = Mathf.Lerp(_fadeFrom, _fadeTo, _fadeTimer / _fadeDuration);
                 }
                 if(_fadeTimer >= _fadeDuration) {
-                    _onComplete.Invoke();
+                    Action onComplete = _onComplete;
                     ClearWithoutValue();
+                    onComplete?.Invoke();
                 }
             }
         }
@@ -58,7 +59,7 @@ namespace SoundSystem {
             _fadeTo = 0;
             _fadeDuration = 0;
             _fadeTimer = 0;
-            _onComplete.RemoveAllListeners();
+            _onComplete = null;
         }
     }
 }

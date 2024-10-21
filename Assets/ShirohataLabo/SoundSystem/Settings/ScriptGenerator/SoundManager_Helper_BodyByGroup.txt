@@ -1,51 +1,51 @@
         public SoundPlayerGroup #GROUPKEY#Group => FindPlayerGroup("#GROUPKEY#");
         public SoundPlayer GetUnused#GROUPKEY#Player() => #GROUPKEY#Group.GetUnusedPlayer();
 
-        public SoundPlayer Play#GROUPKEY#(AudioUnit audioUnit, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#(AudioUnit audioUnit, Action onComplete = null) {
             return #GROUPKEY#Group.Play(audioUnit, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#(Sound sound, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#(Sound sound, Action onComplete = null) {
             return #GROUPKEY#Group.Play(sound, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#(string soundKey, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#(string soundKey, Action onComplete = null) {
             return #GROUPKEY#Group.Play(soundKey, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#IfNotPlaying(AudioUnit audioUnit, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(AudioUnit audioUnit, Action onComplete = null) {
             return #GROUPKEY#Group.PlayIfNotPlaying(audioUnit, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#IfNotPlaying(Sound sound, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(Sound sound, Action onComplete = null) {
             return #GROUPKEY#Group.PlayIfNotPlaying(sound, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#IfNotPlaying(string soundKey, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(string soundKey, Action onComplete = null) {
             return #GROUPKEY#Group.PlayIfNotPlaying(soundKey, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#AsRestart(AudioUnit audioUnit, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#AsRestart(AudioUnit audioUnit, Action onComplete = null) {
             return #GROUPKEY#Group.PlayAsRestart(audioUnit, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#AsRestart(Sound sound, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#AsRestart(Sound sound, Action onComplete = null) {
             return #GROUPKEY#Group.PlayAsRestart(sound, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#AsRestart(string soundKey, UnityAction onComplete = null) {
+        public SoundPlayer Play#GROUPKEY#AsRestart(string soundKey, Action onComplete = null) {
             return #GROUPKEY#Group.PlayAsRestart(soundKey, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#WithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#WithFadeIn(Sound sound, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.PlayWithFadeIn(sound, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#WithFadeIn(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(string soundKey, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.PlayWithFadeIn(soundKey, fadeDuration, onComplete, onFadeComplete);
         }
 
@@ -65,31 +65,31 @@
             #GROUPKEY#Group.Stop(soundKey);
         }
 
-        public void Stop#GROUPKEY#WithFadeOut(float? fadeDuration = null, UnityAction onComplete = null) {
+        public void Stop#GROUPKEY#WithFadeOut(float? fadeDuration = null, Action onComplete = null) {
             #GROUPKEY#Group.StopWithFadeOut(fadeDuration, onComplete);
         }
 
-        public SoundPlayer Switch#GROUPKEY#(AudioUnit audioUnit, UnityAction onComplete = null) {
+        public SoundPlayer Switch#GROUPKEY#(AudioUnit audioUnit, Action onComplete = null) {
             return #GROUPKEY#Group.Switch(audioUnit, onComplete);
         }
 
-        public SoundPlayer Switch#GROUPKEY#(Sound sound, UnityAction onComplete = null) {
+        public SoundPlayer Switch#GROUPKEY#(Sound sound, Action onComplete = null) {
             return #GROUPKEY#Group.Switch(sound, onComplete);
         }
 
-        public SoundPlayer Switch#GROUPKEY#(string soundKey, UnityAction onComplete = null) {
+        public SoundPlayer Switch#GROUPKEY#(string soundKey, Action onComplete = null) {
             return #GROUPKEY#Group.Switch(soundKey, onComplete);
         }
 
-        public SoundPlayer CrossFade#GROUPKEY#(AudioUnit audioUnit, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+        public SoundPlayer CrossFade#GROUPKEY#(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.CrossFade(audioUnit, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer CrossFade#GROUPKEY#(Sound sound, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+        public SoundPlayer CrossFade#GROUPKEY#(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.CrossFade(sound, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer CrossFade#GROUPKEY#(string soundKey, float? fadeDuration = null, UnityAction onComplete = null, UnityAction onFadeComplete = null) {
+        public SoundPlayer CrossFade#GROUPKEY#(string soundKey, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
         }
 

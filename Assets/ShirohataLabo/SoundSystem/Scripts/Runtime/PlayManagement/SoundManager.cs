@@ -45,11 +45,17 @@ namespace SoundSystem {
         }
 
         public SoundPlayerGroup FindPlayerGroup(string groupKey) {
-            return _playerGroups.Find(x => x.GroupKey == groupKey);
+            foreach (SoundPlayerGroup group in _playerGroups) {
+                if (group.GroupKey == groupKey) return group;
+            }
+            return null;
         }
 
         public Volume FindVolume(string volumeKey) {
-            return _volumes.Find(x => x.Key == volumeKey);
+            foreach (Volume volume in _volumes) {
+                if (volume.Key == volumeKey) return volume;
+            }
+            return null;
         }
     }
 }

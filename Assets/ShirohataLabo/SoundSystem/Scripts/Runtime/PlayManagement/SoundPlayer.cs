@@ -39,8 +39,7 @@ namespace SoundSystem {
 
         SoundPlayerGroupSetting _groupSetting;
 
-        UnityEvent _onComplete;
-        public UnityEvent OnComplete => _onComplete;
+        event Action _onComplete;
 
         public SoundPlayer(GameObject parentObject, SoundPlayerGroupSetting groupSetting, List<Volume> volumes) {
             GameObject gameObject = new("Player");
@@ -96,33 +95,32 @@ namespace SoundSystem {
             return this;
         } 
 
-        public SoundPlayer AddOnComplete(UnityAction onComplete) {
+        public SoundPlayer AddOnComplete(Action onComplete) {
             if (onComplete != null) {
-                _onComplete ??= new();
-                _onComplete.AddListener(onComplete);
+                _onComplete += onComplete;
             }
             return this;
         }
 
-        public SoundPlayer SetFadeWithFrom(float from, float to, float? duration = null, UnityAction onComplete = null) {
+        public SoundPlayer SetFadeWithFrom(float from, float to, float? duration = null, Action onComplete = null) {
             duration ??= _groupSetting.DefaultFadeDuration;
             _fadeVolume.Fade(from, to, duration.Value, onComplete);
             return this;
         }
 
-        public SoundPlayer SetFade(float to, float? duration = null, UnityAction onComplete = null) {
+        public SoundPlayer SetFade(float to, float? duration = null, Action onComplete = null) {
             duration ??= _groupSetting.DefaultFadeDuration;
             _fadeVolume.Fade(to, duration.Value, onComplete);
             return this;
         }
 
-        public SoundPlayer SetFadeIn(float? duration = null, UnityAction onComplete = null) {
+        public SoundPlayer SetFadeIn(float? duration = null, Action onComplete = null) {
             duration ??= _groupSetting.DefaultFadeDuration;
             _fadeVolume.Fade(1, duration.Value, onComplete);
             return this;
         }
 
-        public SoundPlayer SetFadeOut(float? duration = null, UnityAction onComplete = null) {
+        public SoundPlayer SetFadeOut(float? duration = null, Action onComplete = null) {
             duration ??= _groupSetting.DefaultFadeDuration;
             _fadeVolume.Fade(0, duration.Value, onComplete);
             return this;
@@ -157,9 +155,9 @@ namespace SoundSystem {
         }
 
         public void Complete() {
-            UnityEvent onComplete = _onComplete;
+            Action onComple = _onComplete;
             Stop();
-            onComplete?.Invoke();
+            onComple?.Invoke();
         }
 
         public void Pause() {
@@ -259,10 +257,6 @@ namespace SoundSystem {
             else {
                 Complete();
             }
-        }
-
-        public Volume FindVolume(string volumeKey) {
-            return _volumes.Find(x => x.Key == volumeKey);
         }
     }
 }

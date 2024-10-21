@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,14 +25,17 @@ namespace SoundSystem {
         public void Execute() {
             SoundPlayerGroup playerGroup = SoundManager.Instance.FindPlayerGroup(_groupKey);
             SoundPlayer player = null;
+            
+            Action onComplete = _onComplete.GetPersistentEventCount() == 0 ? null : () => _onComplete.Invoke();
+
             if (_duplicationHandling == DuplicationHandling.None) {
-                player = playerGroup.Play(_sound.Resolve(), () => _onComplete?.Invoke());
+                player = playerGroup.Play(_sound.Resolve(), onComplete);
             }
             else if (_duplicationHandling == DuplicationHandling.NotPlay) {
-                player = playerGroup.PlayIfNotPlaying(_sound.Resolve(), () => _onComplete?.Invoke());
+                player = playerGroup.PlayIfNotPlaying(_sound.Resolve(), onComplete);
             }
             else if (_duplicationHandling == DuplicationHandling.Restart) {
-                player = playerGroup.PlayAsRestart(_sound.Resolve(), () => _onComplete?.Invoke());
+                player = playerGroup.PlayAsRestart(_sound.Resolve(), onComplete);
             }
 
             if (player != null && _fromTransformPosition) {
