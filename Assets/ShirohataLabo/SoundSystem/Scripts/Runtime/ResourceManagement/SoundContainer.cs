@@ -16,7 +16,7 @@ namespace SoundSystem {
 
         public Sound FindSoundByKey(string key) {
             _soundDic.TryGetValue(key, out SoundWithKey soundWithKey);
-            return soundWithKey.Sound;
+            return soundWithKey?.Sound;
         }
     }
 }
