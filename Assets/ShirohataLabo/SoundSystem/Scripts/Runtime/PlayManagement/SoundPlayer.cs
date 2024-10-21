@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 namespace SoundSystem {
     public partial class SoundPlayer {
+        readonly Transform _transform;
         readonly AudioSource _audioSource;
         public AudioClip Clip => _audioSource.clip;
         public bool IsUsing => _audioSource.clip != null;
@@ -43,7 +44,8 @@ namespace SoundSystem {
 
         public SoundPlayer(GameObject parentObject, SoundPlayerGroupSetting groupSetting, List<Volume> volumes) {
             GameObject gameObject = new("Player");
-            gameObject.transform.SetParent(parentObject.transform);
+            _transform = gameObject.transform;
+            _transform.SetParent(parentObject.transform);
             AudioSource audioSource = gameObject.AddComponent<AudioSource>();
             _audioSource = audioSource;
 
@@ -88,6 +90,11 @@ namespace SoundSystem {
             _audioSource.loop = loop;
             return this;
         }
+
+        public SoundPlayer SetPosition(Vector3 position) {
+            _transform.position = position;
+            return this;
+        } 
 
         public SoundPlayer AddOnComplete(UnityAction onComplete) {
             if (onComplete != null) {
@@ -172,6 +179,7 @@ namespace SoundSystem {
             _onComplete = null;
             _isPlayStarted = false;
             _isPaused = false;
+            _transform.position = Vector3.zero;
             
             // Reset AudioSource
             _audioSource.Stop();

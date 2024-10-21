@@ -6,6 +6,7 @@ namespace SoundSystem {
         [SerializeField] SelectableSoundCommand _soundCommand;
 
         void Awake() {
+            _soundCommand.BindTransformIfPossible(transform);
             if (_executeOnAwake) {
                 Execute();
             }
