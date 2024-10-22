@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 namespace SoundSystem {
-    public class Play : ISoundCommand , ITransformBinder {
+    public class Play : ISoundCommand {
         public enum DuplicationHandling {
             None,
             NotPlay,
@@ -13,14 +13,8 @@ namespace SoundSystem {
         [SerializeField, SoundPlayerGroupKey] string _groupKey;
         [SerializeField] SoundSelector _sound;
         [SerializeField] DuplicationHandling _duplicationHandling;
-        [SerializeField] bool _fromTransformPosition;
+        [SerializeField] Transform _spawnPoint;
         [SerializeField] UnityEvent _onComplete;
-
-        Transform _transform;
-
-        public void BindTransform(Transform transform) {
-            _transform = transform;
-        }
 
         public void Execute() {
             SoundPlayerGroup playerGroup = SoundManager.Instance.FindPlayerGroup(_groupKey);
@@ -38,13 +32,8 @@ namespace SoundSystem {
                 player = playerGroup.PlayAsRestart(_sound.Resolve(), onComplete);
             }
 
-            if (player != null && _fromTransformPosition) {
-                if (_transform == null) {
-                    Debug.LogWarning("Transform is null. Please call BindTransform() to set the Transform.");
-                }
-                else {
-                    player.SetPosition(_transform.position);
-                }
+            if (player != null && _spawnPoint != null) {
+                player.SetSpawnPoint(_spawnPoint);
             }
         }
     }

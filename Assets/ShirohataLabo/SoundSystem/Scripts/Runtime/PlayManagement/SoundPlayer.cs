@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SoundSystem {
     public partial class SoundPlayer {
@@ -40,6 +39,8 @@ namespace SoundSystem {
         SoundPlayerGroupSetting _groupSetting;
 
         event Action _onComplete;
+
+        Transform _spawnPoint;
 
         public SoundPlayer(GameObject parentObject, SoundPlayerGroupSetting groupSetting, List<Volume> volumes) {
             GameObject gameObject = new("Player");
@@ -91,9 +92,14 @@ namespace SoundSystem {
         }
 
         public SoundPlayer SetPosition(Vector3 position) {
-            _transform.position = position;
+            _transform.localPosition = position;
             return this;
-        } 
+        }
+
+        public SoundPlayer SetSpawnPoint(Transform spawnPoint) {
+            _spawnPoint = spawnPoint;
+            return SetPosition(_spawnPoint.position);
+        }
 
         public SoundPlayer AddOnComplete(Action onComplete) {
             if (onComplete != null) {
@@ -140,6 +146,7 @@ namespace SoundSystem {
                 _fadeVolume.Value = 1;
             }
 
+            UpdatePosition();
             ClampTime();
             UpdateVolume();
             UpdateMute();
@@ -177,7 +184,8 @@ namespace SoundSystem {
             _onComplete = null;
             _isPlayStarted = false;
             _isPaused = false;
-            _transform.position = Vector3.zero;
+            _transform.localPosition = Vector3.zero;
+            _spawnPoint = null;
             
             // Reset AudioSource
             _audioSource.Stop();
@@ -196,6 +204,7 @@ namespace SoundSystem {
                 return;
             }
             if (_audioSource.isPlaying == false) return;
+            UpdatePosition();
             _fadeVolume.Update(deltaTime);
             ClampTime();
             UpdateVolume();
@@ -211,6 +220,11 @@ namespace SoundSystem {
                     _audioSource.timeSamples = playRange.FromSamples;
                 }
             }
+        }
+
+        void UpdatePosition() {
+            if (_spawnPoint == null) return;
+            _transform.localPosition = _spawnPoint.position;
         }
 
         void UpdateVolume() {
