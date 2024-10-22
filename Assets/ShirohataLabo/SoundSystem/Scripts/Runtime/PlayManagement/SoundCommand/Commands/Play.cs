@@ -14,6 +14,7 @@ namespace SoundSystem {
         [SerializeField] SoundSelector _sound;
         [SerializeField] DuplicationHandling _duplicationHandling;
         [SerializeField] Transform _spawnPoint;
+        [SerializeField] bool _followSpawnPoint;
         [SerializeField] UnityEvent _onComplete;
 
         public void Execute() {
@@ -33,7 +34,12 @@ namespace SoundSystem {
             }
 
             if (player != null && _spawnPoint != null) {
-                player.SetSpawnPoint(_spawnPoint);
+                if (_followSpawnPoint) {
+                    player.SetSpawnPoint(_spawnPoint);
+                }
+                else {
+                    player.SetPosition(_spawnPoint.position);
+                }
             }
         }
     }
