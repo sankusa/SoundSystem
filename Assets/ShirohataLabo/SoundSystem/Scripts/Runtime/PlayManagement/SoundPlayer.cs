@@ -64,6 +64,7 @@ namespace SoundSystem {
         public UnityEngine.AudioDistortionFilter AudioDistortionFilter { get; private set; }
         public UnityEngine.AudioReverbFilter AudioReverbFilter { get; private set; }
         public UnityEngine.AudioChorusFilter AudioChorusFilter { get; private set; }
+        public UnityEngine.AudioReverbZone AudioReverbZone { get; private set; }
 
         public SoundPlayer(GameObject parentObject, SoundPlayerGroupSetting groupSetting, List<Volume> volumes) {
             _gameObject = new("Player");
@@ -282,6 +283,14 @@ namespace SoundSystem {
             return this;
         }
 
+        public SoundPlayer EnableAudioReverbZone() {
+            if (AudioReverbZone == null) {
+                AudioReverbZone = _gameObject.AddComponent<UnityEngine.AudioReverbZone>();
+            }
+            AudioReverbZone.enabled = true;
+            return this;
+        }
+
         public SoundPlayer Play() {
             if (_audioSource.clip == null) {
                 Debug.LogWarning($"{nameof(AudioClip)} is null");
@@ -361,6 +370,7 @@ namespace SoundSystem {
             AudioDistortionFilter.DisableAndReset();
             AudioReverbFilter.DisableAndReset();
             AudioChorusFilter.DisableAndReset();
+            AudioReverbZone.DisableAndReset();
         }
 
         public void Update(float deltaTime) {
