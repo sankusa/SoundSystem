@@ -48,5 +48,13 @@ namespace SoundSystem {
             filter.rate = 0.8f;
             filter.depth = 0.03f;
         }
+
+        public static void DisableAndReset(this AudioReverbZone filter) {
+            if (filter == null) return;
+            filter.enabled = false;
+            filter.minDistance = 10f;
+            filter.maxDistance = 15f;
+            filter.reverbPreset = AudioReverbPreset.Generic;
+        }
     }
 }
