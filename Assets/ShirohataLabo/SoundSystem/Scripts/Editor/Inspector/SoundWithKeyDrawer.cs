@@ -4,31 +4,31 @@ using UnityEngine;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKey))]
     public class SoundWithKeyDrawer : PropertyDrawer {
-        static readonly RectUtil.LayoutLength[] _columnWidths = new RectUtil.LayoutLength[] {new(1), new(1)};
-
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-            SerializedProperty labelProp = property.FindPropertyRelative("_key");
+            SerializedProperty keyProp = property.FindPropertyRelative("_key");
             SerializedProperty soundProp = property.FindPropertyRelative("_sound");
 
-            position.yMin += EditorGUIUtility.standardVerticalSpacing;
-            Rect[] rects = RectUtil.DivideRectHorizontal(position, _columnWidths);
+            Rect headerRect = new Rect(position) {height = EditorGUIUtility.singleLineHeight};
+            position.yMin += headerRect.height + EditorGUIUtility.standardVerticalSpacing;
 
-            float labelHeight = EditorGUI.GetPropertyHeight(labelProp);
-            Rect labelRect = new(RectUtil.Margin(rects[0], rightMargin: 3)) {height = labelHeight};
-            
-            float soundHeight = EditorGUI.GetPropertyHeight(soundProp);
-            Rect soundRect = new Rect(rects[1]) {height = soundHeight};
+            property.isExpanded = EditorGUI.Foldout(headerRect, property.isExpanded, "");
 
-            EditorGUI.PropertyField(labelRect, labelProp, GUIContent.none);
-            EditorGUI.PropertyField(soundRect, soundProp, GUIContent.none);
+            Rect keyRect = new Rect(headerRect) {xMin = headerRect.xMin};
+            EditorGUI.PropertyField(keyRect, keyProp);
+
+            if (property.isExpanded) {
+                EditorGUI.PropertyField(position, soundProp, GUIContent.none, true);
+            }
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
             SerializedProperty soundProp = property.FindPropertyRelative("_sound");
             
             float height = 0;
-            height += EditorGUI.GetPropertyHeight(soundProp, GUIContent.none);
-            height += EditorGUIUtility.standardVerticalSpacing;
+            height += EditorGUIUtility.singleLineHeight;
+            if (property.isExpanded) {
+                height += EditorGUI.GetPropertyHeight(soundProp, GUIContent.none, true) + EditorGUIUtility.standardVerticalSpacing;
+            }
             return height;
         }
     }

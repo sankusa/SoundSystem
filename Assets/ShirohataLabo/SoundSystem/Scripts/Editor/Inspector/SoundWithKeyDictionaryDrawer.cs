@@ -5,8 +5,6 @@ using UnityEngine;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKeyDictionary))]
     public class SoundWithKeyDictionaryDrawer : PropertyDrawer {
-        static readonly RectUtil.LayoutLength[] _columnWidths = new RectUtil.LayoutLength[] {new(1), new(1)};
-
         ReorderableList _soundList;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
@@ -22,22 +20,19 @@ namespace SoundSystem {
         }
 
         void PrepareList(SerializedProperty listProp) {
-            if (_soundList == null) {
-                _soundList = new ReorderableList(listProp.serializedObject, listProp) {
-                    drawHeaderCallback = (Rect rect) => {
-                        rect.xMin += 14;
-                        Rect[] rects = RectUtil.DivideRectHorizontal(rect, _columnWidths);
-                        EditorGUI.LabelField(rects[0], "Key");
-                        EditorGUI.LabelField(rects[1], nameof(Sound));
-                    },
-                    drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
-                        EditorGUI.PropertyField(rect, listProp.GetArrayElementAtIndex(index), true);
-                    },
-                    elementHeightCallback = (int index) => {
-                        return EditorGUI.GetPropertyHeight(listProp.GetArrayElementAtIndex(index), true);
-                    },
-                };
-            }
+            _soundList ??= new ReorderableList(listProp.serializedObject, listProp) {
+                drawHeaderCallback = (Rect rect) => {
+                    EditorGUI.LabelField(rect, "Sounds");
+                },
+                drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+                    rect.xMin += 10;
+                    rect.yMax -= EditorGUIUtility.standardVerticalSpacing;;
+                    EditorGUI.PropertyField(rect, listProp.GetArrayElementAtIndex(index), true);
+                },
+                elementHeightCallback = (int index) => {
+                    return EditorGUI.GetPropertyHeight(listProp.GetArrayElementAtIndex(index), true);
+                },
+            };
         }
     }
 }

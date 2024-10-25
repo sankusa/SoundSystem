@@ -97,7 +97,9 @@ namespace SoundSystem {
             }
 
             _sound = sound;
-            return SetAudioUnit(_sound.AudioUnit);
+            SetAudioUnit(_sound.AudioUnit);
+            ApplySoundBehaviours(_sound.Behaviours);
+            return this;
         }
 
         public SoundPlayer SetSoundByKey(string soundKey) {
@@ -289,6 +291,12 @@ namespace SoundSystem {
             }
             AudioReverbZone.enabled = true;
             return this;
+        }
+
+        void ApplySoundBehaviours(List<SoundBehaviour> behaviours) {
+            foreach (SoundBehaviour behaviour in behaviours) {
+                behaviour.ApplyTo(this);
+            }
         }
 
         public SoundPlayer Play() {
