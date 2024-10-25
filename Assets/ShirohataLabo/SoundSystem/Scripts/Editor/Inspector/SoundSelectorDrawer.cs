@@ -23,7 +23,7 @@ namespace SoundSystem {
             EditorGUI.indentLevel++;
 
             if (selectTypeProp.enumValueIndex == (int)SoundSelector.SelectType.Sound) {
-                Rect soundRect = new(position) {height = EditorGUI.GetPropertyHeight(soundProp, true)};
+                Rect soundRect = new(position) {height = EditorGUI.GetPropertyHeight(soundProp, GUIContent.none, true)};
                 EditorGUI.PropertyField(soundRect, soundProp, GUIContent.none, true);
             }
             else if (selectTypeProp.enumValueIndex == (int)SoundSelector.SelectType.SoundKey) {
