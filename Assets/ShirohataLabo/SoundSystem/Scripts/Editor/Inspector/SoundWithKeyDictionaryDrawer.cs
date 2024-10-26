@@ -32,6 +32,14 @@ namespace SoundSystem {
                 elementHeightCallback = (int index) => {
                     return EditorGUI.GetPropertyHeight(listProp.GetArrayElementAtIndex(index), true);
                 },
+                onAddCallback = (ReorderableList list) => {
+                    listProp.InsertArrayElementAtIndex(listProp.arraySize);
+                    SerializedProperty newElementProp = listProp.GetArrayElementAtIndex(listProp.arraySize - 1);
+                    newElementProp.FindPropertyRelative("_key").stringValue = "";
+                    SerializedProperty soundProp = newElementProp.FindPropertyRelative("_sound");
+                    soundProp.FindPropertyRelative("_audioUnit").objectReferenceValue = null;
+                    soundProp.FindPropertyRelative("_behaviours").ClearArray();
+                }
             };
         }
     }

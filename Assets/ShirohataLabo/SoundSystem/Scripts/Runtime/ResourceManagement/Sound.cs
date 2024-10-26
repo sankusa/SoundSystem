@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Search;
 
 namespace SoundSystem {
     [System.Serializable]
@@ -8,7 +7,7 @@ namespace SoundSystem {
         [SerializeField] AudioUnit _audioUnit;
         public AudioUnit AudioUnit => _audioUnit;
 
-        [SerializeReference] List<SoundBehaviour> _behavioiurs = new();
-        public List<SoundBehaviour> Behaviours => _behavioiurs;
+        [SerializeReference] List<SoundBehaviour> _behaviours = new();
+        public List<SoundBehaviour> Behaviours => _behaviours;
     }
 }

@@ -8,6 +8,7 @@ namespace SoundSystem {
         readonly Transform _transform;
         readonly AudioSource _audioSource;
         public AudioClip Clip => _audioSource.clip;
+        public bool IsPlayable => _audioSource.clip != null;
         public bool IsUsing => _audioSource.clip != null;
         public bool IsPlaying => _audioSource.isPlaying;
         public bool IsStopped => _audioSource.isPlaying == false && IsPaused == false;
@@ -98,7 +99,7 @@ namespace SoundSystem {
 
             _sound = sound;
             SetAudioUnit(_sound.AudioUnit);
-            ApplySoundBehaviours(_sound.Behaviours);
+            ApplySoundBehaviours();
             return this;
         }
 
@@ -233,6 +234,7 @@ namespace SoundSystem {
         }
 
         public SoundPlayer SetCustomCurve(AudioSourceCurveType type, AnimationCurve curve) {
+            if (curve.keys.Length == 0) return this;
             _audioSource.SetCustomCurve(type, curve);
             return this;
         }
@@ -293,9 +295,11 @@ namespace SoundSystem {
             return this;
         }
 
-        void ApplySoundBehaviours(List<SoundBehaviour> behaviours) {
-            foreach (SoundBehaviour behaviour in behaviours) {
-                behaviour.ApplyTo(this);
+        public void ApplySoundBehaviours() {
+            if (_sound != null) {
+                foreach (SoundBehaviour behaviour in _sound.Behaviours) {
+                    behaviour.ApplyTo(this);
+                }
             }
         }
 
@@ -357,6 +361,10 @@ namespace SoundSystem {
             _audioSource.loop = _groupSetting.DefaultLoop;
             _audioSource.timeSamples = 0;
 
+            ResetSoundBehaviours();
+        }
+
+        public void ResetSoundBehaviours() {
             _audioSource.bypassEffects = false;
             _audioSource.bypassListenerEffects = false;
             _audioSource.bypassReverbZones = false;

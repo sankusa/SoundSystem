@@ -11,7 +11,7 @@ namespace SoundSystem.SoundBehaviours {
         public float DistortionLevel => _distortionLevel;
 
         protected override void ApplyMain(SoundPlayer player) {
-            player.EnableAudioEchoFilter();
+            player.EnableAudioDistortionFilter();
             UnityEngine.AudioDistortionFilter filter = player.AudioDistortionFilter;
             filter.enabled = _enable;
             filter.distortionLevel = _distortionLevel;

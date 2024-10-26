@@ -16,7 +16,7 @@ namespace SoundSystem {
         }
 
         public void Bind(AudioUnit audioUnit) {
-            _editorPlayer.BindAudioUnit(audioUnit);
+            _editorPlayer.Bind(audioUnit);
             if (_playAuto) _editorPlayer.Play();
         }
 
@@ -33,12 +33,12 @@ namespace SoundSystem {
                     EditorGUILayout.LabelField(new GUIContent(_editorPlayer.AudioUnit.name, icon));
                 }
 
-                _editorPlayer.DrawTimeSlider();
+                _editorPlayer.DrawLayoutTimeSlider();
                 using (new EditorGUILayout.HorizontalScope()) {
-                    _editorPlayer.DrawPlayerGroupSelectPopup();
-                    _editorPlayer.DrawPlayButton(GUILayout.Width(19), GUILayout.Height(19));
-                    _editorPlayer.DrawPauseButton(GUILayout.Width(19), GUILayout.Height(19));
-                    _editorPlayer.DrawLoopButton(GUILayout.Width(19), GUILayout.Height(19));
+                    _editorPlayer.DrawLayoutPlayerGroupSelectPopup();
+                    _editorPlayer.DrawLayoutPlayButton(GUILayout.Width(19), GUILayout.Height(19));
+                    _editorPlayer.DrawLayoutPauseButton(GUILayout.Width(19), GUILayout.Height(19));
+                    _editorPlayer.DrawLayoutLoopButton(GUILayout.Width(19), GUILayout.Height(19));
 
                     EditorGUI.BeginChangeCheck();
                     _playAuto = GUILayout.Toggle(_playAuto, "", "Button", GUILayout.Width(19));

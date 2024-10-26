@@ -7,7 +7,10 @@ using UnityEngine;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(Sound))]
     public class SoundDrawer : PropertyDrawer {
-        Dictionary<string, ReorderableList> _soundBehaviourLists = new();
+        Dictionary<string, EditorSoundPlayerGUIForPropertyDrawer> _soundPlayerGUIDic = new();
+        Dictionary<string, ReorderableList> _soundBehaviourDic = new();
+
+        static float _editorPlayerHeight = EditorGUIUtility.singleLineHeight + 8;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             if (label != GUIContent.none) {
@@ -22,15 +25,27 @@ namespace SoundSystem {
 
             position.yMin += EditorGUIUtility.standardVerticalSpacing;
 
-            SerializedProperty audioUnitProp = property.FindPropertyRelative("_audioUnit");
-            Rect audioUnitRect = new(position) {height = EditorGUIUtility.singleLineHeight};
-            position.yMin += audioUnitRect.height + EditorGUIUtility.standardVerticalSpacing;
-            EditorGUI.PropertyField(audioUnitRect, audioUnitProp);
+            EditorSoundPlayerGUIForPropertyDrawer playerGUI = PrepareEditorSoundPlayerGUI(property);
+            Rect playerRect = new Rect(position) {height = _editorPlayerHeight, xMin = position.xMin + EditorGUI.indentLevel * 14};
+            position.yMin += playerRect.height + EditorGUIUtility.standardVerticalSpacing;
+            playerGUI.DrawGUI(playerRect);
 
-            SerializedProperty behavioursProp = property.FindPropertyRelative("_behavioiurs");
-            ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
-            float listHeight = soundBehaviourList.GetHeight();
-            soundBehaviourList.DoList(new Rect(position) {width = position.width, height = listHeight, xMin = position.xMin + EditorGUI.indentLevel * 14});
+            using (var check = new EditorGUI.ChangeCheckScope()) {
+                SerializedProperty audioUnitProp = property.FindPropertyRelative("_audioUnit");
+                Rect audioUnitRect = new(position) {height = EditorGUIUtility.singleLineHeight};
+                position.yMin += audioUnitRect.height + EditorGUIUtility.standardVerticalSpacing;
+                EditorGUI.PropertyField(audioUnitRect, audioUnitProp);
+
+                SerializedProperty behavioursProp = property.FindPropertyRelative("_behaviours");
+                ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
+                float listHeight = soundBehaviourList.GetHeight();
+                soundBehaviourList.DoList(new Rect(position) {width = position.width, height = listHeight, xMin = position.xMin + EditorGUI.indentLevel * 14});
+
+                if (check.changed) {
+                    property.serializedObject.ApplyModifiedProperties();
+                    playerGUI.ReapplyParameters();
+                }
+            }
 
             if (label != GUIContent.none) {
                 EditorGUI.indentLevel--;
@@ -40,19 +55,28 @@ namespace SoundSystem {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
             float height = 0;
             height += EditorGUIUtility.standardVerticalSpacing * 2;
+            height += _editorPlayerHeight;
             if (label != GUIContent.none) {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
             height += EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty behavioursProp = property.FindPropertyRelative("_behavioiurs");
+            SerializedProperty behavioursProp = property.FindPropertyRelative("_behaviours");
             ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
             height += soundBehaviourList.GetHeight();
             return height;
         }
 
+        EditorSoundPlayerGUIForPropertyDrawer PrepareEditorSoundPlayerGUI(SerializedProperty property) {
+            if (_soundPlayerGUIDic.ContainsKey(property.propertyPath)) return _soundPlayerGUIDic[property.propertyPath];
+            EditorSoundPlayerGUIForPropertyDrawer soundPlayerGUI = new();
+            soundPlayerGUI.Bind(property.GetObject() as Sound);
+            _soundPlayerGUIDic[property.propertyPath] = soundPlayerGUI;
+            return soundPlayerGUI;
+        }
+
         ReorderableList PrepareReorderableList(SerializedProperty property, SerializedProperty behavioursProp) {
-            if (_soundBehaviourLists.ContainsKey(property.propertyPath)) return _soundBehaviourLists[property.propertyPath];
+            if (_soundBehaviourDic.ContainsKey(property.propertyPath)) return _soundBehaviourDic[property.propertyPath];
             ReorderableList soundBehaviourList = new ReorderableList(property.serializedObject, behavioursProp, true, true, false, false) {
                 drawHeaderCallback = (Rect rect) => {
                     EditorGUI.LabelField(rect, "Sound Behaviours");
@@ -83,6 +107,7 @@ namespace SoundSystem {
                                         behaviourProp.managedReferenceValue = Activator.CreateInstance(type);
                                     }
                                     property.serializedObject.ApplyModifiedProperties();
+                                    _soundPlayerGUIDic[property.propertyPath].ReapplyParameters(); 
                                 }
                             );
                         }
@@ -99,7 +124,7 @@ namespace SoundSystem {
 
                 }
             };
-            _soundBehaviourLists[property.propertyPath] = soundBehaviourList; 
+            _soundBehaviourDic[property.propertyPath] = soundBehaviourList; 
             return soundBehaviourList;
         }
     }
