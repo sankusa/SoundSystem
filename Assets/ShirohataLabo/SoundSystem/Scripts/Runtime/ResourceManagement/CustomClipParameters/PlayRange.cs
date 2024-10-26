@@ -3,10 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem {
     [Serializable]
-    public class PlayRange {
-        [SerializeField] bool _enable;
-        public bool Enable => _enable;
-
+    public class PlayRange : CustomClipParameter {
         [SerializeField] int _fromSamples = 0;
         public int FromSamples => _fromSamples;
 

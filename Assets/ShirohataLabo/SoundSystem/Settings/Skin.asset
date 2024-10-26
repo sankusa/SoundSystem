@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Skin
   m_EditorClassIdentifier: 
   _mainIcon: {fileID: 2800000, guid: 348c22a9c707b74478a417a0a2d166b9, type: 3}
-  _audioUnitIcon: {fileID: 2800000, guid: 23b3043622c960949a7b4cffadf2ef29, type: 3}
+  _customClipIcon: {fileID: 2800000, guid: 23b3043622c960949a7b4cffadf2ef29, type: 3}
   _soundContainerIcon: {fileID: 2800000, guid: be8977059fdb47b4caca6e4cfc07bdbc, type: 3}

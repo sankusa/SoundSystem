@@ -31,12 +31,12 @@ namespace SoundSystem {
             playerGUI.DrawGUI(playerRect);
 
             using (var check = new EditorGUI.ChangeCheckScope()) {
-                SerializedProperty audioUnitProp = property.FindPropertyRelative("_audioUnit");
-                Rect audioUnitRect = new(position) {height = EditorGUIUtility.singleLineHeight};
-                position.yMin += audioUnitRect.height + EditorGUIUtility.standardVerticalSpacing;
-                EditorGUI.PropertyField(audioUnitRect, audioUnitProp);
+                SerializedProperty customClipProp = Sound.GetCustomClipProp(property);
+                Rect customClipRect = new(position) {height = EditorGUIUtility.singleLineHeight};
+                position.yMin += customClipRect.height + EditorGUIUtility.standardVerticalSpacing;
+                EditorGUI.PropertyField(customClipRect, customClipProp);
 
-                SerializedProperty behavioursProp = property.FindPropertyRelative("_behaviours");
+                SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
                 ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
                 float listHeight = soundBehaviourList.GetHeight();
                 soundBehaviourList.DoList(new Rect(position) {width = position.width, height = listHeight, xMin = position.xMin + EditorGUI.indentLevel * 14});
@@ -61,7 +61,7 @@ namespace SoundSystem {
             }
             height += EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty behavioursProp = property.FindPropertyRelative("_behaviours");
+            SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
             ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
             height += soundBehaviourList.GetHeight();
             return height;

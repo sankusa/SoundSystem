@@ -371,19 +371,23 @@ MonoBehaviour:
   _executeOnAwake: 1
   _soundCommand:
     _command:
-      rid: 1126683067014184961
+      rid: 1126683354508558401
   references:
     version: 2
     RefIds:
-    - rid: 1126683067014184961
+    - rid: 1126683354508558401
       type: {class: Play, ns: SoundSystem, asm: SoundSystem}
       data:
         _groupKey: Se
         _sound:
           _selectType: 0
           _sound:
-            _audioUnit: {fileID: 0}
+            _customClip: {fileID: 0}
+            _behaviours: []
           _soundKey: 
+        _duplicationHandling: 0
+        _spawnPoint: {fileID: 0}
+        _followSpawnPoint: 0
         _onComplete:
           m_PersistentCalls:
             m_Calls: []

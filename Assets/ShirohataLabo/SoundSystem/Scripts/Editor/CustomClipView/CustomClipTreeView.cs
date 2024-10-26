@@ -8,10 +8,10 @@ using Object = UnityEngine.Object;
 
 namespace SoundSystem {
     [Serializable]
-    public class AudioUnitTreeView : TreeView {
-        public Action<IEnumerable<AudioUnit>> onSelectedAudioUnitChanged;
+    public class CustomClipTreeView : TreeView {
+        public Action<IEnumerable<CustomClip>> _onSelectedCustomClipChanged;
 
-        public AudioUnitTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
+        public CustomClipTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
             rowHeight = 16;
             // showAlternatingRowBackgrounds = true;
             // showBorder = true;
@@ -24,8 +24,8 @@ namespace SoundSystem {
 
             int id = 0;
 
-            string folderPath = SoundSystemSetting.Instance.AudioUnitFolderRoot;
-            AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(folderPath);
+            string folderPath = SoundSystemSetting.Instance.CustomClipFolderRoot;
+            CustomClipTreeViewItem_Folder folderItem = new CustomClipTreeViewItem_Folder(folderPath);
             root.AddChild(folderItem);
 
             BuildItemRecursive(folderItem, ref id);
@@ -34,7 +34,7 @@ namespace SoundSystem {
             return root;
         }
 
-        void BuildItemRecursive(AudioUnitTreeViewItem_Folder parentFolderItem, ref int id) {
+        void BuildItemRecursive(CustomClipTreeViewItem_Folder parentFolderItem, ref int id) {
             string folderPath = parentFolderItem.FolderPath;
             int nextClipItemInsertIndex = 0;
             foreach (string guid in AssetDatabase.FindAssets("", new string[] {folderPath})) {
@@ -44,15 +44,15 @@ namespace SoundSystem {
                 if (assetPath.Substring(folderPath.Length + 1).IndexOf('/') != -1) continue;
 
                 if (AssetDatabase.IsValidFolder(assetPath)) {
-                    AudioUnitTreeViewItem_Folder folderItem = new AudioUnitTreeViewItem_Folder(assetPath);
+                    CustomClipTreeViewItem_Folder folderItem = new CustomClipTreeViewItem_Folder(assetPath);
                     parentFolderItem.AddChild(folderItem);
                     BuildItemRecursive(folderItem, ref id);
                     continue;
                 }
                 
-                AudioUnit audioUnit = AssetDatabase.LoadAssetAtPath<AudioUnit>(assetPath);
-                if (audioUnit != null) {
-                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new AudioUnitTreeViewItem_AudioUnit(audioUnit));
+                CustomClip customClip = AssetDatabase.LoadAssetAtPath<CustomClip>(assetPath);
+                if (customClip != null) {
+                    parentFolderItem.InsertChild(nextClipItemInsertIndex++, new CustomClipTreeViewItem_CustomClip(customClip));
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace SoundSystem {
         protected override void RowGUI(RowGUIArgs args) {
             Rect backgroundRect = new(args.rowRect) {xMin = args.rowRect.xMin + GetContentIndent(args.item) - 16};
 
-            if (args.item is AudioUnitTreeViewItem_Folder folderItem) {
+            if (args.item is CustomClipTreeViewItem_Folder folderItem) {
                 GUI.Box(backgroundRect, "", GUIStyles.FolderRowBackground);
                 for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
                     Rect cellRect = args.GetCellRect(i);
@@ -76,7 +76,7 @@ namespace SoundSystem {
                     }
                 }
             }
-            else if (args.item is AudioUnitTreeViewItem_AudioUnit unitItem) {
+            else if (args.item is CustomClipTreeViewItem_CustomClip clipItem) {
                 GUI.Box(backgroundRect, "", GUIStyles.BasicRowBackground);
                 for (int i = 0; i < args.GetNumVisibleColumns(); i++) {
                     Rect cellRect = args.GetCellRect(i);
@@ -84,10 +84,10 @@ namespace SoundSystem {
                     switch (columnIndex) {
                         case 0:
                             cellRect.xMin += GetContentIndent(args.item);
-                            string assetPath = AssetDatabase.GetAssetPath(unitItem.AudioUnit);
+                            string assetPath = AssetDatabase.GetAssetPath(clipItem.CustomClip);
                             Texture icon = AssetDatabase.GetCachedIcon(assetPath);
 
-                            EditorGUI.LabelField(cellRect, new GUIContent(unitItem.AudioUnit.name, icon));
+                            EditorGUI.LabelField(cellRect, new GUIContent(clipItem.CustomClip.name, icon));
                             break;
                     }
                 }
@@ -100,21 +100,21 @@ namespace SoundSystem {
 
         protected override void SingleClickedItem(int id) {
             TreeViewItem item = FindItem(id, rootItem);
-            if (item is AudioUnitTreeViewItem_Folder folderItem) {
+            if (item is CustomClipTreeViewItem_Folder folderItem) {
                 folderItem.OnSingleClick();
             }
-            else if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                unitItem.OnSingleClick();
+            else if (item is CustomClipTreeViewItem_CustomClip clipItem) {
+                clipItem.OnSingleClick();
             } 
         }
 
         protected override void DoubleClickedItem(int id) {
             TreeViewItem item = FindItem(id, rootItem);
-            if (item is AudioUnitTreeViewItem_Folder folderItem) {
+            if (item is CustomClipTreeViewItem_Folder folderItem) {
                 folderItem.OnDoubleClick();
             }
-            else if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                unitItem.OnDoubleClick();
+            else if (item is CustomClipTreeViewItem_CustomClip clipItem) {
+                clipItem.OnDoubleClick();
             }
         }
 
@@ -130,11 +130,11 @@ namespace SoundSystem {
             Object[] dragObjects = GetRows()
                 .Where(item => args.draggedItemIDs.Contains(item.id))
                 .Select(x => {
-                    if (x is AudioUnitTreeViewItem_Folder folderItem) {
+                    if (x is CustomClipTreeViewItem_Folder folderItem) {
                         return folderItem.FolderAsset as Object;
                     }
-                    if (x is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                        return unitItem.AudioUnit as Object;
+                    if (x is CustomClipTreeViewItem_CustomClip clipItem) {
+                        return clipItem.CustomClip as Object;
                     }
                     return null;
                 })
@@ -152,12 +152,12 @@ namespace SoundSystem {
 
                 switch (args.dragAndDropPosition) {
                     case DragAndDropPosition.UponItem:
-                        if (args.parentItem is AudioUnitTreeViewItem_Folder parentFolderItem) {
+                        if (args.parentItem is CustomClipTreeViewItem_Folder parentFolderItem) {
                             string folderPath = AssetDatabase.GetAssetPath(parentFolderItem.FolderAsset);
                             HandleDroppedObjects(droppedObjects, folderPath);
                         }
-                        if (args.parentItem is AudioUnitTreeViewItem_AudioUnit parentUnitItem) {
-                            string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentUnitItem.AudioUnit));
+                        if (args.parentItem is CustomClipTreeViewItem_CustomClip parentClipItem) {
+                            string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(parentClipItem.CustomClip));
                             HandleDroppedObjects(droppedObjects, folderPath);
                         }
                         Reload();
@@ -176,23 +176,23 @@ namespace SoundSystem {
         }
 
         static void HandleDroppedObjects(Object[] droppedObjects, string folderPath) {
-            IEnumerable<AudioUnit> audioUnits = droppedObjects.OfType<AudioUnit>();
-            EditorUtil.MoveAssetsWithUndo(audioUnits, folderPath);
+            IEnumerable<CustomClip> customClips = droppedObjects.OfType<CustomClip>();
+            EditorUtil.MoveAssetsWithUndo(customClips, folderPath);
 
             IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
             EditorUtil.MoveAssetsWithUndo(folders, folderPath);
 
             IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
-            AudioUnitUtil.CreateAudioUnits(clips, folderPath);
+            CustomClipUtil.CreateCustomClips(clips, folderPath);
         }
 
         protected override void SelectionChanged(IList<int> selectedIds) {
             base.SelectionChanged(selectedIds);
-            onSelectedAudioUnitChanged?.Invoke(
+            _onSelectedCustomClipChanged?.Invoke(
                 selectedIds
                     .Select(id => FindItem(id, rootItem))
-                    .OfType<AudioUnitTreeViewItem_AudioUnit>()
-                    .Select(x => x.AudioUnit)
+                    .OfType<CustomClipTreeViewItem_CustomClip>()
+                    .Select(x => x.CustomClip)
             );
         }
 
@@ -201,11 +201,11 @@ namespace SoundSystem {
         protected override void RenameEnded(RenameEndedArgs args) {
             if (args.acceptedRename == false) return;
             TreeViewItem item = FindItem(args.itemID, rootItem);
-            if (item is AudioUnitTreeViewItem_AudioUnit unitItem) {
-                string assetPath = AssetDatabase.GetAssetPath(unitItem.AudioUnit);
+            if (item is CustomClipTreeViewItem_CustomClip clipItem) {
+                string assetPath = AssetDatabase.GetAssetPath(clipItem.CustomClip);
                 AssetDatabase.RenameAsset(assetPath, args.newName);
             }
-            else if (item is AudioUnitTreeViewItem_Folder folderItem) {
+            else if (item is CustomClipTreeViewItem_Folder folderItem) {
                 string assetPath = AssetDatabase.GetAssetPath(folderItem.FolderAsset);
                 AssetDatabase.RenameAsset(assetPath, args.newName);
             }

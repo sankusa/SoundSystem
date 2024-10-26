@@ -5,8 +5,8 @@ namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKey))]
     public class SoundWithKeyDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-            SerializedProperty keyProp = property.FindPropertyRelative("_key");
-            SerializedProperty soundProp = property.FindPropertyRelative("_sound");
+            SerializedProperty keyProp = SoundWithKey.GetKeyProp(property);
+            SerializedProperty soundProp = SoundWithKey.GetSoundProp(property);
 
             Rect headerRect = new Rect(position) {height = EditorGUIUtility.singleLineHeight};
             position.yMin += headerRect.height + EditorGUIUtility.standardVerticalSpacing;
@@ -22,7 +22,7 @@ namespace SoundSystem {
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            SerializedProperty soundProp = property.FindPropertyRelative("_sound");
+            SerializedProperty soundProp = SoundWithKey.GetSoundProp(property);
             
             float height = 0;
             height += EditorGUIUtility.singleLineHeight;

@@ -12,7 +12,7 @@ namespace SoundSystem {
             position.yMin += headerRect.height + EditorGUIUtility.standardVerticalSpacing;
             EditorGUI.LabelField(headerRect, behaviour.GetType().Name, EditorStyles.boldLabel);
 
-            SerializedProperty activeProp = property.FindPropertyRelative("_active");
+            SerializedProperty activeProp = SoundBehaviour.GetActiveProp(property);
             Rect activeRect = new Rect(headerRect) {xMin = headerRect.xMax - 18};
             EditorGUI.PropertyField(activeRect, activeProp, GUIContent.none);
 
@@ -37,7 +37,7 @@ namespace SoundSystem {
             SoundBehaviour behaviour = property.GetObject() as SoundBehaviour;
             if (behaviour == null) return EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty activeProp = property.FindPropertyRelative("_active");
+            SerializedProperty activeProp = SoundBehaviour.GetActiveProp(property);
 
             float totalHeight = EditorGUIUtility.singleLineHeight;
             if (activeProp.boolValue) {

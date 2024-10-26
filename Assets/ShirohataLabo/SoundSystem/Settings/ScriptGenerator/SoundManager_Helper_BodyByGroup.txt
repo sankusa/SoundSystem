@@ -1,8 +1,8 @@
         public SoundPlayerGroup #GROUPKEY#Group => FindPlayerGroup("#GROUPKEY#");
         public SoundPlayer GetUnused#GROUPKEY#Player() => #GROUPKEY#Group.GetUnusedPlayer();
 
-        public SoundPlayer Play#GROUPKEY#(AudioUnit audioUnit, Action onComplete = null) {
-            return #GROUPKEY#Group.Play(audioUnit, onComplete);
+        public SoundPlayer Play#GROUPKEY#(CustomClip customClip, Action onComplete = null) {
+            return #GROUPKEY#Group.Play(customClip, onComplete);
         }
 
         public SoundPlayer Play#GROUPKEY#(Sound sound, Action onComplete = null) {
@@ -13,8 +13,8 @@
             return #GROUPKEY#Group.Play(soundKey, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#IfNotPlaying(AudioUnit audioUnit, Action onComplete = null) {
-            return #GROUPKEY#Group.PlayIfNotPlaying(audioUnit, onComplete);
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(CustomClip customClip, Action onComplete = null) {
+            return #GROUPKEY#Group.PlayIfNotPlaying(customClip, onComplete);
         }
 
         public SoundPlayer Play#GROUPKEY#IfNotPlaying(Sound sound, Action onComplete = null) {
@@ -25,8 +25,8 @@
             return #GROUPKEY#Group.PlayIfNotPlaying(soundKey, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#AsRestart(AudioUnit audioUnit, Action onComplete = null) {
-            return #GROUPKEY#Group.PlayAsRestart(audioUnit, onComplete);
+        public SoundPlayer Play#GROUPKEY#AsRestart(CustomClip customClip, Action onComplete = null) {
+            return #GROUPKEY#Group.PlayAsRestart(customClip, onComplete);
         }
 
         public SoundPlayer Play#GROUPKEY#AsRestart(Sound sound, Action onComplete = null) {
@@ -37,8 +37,8 @@
             return #GROUPKEY#Group.PlayAsRestart(soundKey, onComplete);
         }
 
-        public SoundPlayer Play#GROUPKEY#WithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            return #GROUPKEY#Group.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return #GROUPKEY#Group.PlayWithFadeIn(customClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer Play#GROUPKEY#WithFadeIn(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -53,8 +53,8 @@
             #GROUPKEY#Group.Stop();
         }
 
-        public void Stop#GROUPKEY#(AudioUnit audioUnit) {
-            #GROUPKEY#Group.Stop(audioUnit);
+        public void Stop#GROUPKEY#(CustomClip customClip) {
+            #GROUPKEY#Group.Stop(customClip);
         }
 
         public void Stop#GROUPKEY#(Sound sound) {
@@ -69,8 +69,8 @@
             #GROUPKEY#Group.StopWithFadeOut(fadeDuration, onComplete);
         }
 
-        public SoundPlayer Switch#GROUPKEY#(AudioUnit audioUnit, Action onComplete = null) {
-            return #GROUPKEY#Group.Switch(audioUnit, onComplete);
+        public SoundPlayer Switch#GROUPKEY#(CustomClip customClip, Action onComplete = null) {
+            return #GROUPKEY#Group.Switch(customClip, onComplete);
         }
 
         public SoundPlayer Switch#GROUPKEY#(Sound sound, Action onComplete = null) {
@@ -81,8 +81,8 @@
             return #GROUPKEY#Group.Switch(soundKey, onComplete);
         }
 
-        public SoundPlayer CrossFade#GROUPKEY#(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            return #GROUPKEY#Group.CrossFade(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        public SoundPlayer CrossFade#GROUPKEY#(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return #GROUPKEY#Group.CrossFade(customClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer CrossFade#GROUPKEY#(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -93,8 +93,8 @@
             return #GROUPKEY#Group.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer FindPlaying#GROUPKEY#Player(AudioUnit audioUnit) {
-            return #GROUPKEY#Group.FindPlayingPlayer(audioUnit);
+        public SoundPlayer FindPlaying#GROUPKEY#Player(CustomClip customClip) {
+            return #GROUPKEY#Group.FindPlayingPlayer(customClip);
         }
 
         public SoundPlayer FindPlaying#GROUPKEY#Player(Sound sound) {

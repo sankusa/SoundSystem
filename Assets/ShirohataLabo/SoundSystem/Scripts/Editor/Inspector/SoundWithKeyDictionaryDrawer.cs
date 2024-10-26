@@ -8,13 +8,13 @@ namespace SoundSystem {
         ReorderableList _soundList;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-            SerializedProperty listProp = property.FindPropertyRelative("_list");
+            SerializedProperty listProp = SoundWithKeyDictionary.GetListProp(property);
             PrepareList(listProp);
             _soundList.DoList(position);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            SerializedProperty listProp = property.FindPropertyRelative("_list");
+            SerializedProperty listProp = SoundWithKeyDictionary.GetListProp(property);
             PrepareList(listProp);
             return _soundList.GetHeight();
         }
@@ -35,10 +35,10 @@ namespace SoundSystem {
                 onAddCallback = (ReorderableList list) => {
                     listProp.InsertArrayElementAtIndex(listProp.arraySize);
                     SerializedProperty newElementProp = listProp.GetArrayElementAtIndex(listProp.arraySize - 1);
-                    newElementProp.FindPropertyRelative("_key").stringValue = "";
-                    SerializedProperty soundProp = newElementProp.FindPropertyRelative("_sound");
-                    soundProp.FindPropertyRelative("_audioUnit").objectReferenceValue = null;
-                    soundProp.FindPropertyRelative("_behaviours").ClearArray();
+                    SoundWithKey.GetKeyProp(newElementProp).stringValue = "";
+                    SerializedProperty soundProp = SoundWithKey.GetSoundProp(newElementProp);
+                    Sound.GetCustomClipProp(soundProp).objectReferenceValue = null;
+                    Sound.GetBehavioursProp(soundProp).ClearArray();
                 }
             };
         }

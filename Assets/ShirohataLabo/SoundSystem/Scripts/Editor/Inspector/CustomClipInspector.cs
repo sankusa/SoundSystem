@@ -2,13 +2,13 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoundSystem {
-    [CustomEditor(typeof(AudioUnit))]
-    public class AudioUnitInspector : Editor {
+    [CustomEditor(typeof(CustomClip))]
+    public class CustomClipInspector : Editor {
         readonly EditorSoundPlayerGUI _editorSoundPlayer = new();
 
         void OnEnable() {
             _editorSoundPlayer.OnEnable();
-            _editorSoundPlayer.Bind(target as AudioUnit);
+            _editorSoundPlayer.Bind(target as CustomClip);
         }
 
         void OnDisable() {
@@ -19,45 +19,24 @@ namespace SoundSystem {
             serializedObject.Update();
 
             // メンバ取得
-            var categoryProp = serializedObject.FindProperty("_category");
-            var clipProp = serializedObject.FindProperty("_clip");
+            var audioClipProp = serializedObject.FindProperty("_audioClip");
 
-            var volumeMultiplierProp = serializedObject.FindProperty("_volumeMultiplier");
-            var volumeMultiplier_ValueProp = volumeMultiplierProp.FindPropertyRelative("_value");
+            var volumeMultiplierProp = CustomClip.GetVolumeMultiplierProp(serializedObject);
+            var volumeMultiplierCurveProp = CustomClip.GetVolumeMultiplierCurveProp(serializedObject);
+            var pitchMultiplierProp = CustomClip.GetPitchMultiplierProp(serializedObject);
 
-            var volumeMultiplierCurveProp = serializedObject.FindProperty("_volumeMultiplierCurve");
-            var volumeMultiplierCurve_CurveProp = volumeMultiplierCurveProp.FindPropertyRelative("_curve");
-
-            var pitchMultiplierProp = serializedObject.FindProperty("_pitchMultiplier");
-            var pitchMultiplier_ValueProp = pitchMultiplierProp.FindPropertyRelative("_value");
-
-            var playRangeProp = serializedObject.FindProperty("_playRange");
+            var playRangeProp = CustomClip.GetPlayRangeProp(serializedObject);
             var playRange_EnableProp = playRangeProp.FindPropertyRelative("_enable");
             var playRange_FromSamplesProp = playRangeProp.FindPropertyRelative("_fromSamples");
             var playrange_ToSamplesProp = playRangeProp.FindPropertyRelative("_toSamples");
 
-            AudioClip clip = (AudioClip)clipProp.objectReferenceValue;
+            AudioClip clip = (AudioClip)audioClipProp.objectReferenceValue;
 
-            EditorGUILayout.PropertyField(categoryProp);
-            EditorGUILayout.PropertyField(clipProp);
+            EditorGUILayout.PropertyField(audioClipProp);
             // AudioClip変更時、各種値をリセット
-            if ((AudioClip)clipProp.objectReferenceValue != clip) {
-                clip = (AudioClip)clipProp.objectReferenceValue;
-                volumeMultiplier_ValueProp.floatValue = 1;
-                if (clip == null) {
-                    volumeMultiplierCurve_CurveProp.animationCurveValue = new AnimationCurve();
-                }
-                else {
-                    volumeMultiplierCurve_CurveProp.animationCurveValue = new AnimationCurve(new Keyframe(0, 1), new Keyframe(clip.length, 1));
-                }
-                pitchMultiplier_ValueProp.floatValue = 1;
-                playRange_FromSamplesProp.intValue = 0;
-                if (clip == null) {
-                    playrange_ToSamplesProp.intValue = 0;
-                }
-                else {
-                    playrange_ToSamplesProp.intValue = clip.samples;
-                }
+            if ((AudioClip)audioClipProp.objectReferenceValue != clip) {
+                clip = (AudioClip)audioClipProp.objectReferenceValue;
+                CustomClip.ResetValueBasedOnAudioClip(serializedObject);
             }
 
             // 音量

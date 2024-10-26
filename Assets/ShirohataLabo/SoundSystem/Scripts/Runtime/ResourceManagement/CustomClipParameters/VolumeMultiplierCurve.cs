@@ -1,12 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace SoundSystem.AudioUnitEffects {
+namespace SoundSystem.CustomClipParameters {
     [Serializable]
-    public class VolumeMultiplierCurve {
-        [SerializeField] bool _enable;
-        public bool Enable => _enable;
-
+    public class VolumeMultiplierCurve : CustomClipParameter {
         [SerializeField] AnimationCurve _curve = new();
         public AnimationCurve Curve => _curve;
     }

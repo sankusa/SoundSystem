@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoundSystem {
-    public class EditorSoundPlayerGUIForAudioUnitView {
+    public class EditorSoundPlayerGUIForCustomClipView {
         EditorSoundPlayer _editorPlayer;
 
         bool _playAuto;
@@ -15,8 +15,8 @@ namespace SoundSystem {
             _editorPlayer.Dispose();
         }
 
-        public void Bind(AudioUnit audioUnit) {
-            _editorPlayer.Bind(audioUnit);
+        public void Bind(CustomClip customClip) {
+            _editorPlayer.Bind(customClip);
             if (_playAuto) _editorPlayer.Play();
         }
 
@@ -24,13 +24,13 @@ namespace SoundSystem {
             _editorPlayer.Update();
 
             using (new EditorGUILayout.VerticalScope(GUIStyles.SimpleBox)) {
-                if (_editorPlayer.AudioUnit == null) {
+                if (_editorPlayer.CustomClip == null) {
                     EditorGUILayout.LabelField("Not Selected");
                 }
                 else {
-                    string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.AudioUnit);
+                    string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.CustomClip);
                     Texture icon = AssetDatabase.GetCachedIcon(assetPath);
-                    EditorGUILayout.LabelField(new GUIContent(_editorPlayer.AudioUnit.name, icon));
+                    EditorGUILayout.LabelField(new GUIContent(_editorPlayer.CustomClip.name, icon));
                 }
 
                 _editorPlayer.DrawLayoutTimeSlider();

@@ -1,18 +1,15 @@
-using SoundSystem.AudioUnitEffects;
 using UnityEditor;
 using UnityEngine;
 
 namespace SoundSystem {
-    [CustomPropertyDrawer(typeof(VolumeMultiplier))]
-    [CustomPropertyDrawer(typeof(VolumeMultiplierCurve))]
-    [CustomPropertyDrawer(typeof(PitchMultiplier))]
-    public class BasicAudioUnitEffectDrawer : PropertyDrawer {
+    [CustomPropertyDrawer(typeof(CustomClipParameter), true)]
+    public class CustomClipParameterDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             Rect headerRect = new Rect(position) {height = EditorGUIUtility.singleLineHeight};
             position.yMin += headerRect.height + EditorGUIUtility.standardVerticalSpacing;
             EditorGUI.LabelField(headerRect, label, EditorStyles.boldLabel);
 
-            SerializedProperty enableProp = property.FindPropertyRelative("_enable");
+            SerializedProperty enableProp = CustomClipParameter.GetEnableProp(property);
             Rect enableRect = new Rect(headerRect) {xMin = headerRect.xMax - 18};
             EditorGUI.PropertyField(enableRect, enableProp, GUIContent.none);
 
@@ -34,7 +31,7 @@ namespace SoundSystem {
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            SerializedProperty enableProp = property.FindPropertyRelative("_enable");
+            SerializedProperty enableProp = CustomClipParameter.GetEnableProp(property);
 
             float totalHeight = EditorGUIUtility.singleLineHeight;
             if (enableProp.boolValue) {

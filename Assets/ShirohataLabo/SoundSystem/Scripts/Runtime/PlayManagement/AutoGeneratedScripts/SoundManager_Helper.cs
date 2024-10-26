@@ -6,8 +6,8 @@ namespace SoundSystem {
         public SoundPlayerGroup BgmGroup => FindPlayerGroup("Bgm");
         public SoundPlayer GetUnusedBgmPlayer() => BgmGroup.GetUnusedPlayer();
 
-        public SoundPlayer PlayBgm(AudioUnit audioUnit, Action onComplete = null) {
-            return BgmGroup.Play(audioUnit, onComplete);
+        public SoundPlayer PlayBgm(CustomClip customClip, Action onComplete = null) {
+            return BgmGroup.Play(customClip, onComplete);
         }
 
         public SoundPlayer PlayBgm(Sound sound, Action onComplete = null) {
@@ -18,8 +18,8 @@ namespace SoundSystem {
             return BgmGroup.Play(soundKey, onComplete);
         }
 
-        public SoundPlayer PlayBgmIfNotPlaying(AudioUnit audioUnit, Action onComplete = null) {
-            return BgmGroup.PlayIfNotPlaying(audioUnit, onComplete);
+        public SoundPlayer PlayBgmIfNotPlaying(CustomClip customClip, Action onComplete = null) {
+            return BgmGroup.PlayIfNotPlaying(customClip, onComplete);
         }
 
         public SoundPlayer PlayBgmIfNotPlaying(Sound sound, Action onComplete = null) {
@@ -30,8 +30,8 @@ namespace SoundSystem {
             return BgmGroup.PlayIfNotPlaying(soundKey, onComplete);
         }
 
-        public SoundPlayer PlayBgmAsRestart(AudioUnit audioUnit, Action onComplete = null) {
-            return BgmGroup.PlayAsRestart(audioUnit, onComplete);
+        public SoundPlayer PlayBgmAsRestart(CustomClip customClip, Action onComplete = null) {
+            return BgmGroup.PlayAsRestart(customClip, onComplete);
         }
 
         public SoundPlayer PlayBgmAsRestart(Sound sound, Action onComplete = null) {
@@ -42,8 +42,8 @@ namespace SoundSystem {
             return BgmGroup.PlayAsRestart(soundKey, onComplete);
         }
 
-        public SoundPlayer PlayBgmWithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            return BgmGroup.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        public SoundPlayer PlayBgmWithFadeIn(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return BgmGroup.PlayWithFadeIn(customClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer PlayBgmWithFadeIn(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -58,8 +58,8 @@ namespace SoundSystem {
             BgmGroup.Stop();
         }
 
-        public void StopBgm(AudioUnit audioUnit) {
-            BgmGroup.Stop(audioUnit);
+        public void StopBgm(CustomClip customClip) {
+            BgmGroup.Stop(customClip);
         }
 
         public void StopBgm(Sound sound) {
@@ -74,8 +74,8 @@ namespace SoundSystem {
             BgmGroup.StopWithFadeOut(fadeDuration, onComplete);
         }
 
-        public SoundPlayer SwitchBgm(AudioUnit audioUnit, Action onComplete = null) {
-            return BgmGroup.Switch(audioUnit, onComplete);
+        public SoundPlayer SwitchBgm(CustomClip customClip, Action onComplete = null) {
+            return BgmGroup.Switch(customClip, onComplete);
         }
 
         public SoundPlayer SwitchBgm(Sound sound, Action onComplete = null) {
@@ -86,8 +86,8 @@ namespace SoundSystem {
             return BgmGroup.Switch(soundKey, onComplete);
         }
 
-        public SoundPlayer CrossFadeBgm(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            return BgmGroup.CrossFade(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        public SoundPlayer CrossFadeBgm(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return BgmGroup.CrossFade(customClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer CrossFadeBgm(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -98,8 +98,8 @@ namespace SoundSystem {
             return BgmGroup.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer FindPlayingBgmPlayer(AudioUnit audioUnit) {
-            return BgmGroup.FindPlayingPlayer(audioUnit);
+        public SoundPlayer FindPlayingBgmPlayer(CustomClip customClip) {
+            return BgmGroup.FindPlayingPlayer(customClip);
         }
 
         public SoundPlayer FindPlayingBgmPlayer(Sound sound) {
@@ -113,8 +113,8 @@ namespace SoundSystem {
         public SoundPlayerGroup SeGroup => FindPlayerGroup("Se");
         public SoundPlayer GetUnusedSePlayer() => SeGroup.GetUnusedPlayer();
 
-        public SoundPlayer PlaySe(AudioUnit audioUnit, Action onComplete = null) {
-            return SeGroup.Play(audioUnit, onComplete);
+        public SoundPlayer PlaySe(CustomClip customClip, Action onComplete = null) {
+            return SeGroup.Play(customClip, onComplete);
         }
 
         public SoundPlayer PlaySe(Sound sound, Action onComplete = null) {
@@ -125,8 +125,8 @@ namespace SoundSystem {
             return SeGroup.Play(soundKey, onComplete);
         }
 
-        public SoundPlayer PlaySeIfNotPlaying(AudioUnit audioUnit, Action onComplete = null) {
-            return SeGroup.PlayIfNotPlaying(audioUnit, onComplete);
+        public SoundPlayer PlaySeIfNotPlaying(CustomClip customClip, Action onComplete = null) {
+            return SeGroup.PlayIfNotPlaying(customClip, onComplete);
         }
 
         public SoundPlayer PlaySeIfNotPlaying(Sound sound, Action onComplete = null) {
@@ -137,8 +137,8 @@ namespace SoundSystem {
             return SeGroup.PlayIfNotPlaying(soundKey, onComplete);
         }
 
-        public SoundPlayer PlaySeAsRestart(AudioUnit audioUnit, Action onComplete = null) {
-            return SeGroup.PlayAsRestart(audioUnit, onComplete);
+        public SoundPlayer PlaySeAsRestart(CustomClip customClip, Action onComplete = null) {
+            return SeGroup.PlayAsRestart(customClip, onComplete);
         }
 
         public SoundPlayer PlaySeAsRestart(Sound sound, Action onComplete = null) {
@@ -149,8 +149,8 @@ namespace SoundSystem {
             return SeGroup.PlayAsRestart(soundKey, onComplete);
         }
 
-        public SoundPlayer PlaySeWithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            return SeGroup.PlayWithFadeIn(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        public SoundPlayer PlaySeWithFadeIn(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return SeGroup.PlayWithFadeIn(customClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer PlaySeWithFadeIn(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -165,8 +165,8 @@ namespace SoundSystem {
             SeGroup.Stop();
         }
 
-        public void StopSe(AudioUnit audioUnit) {
-            SeGroup.Stop(audioUnit);
+        public void StopSe(CustomClip customClip) {
+            SeGroup.Stop(customClip);
         }
 
         public void StopSe(Sound sound) {
@@ -181,8 +181,8 @@ namespace SoundSystem {
             SeGroup.StopWithFadeOut(fadeDuration, onComplete);
         }
 
-        public SoundPlayer SwitchSe(AudioUnit audioUnit, Action onComplete = null) {
-            return SeGroup.Switch(audioUnit, onComplete);
+        public SoundPlayer SwitchSe(CustomClip customClip, Action onComplete = null) {
+            return SeGroup.Switch(customClip, onComplete);
         }
 
         public SoundPlayer SwitchSe(Sound sound, Action onComplete = null) {
@@ -193,8 +193,8 @@ namespace SoundSystem {
             return SeGroup.Switch(soundKey, onComplete);
         }
 
-        public SoundPlayer CrossFadeSe(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            return SeGroup.CrossFade(audioUnit, fadeDuration, onComplete, onFadeComplete);
+        public SoundPlayer CrossFadeSe(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return SeGroup.CrossFade(customClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer CrossFadeSe(Sound sound, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -205,8 +205,8 @@ namespace SoundSystem {
             return SeGroup.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
         }
 
-        public SoundPlayer FindPlayingSePlayer(AudioUnit audioUnit) {
-            return SeGroup.FindPlayingPlayer(audioUnit);
+        public SoundPlayer FindPlayingSePlayer(CustomClip customClip) {
+            return SeGroup.FindPlayingPlayer(customClip);
         }
 
         public SoundPlayer FindPlayingSePlayer(Sound sound) {

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SoundSystem {
     [System.Serializable]
@@ -21,5 +22,11 @@ namespace SoundSystem {
             //     _list.Add(keyValuePair.Value);
             // }
         }
+
+#if UNITY_EDITOR
+        public static SerializedProperty GetListProp(SerializedProperty soundWithKeyDictionaryProp) {
+            return soundWithKeyDictionaryProp.FindPropertyRelative(nameof(_list));
+        }
+#endif
     }
 }

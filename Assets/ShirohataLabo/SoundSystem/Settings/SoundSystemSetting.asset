@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f45a635caa01fb4baa3be28346a3f65, type: 3}
   m_Name: SoundSystemSetting
   m_EditorClassIdentifier: 
-  _audioClipFolderRoot: {fileID: 102900000, guid: 0f43ee94a3b71e94db7f27097431ae0e, type: 3}
-  _audioUnitFolderRoot: {fileID: 102900000, guid: 8e3e66ead89018f409823c1cb7c08ab4, type: 3}
+  _audioClipFolderRoot: {fileID: 102900000, guid: 2b507c4ed1caa7a42b4436c0f92cb593, type: 3}
+  _customClipFolderRoot: {fileID: 102900000, guid: 2b507c4ed1caa7a42b4436c0f92cb593, type: 3}

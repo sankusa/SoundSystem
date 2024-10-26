@@ -2,14 +2,14 @@ using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 
 namespace SoundSystem {
-    public class AudioUnitTreeViewItem_Folder : TreeViewItem {
+    public class CustomClipTreeViewItem_Folder : TreeViewItem {
         string _folderPath;
         public string FolderPath => _folderPath;
 
         DefaultAsset _folderAsset;
         public DefaultAsset FolderAsset => _folderAsset;
 
-        public AudioUnitTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
+        public CustomClipTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
             _folderPath = folderPath;
             _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(folderPath);
             id = _folderAsset.GetInstanceID();

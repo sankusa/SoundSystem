@@ -3,8 +3,8 @@ using UnityEngine.Events;
 
 namespace SoundSystem {
     public partial class SoundPlayer {
-        public SoundPlayer Play(AudioUnit audioUnit, Action onComplete = null) {
-            SetAudioUnit(audioUnit);
+        public SoundPlayer Play(CustomClip customClip, Action onComplete = null) {
+            SetCustomClip(customClip);
             AddOnComplete(onComplete);
             return Play();
         }
@@ -21,8 +21,8 @@ namespace SoundSystem {
             return Play();
         }
 
-        public SoundPlayer PlayWithFadeIn(AudioUnit audioUnit, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
-            SetAudioUnit(audioUnit);
+        public SoundPlayer PlayWithFadeIn(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            SetCustomClip(customClip);
             SetFadeIn(fadeDuration, onFadeComplete);
             AddOnComplete(onComplete);
             return Play();

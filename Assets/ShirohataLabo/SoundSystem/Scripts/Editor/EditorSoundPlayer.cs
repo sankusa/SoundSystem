@@ -29,8 +29,8 @@ namespace SoundSystem {
 
         double _oldTime;
 
-        AudioUnit _audioUnit;
-        public AudioUnit AudioUnit => _audioUnit;
+        CustomClip _customClip;
+        public CustomClip CustomClip => _customClip;
 
         Sound _sound;
         public Sound Sound => _sound;
@@ -51,33 +51,33 @@ namespace SoundSystem {
             DestroyAudioSourceObject();
         }
 
-        public void Bind(AudioUnit audioUnit) {
-            _audioUnit = audioUnit;
+        public void Bind(CustomClip customClip) {
+            _customClip = customClip;
             _sound = null;
             Player.Reset();
-            if (audioUnit != null) {
-                Player.SetAudioUnit(_audioUnit);
+            if (customClip != null) {
+                Player.SetCustomClip(_customClip);
             }
         }
 
         public void Bind(Sound sound) {
             _sound = sound;
-            _audioUnit = null;
+            _customClip = null;
             Player.Reset();
-            if (_sound != null && _sound.AudioUnit != null) {
+            if (_sound != null && _sound.CustomClip != null) {
                 Player.SetSound(sound);
             }
         }
 
         public void Update() {
             // 再生対象が変更されていたら反映
-            if (_audioUnit == null && _sound == null) {
+            if (_customClip == null && _sound == null) {
                 if (Player.IsUsing) Player.Reset();
             }
-            else if (_audioUnit != null && Player.AudioUnit != _audioUnit) {
-                Player.SetAudioUnit(_audioUnit);
+            else if (_customClip != null && Player.CustomClip != _customClip) {
+                Player.SetCustomClip(_customClip);
             }
-            else if (_sound != null && Player.Sound != _sound && _sound.AudioUnit != null) {
+            else if (_sound != null && Player.Sound != _sound && _sound.CustomClip != null) {
                 Player.SetSound(_sound);
             }
 
@@ -131,8 +131,8 @@ namespace SoundSystem {
         }
 
         public void Play() {
-            if (_audioUnit != null) {
-                Player.SetAudioUnit(_audioUnit).SetLoop(_loop).Play();
+            if (_customClip != null) {
+                Player.SetCustomClip(_customClip).SetLoop(_loop).Play();
             }
             else if (_sound != null) {
                 Player.SetSound(_sound).SetLoop(_loop).Play();

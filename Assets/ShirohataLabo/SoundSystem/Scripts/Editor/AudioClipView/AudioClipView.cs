@@ -5,8 +5,8 @@ using UnityEngine;
 namespace SoundSystem {
     [System.Serializable]
     public class AudioClipView {
-        [SerializeField] TreeViewState _audioUnitTreeViewState = new();
-        AudioClipTreeView _audioClipTreeView;
+        [SerializeField] TreeViewState _treeViewState = new();
+        AudioClipTreeView _treeView;
 
         SearchField _searchField;
 
@@ -27,7 +27,7 @@ namespace SoundSystem {
             var multiColumnHeader = new MultiColumnHeader(headerState);
             multiColumnHeader.ResizeToFit();
 
-            _audioClipTreeView = new AudioClipTreeView(_audioUnitTreeViewState, multiColumnHeader);
+            _treeView = new AudioClipTreeView(_treeViewState, multiColumnHeader);
         }
 
         public void OnGUI() {
@@ -35,37 +35,37 @@ namespace SoundSystem {
                 using (new EditorGUILayout.HorizontalScope(GUIStyles.DarkToolbar)) {
                     EditorGUILayout.LabelField($"{nameof(AudioClip)}", GUIStyles.CaptionLabel, GUILayout.Width(80));
                     GUILayout.FlexibleSpace();
-                    _audioClipTreeView.searchString = _searchField.OnGUI(
+                    _treeView.searchString = _searchField.OnGUI(
                         EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(true), GUILayout.Height(EditorGUIUtility.singleLineHeight)),
-                        _audioClipTreeView.searchString
+                        _treeView.searchString
                     );
                     if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
-                        _audioClipTreeView.Reload();
+                        _treeView.Reload();
                     }
                     if (GUILayout.Button(new GUIContent(Icons.CommandIcon), EditorStyles.toolbarButton)) {
                         GenericMenu menu = new();
                         menu.AddItem(
                             new GUIContent("Check Import Setting"),
                             false,
-                            () => _audioClipTreeView.CheckImportSetting()
+                            () => _treeView.CheckImportSetting()
                         );
                         menu.AddItem(
                             new GUIContent("Apply Import Setting"),
                             false,
-                            () => _audioClipTreeView.ApplyImportSetting()
+                            () => _treeView.ApplyImportSetting()
                         );
                         menu.ShowAsContext();
                     }
                 }
 
-                _audioClipTreeView.OnGUI(
+                _treeView.OnGUI(
                     GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
                 );
             }
         }
 
         public void Reload() {
-            _audioClipTreeView.Reload();
+            _treeView.Reload();
         }
     }
 }

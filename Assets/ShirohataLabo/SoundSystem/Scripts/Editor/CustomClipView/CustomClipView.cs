@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace SoundSystem {
     [System.Serializable]
-    public class AudioUnitView {
-        [SerializeField] TreeViewState _audioUnitTreeViewState = new();
-        AudioUnitTreeView _audioUnitTreeView;
+    public class CustomClipView {
+        [SerializeField] TreeViewState _treeViewState = new();
+        CustomClipTreeView _treeView;
 
         SearchField _searchField;
 
-        EditorSoundPlayerGUIForAudioUnitView _editorSoundPlayerGUI = new();
+        EditorSoundPlayerGUIForCustomClipView _editorSoundPlayerGUI = new();
 
         public void OnEnable() {
             _searchField = new();
@@ -31,8 +31,8 @@ namespace SoundSystem {
             var multiColumnHeader = new MultiColumnHeader(headerState);
             multiColumnHeader.ResizeToFit();
 
-            _audioUnitTreeView = new AudioUnitTreeView(_audioUnitTreeViewState, multiColumnHeader);
-            _audioUnitTreeView.onSelectedAudioUnitChanged = audioUnits => {_editorSoundPlayerGUI.Bind(audioUnits.FirstOrDefault());};
+            _treeView = new CustomClipTreeView(_treeViewState, multiColumnHeader);
+            _treeView._onSelectedCustomClipChanged = customClips => {_editorSoundPlayerGUI.Bind(customClips.FirstOrDefault());};
 
             _editorSoundPlayerGUI.OnEnable();
         }
@@ -44,18 +44,18 @@ namespace SoundSystem {
         public void OnGUI() {
             using (new EditorGUILayout.VerticalScope()) {
                 using (new EditorGUILayout.HorizontalScope(GUIStyles.DarkToolbar)) {
-                    EditorGUILayout.LabelField($"{nameof(AudioUnit)}", GUIStyles.CaptionLabel, GUILayout.Width(80));
+                    EditorGUILayout.LabelField($"{nameof(CustomClip)}", GUIStyles.CaptionLabel, GUILayout.Width(80));
                     GUILayout.FlexibleSpace();
-                    _audioUnitTreeView.searchString = _searchField.OnGUI(
+                    _treeView.searchString = _searchField.OnGUI(
                         EditorGUILayout.GetControlRect(false, GUILayout.ExpandWidth(true), GUILayout.Height(EditorGUIUtility.singleLineHeight)),
-                        _audioUnitTreeView.searchString
+                        _treeView.searchString
                     );
                     if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
-                        _audioUnitTreeView.Reload();
+                        _treeView.Reload();
                     }
                 }
 
-                _audioUnitTreeView.OnGUI(
+                _treeView.OnGUI(
                     GUILayoutUtility.GetRect(0, 0, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true))
                 );
 
@@ -64,7 +64,7 @@ namespace SoundSystem {
         }
 
         public void Reload() {
-            _audioUnitTreeView.Reload();
+            _treeView.Reload();
         }
     }
 }

@@ -12,11 +12,11 @@ namespace SoundSystem {
         }
         
         [SerializeField] AudioClipView _audioClipView = new();
-        [SerializeField] AudioUnitView _audioUnitView = new();
+        [SerializeField] CustomClipView _customClipView = new();
         [SerializeField] SoundContainerView _soundContainerView = new();
 
         [SerializeField] bool _showAudioClipView = true;
-        [SerializeField] bool _showAudioUnitView = true;
+        [SerializeField] bool _showcustomClipView = true;
         [SerializeField] bool _showSoundContainerView = true;
 
         LayoutSplitter _splitter1;
@@ -26,7 +26,7 @@ namespace SoundSystem {
             titleContent = new GUIContent(nameof(SoundSystem), Skin.Instance.MainIcon);
 
             _audioClipView.OnEnable();
-            _audioUnitView.OnEnable();
+            _customClipView.OnEnable();
             _soundContainerView.OnEnable();
 
             _splitter1 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter1") {
@@ -46,7 +46,7 @@ namespace SoundSystem {
         }
 
         void OnDisable() {
-            _audioUnitView.OnDisable();
+            _customClipView.OnDisable();
             _soundContainerView.OnDisable();
 
             EditorApplication.projectChanged -= OnProjectChanged;
@@ -55,7 +55,7 @@ namespace SoundSystem {
         void OnGUI() {
             using (new GUILayout.HorizontalScope(EditorStyles.toolbar)) {
                 _showAudioClipView = GUILayout.Toggle(_showAudioClipView, new GUIContent(Icons.AudioClipIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
-                _showAudioUnitView = GUILayout.Toggle(_showAudioUnitView, new GUIContent(Skin.Instance.AudioUnitIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
+                _showcustomClipView = GUILayout.Toggle(_showcustomClipView, new GUIContent(Skin.Instance.CustomClipIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
                 _showSoundContainerView = GUILayout.Toggle(_showSoundContainerView, new GUIContent(Skin.Instance.SoundContainerIcon), EditorStyles.toolbarButton, GUILayout.Width(32));
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button("Command", EditorStyles.toolbarButton)) {
@@ -65,13 +65,13 @@ namespace SoundSystem {
                 }
             }
             using (new GUILayout.HorizontalScope()) {
-                bool useSplitter1 = _showAudioClipView && _showAudioUnitView;
-                bool useSplitter2 = (_showAudioUnitView || _showAudioClipView) && _showSoundContainerView;
+                bool useSplitter1 = _showAudioClipView && _showcustomClipView;
+                bool useSplitter2 = (_showcustomClipView || _showAudioClipView) && _showSoundContainerView;
                 if (useSplitter2) _splitter2.Begin();
                 if (useSplitter1) _splitter1.Begin();
                 if (_showAudioClipView) _audioClipView.OnGUI();
                 if (useSplitter1) _splitter1.Split();
-                if (_showAudioUnitView) _audioUnitView.OnGUI();
+                if (_showcustomClipView) _customClipView.OnGUI();
                 if (useSplitter1) _splitter1.End();
                 if (useSplitter2) _splitter2.Split();
                 if (_showSoundContainerView) _soundContainerView.OnGUI();
@@ -82,7 +82,7 @@ namespace SoundSystem {
 
         void OnProjectChanged() {
             _audioClipView.Reload();
-            _audioUnitView.Reload();
+            _customClipView.Reload();
             _soundContainerView.Reload(); 
         }
     }

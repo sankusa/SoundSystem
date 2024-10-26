@@ -17,8 +17,8 @@ namespace SoundSystem {
         [SerializeField] Texture2D _mainIcon;
         public Texture2D MainIcon => _mainIcon;
 
-        [SerializeField] Texture2D _audioUnitIcon;
-        public Texture2D AudioUnitIcon => _audioUnitIcon;
+        [SerializeField] Texture2D _customClipIcon;
+        public Texture2D CustomClipIcon => _customClipIcon;
 
         [SerializeField] Texture2D _soundContainerIcon;
         public Texture2D SoundContainerIcon => _soundContainerIcon;

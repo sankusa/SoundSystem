@@ -22,8 +22,8 @@ namespace SoundSystem {
             _player.Dispose();
         }
 
-        public void Bind(AudioUnit audioUnit) {
-            _player.Bind(audioUnit);
+        public void Bind(CustomClip customClip) {
+            _player.Bind(customClip);
         }
 
         public void Bind(Sound sound) {
