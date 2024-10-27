@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/VolumeRolloff", 152)]
+    [SoundBehaviourMenuItem(nameof(VolumeRolloff), 552)]
     public class VolumeRolloff : SoundBehaviour {
         [SerializeField] AudioRolloffMode _mode = AudioRolloffMode.Logarithmic;
         public AudioRolloffMode Mode => _mode;

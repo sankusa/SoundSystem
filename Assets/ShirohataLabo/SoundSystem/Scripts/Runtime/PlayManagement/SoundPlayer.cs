@@ -12,8 +12,7 @@ namespace SoundSystem {
         public bool IsUsing => _audioSource.clip != null;
         public bool IsPlaying => _audioSource.isPlaying;
         public bool IsStopped => _audioSource.isPlaying == false && IsPaused == false;
-        bool _isPaused;
-        public bool IsPaused => _isPaused;
+        public bool IsPaused { get; private set; }
         public int TimeSamples {
             get => _audioSource.timeSamples;
             set => _audioSource.timeSamples = value;
@@ -34,7 +33,6 @@ namespace SoundSystem {
         public AudioRolloffMode VolumeRollof => _audioSource.rolloffMode;
         public float MinDistance => _audioSource.minDistance;
         public float MaxDistance => _audioSource.maxDistance;
-
 
         // ・AudioSource.isPlayingはポーズ時にfalseになってしまう
         // ・AudioSourceは再生位置が終端に達した場合、SoundPlayerが検知する前に自律的に状態をリセットしてしまう場合がある
@@ -59,6 +57,8 @@ namespace SoundSystem {
 
         Transform _spawnPoint;
 
+        public float VolumeMultiplier { get; private set; } = 1;
+        public float PitchMultiplier { get; private set; } = 1;
         public UnityEngine.AudioHighPassFilter AudioHighPassFilter { get; private set; }
         public UnityEngine.AudioLowPassFilter AudioLowPassFilter { get; private set; }
         public UnityEngine.AudioEchoFilter AudioEchoFilter { get; private set; }
@@ -182,6 +182,16 @@ namespace SoundSystem {
 
         public SoundPlayer SetTime(float time) {
             _audioSource.timeSamples = _audioSource.clip == null ? 0 : (int)(time * _audioSource.clip.frequency);
+            return this;
+        }
+
+        public SoundPlayer SetVolumeMultiplier(float volumeMultiplier) {
+            VolumeMultiplier = volumeMultiplier;
+            return this;
+        }
+
+        public SoundPlayer SetPitchMultiplier(float pitchMultiplier) {
+            PitchMultiplier = pitchMultiplier;
             return this;
         }
 
@@ -357,12 +367,12 @@ namespace SoundSystem {
 
         public void Pause() {
             _audioSource.Pause();
-            _isPaused = true;
+            IsPaused = true;
         }
 
         public void Resume() {
             _audioSource.UnPause();
-            _isPaused = false;
+            IsPaused = false;
         }
 
         public void Reset() {
@@ -371,7 +381,7 @@ namespace SoundSystem {
             _fadeVolume.Clear();
             _onComplete = null;
             _isPlayStarted = false;
-            _isPaused = false;
+            IsPaused = false;
             _transform.localPosition = Vector3.zero;
             _spawnPoint = null;
             
@@ -386,6 +396,8 @@ namespace SoundSystem {
         }
 
         public void ResetSoundBehaviours() {
+            VolumeMultiplier = 1;
+            PitchMultiplier = 1;
             _audioSource.bypassEffects = false;
             _audioSource.bypassListenerEffects = false;
             _audioSource.bypassReverbZones = false;
@@ -449,6 +461,7 @@ namespace SoundSystem {
             if (_customClip != null) {
                 volume *= _customClip.GetVolumeMultiplier(_audioSource.time);
             }
+            volume *= VolumeMultiplier;
             volume *= Volume.MultiplyVolume(_volumes);
             volume *= _fadeVolume.Value;
 
@@ -464,6 +477,7 @@ namespace SoundSystem {
             if (_customClip != null) {
                 pitch = _customClip.GetPitchMultiplier();
             }
+            pitch *= PitchMultiplier;
             _audioSource.pitch = pitch;
         }
 

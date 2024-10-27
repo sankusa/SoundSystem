@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("Filter/AudioDistortionFilter", 1001)]
+    [SoundBehaviourMenuItem(nameof(AudioDistortionFilter), 1001)]
     public class AudioDistortionFilter : SoundBehaviour {
         [SerializeField] bool _enable = true;
         public bool Enable => _enable;

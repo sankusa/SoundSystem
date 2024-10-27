@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/IgnoreListenerPause", 201)]
+    [SoundBehaviourMenuItem(nameof(IgnoreListenerPause), 601)]
     public class IgnoreListenerPause : SoundBehaviour {
         [SerializeField] bool _value;
         public bool Value => _value;

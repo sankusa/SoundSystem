@@ -86,6 +86,7 @@ namespace SoundSystem {
                     Rect itemButtonRect = new Rect(rect) {xMin = rect.xMax - 22};
                     if (GUI.Button(itemButtonRect, Icons.PlusIcon)) {
                         GenericMenu menu = new GenericMenu();
+                        int previousPriority = int.MinValue;
                         foreach (Type type in TypeCache
                             .GetTypesDerivedFrom<SoundBehaviour>()
                             .OrderBy(x => {
@@ -101,6 +102,9 @@ namespace SoundSystem {
                                 as SoundBehaviourMenuItemAttribute;
 
                             if (menuItemAttribute == null) continue;
+
+                            if (previousPriority != int.MinValue && menuItemAttribute.Priority - previousPriority > 100) menu.AddSeparator("");
+                            previousPriority = menuItemAttribute.Priority;
 
                             string typeFullName = type.Assembly.GetName().Name + " " + type.FullName;
                             bool exists = Enumerable
@@ -143,9 +147,6 @@ namespace SoundSystem {
                 elementHeightCallback = (int index) => {
                     return EditorGUI.GetPropertyHeight(behavioursProp.GetArrayElementAtIndex(index));
                 },
-                onAddDropdownCallback = (Rect buttonRect, ReorderableList list) => {
-
-                }
             };
             _soundBehaviourDic[property.propertyPath] = soundBehaviourList; 
             return soundBehaviourList;

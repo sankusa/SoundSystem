@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/IgnoreListenerVolume", 200)]
+    [SoundBehaviourMenuItem(nameof(IgnoreListenerVolume), 600)]
     public class IgnoreListenerVolume : SoundBehaviour {
         [SerializeField] bool _value;
         public bool Value => _value;

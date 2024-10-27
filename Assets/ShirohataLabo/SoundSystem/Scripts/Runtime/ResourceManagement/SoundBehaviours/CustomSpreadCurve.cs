@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/CustomSpreadCurve", 158)]
+    [SoundBehaviourMenuItem(nameof(CustomSpreadCurve), 558)]
     public class CustomSpreadCurve : SoundBehaviour {
         [SerializeField] AnimationCurve _curve = new();
         public AnimationCurve Curve => _curve;

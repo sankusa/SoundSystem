@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/BypassListenerEffects", 101)]
+    [SoundBehaviourMenuItem(nameof(BypassListenerEffects), 501)]
     public class BypassListenerEffects : SoundBehaviour {
         [SerializeField] bool _value = true;
         public bool Value => _value;

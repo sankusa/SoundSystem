@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("Filter/AudioHighPassFilter", 1003)]
+    [SoundBehaviourMenuItem(nameof(AudioHighPassFilter), 1003)]
     public class AudioHighPassFilter : SoundBehaviour {
         [SerializeField] bool _enable = true;
         public bool Enable => _enable;

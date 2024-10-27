@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/CustomSpatialBlendCurve", 157)]
+    [SoundBehaviourMenuItem(nameof(CustomSpatialBlendCurve), 557)]
     public class CustomSpatialBlendCurve : SoundBehaviour {
         [SerializeField] AnimationCurve _curve = new();
         public AnimationCurve Curve => _curve;

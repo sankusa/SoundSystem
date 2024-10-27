@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/Spread", 151)]
+    [SoundBehaviourMenuItem(nameof(Spread), 551)]
     public class Spread : SoundBehaviour {
         [SerializeField, Range(0, 360)] float _value;
         public float Value => _value;

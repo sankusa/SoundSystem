@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem("AudioSource/StereoPan", 110)]
+    [SoundBehaviourMenuItem(nameof(StereoPan), 510)]
     public class StereoPan : SoundBehaviour {
         [SerializeField, Range(-1, 1)] float _value;
         public float Value => _value;
