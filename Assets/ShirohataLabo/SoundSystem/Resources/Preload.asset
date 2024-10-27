@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _soundDic:
     _list: []
+  references:
+    version: 2
+    RefIds: []

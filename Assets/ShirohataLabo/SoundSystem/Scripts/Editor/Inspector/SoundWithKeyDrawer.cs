@@ -14,7 +14,7 @@ namespace SoundSystem {
             property.isExpanded = EditorGUI.Foldout(headerRect, property.isExpanded, "");
 
             Rect keyRect = new Rect(headerRect) {xMin = headerRect.xMin};
-            EditorGUI.PropertyField(keyRect, keyProp);
+            EditorGUI.PropertyField(keyRect, keyProp, GUIContent.none);
 
             if (property.isExpanded) {
                 EditorGUI.PropertyField(position, soundProp, GUIContent.none, true);

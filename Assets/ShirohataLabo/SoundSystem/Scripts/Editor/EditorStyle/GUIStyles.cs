@@ -26,6 +26,24 @@ namespace SoundSystem {
             }
         }
 
+        static GUIStyle _darkSimpleBox;
+        public static GUIStyle DarkSimpleBox {
+            get {
+                if (_darkSimpleBox == null) {
+                    _darkSimpleBox = new GUIStyle("GroupBox");
+                    _darkSimpleBox.margin = new RectOffset();
+                    _darkSimpleBox.padding = new RectOffset(6, 6, 6, 6);
+
+                    Texture2D backgroundTexture = new(1, 1);
+                    backgroundTexture.SetPixel(0, 0, new Color(0, 0, 0, 0.4f));
+                    backgroundTexture.Apply();
+
+                    _darkSimpleBox.normal.background = backgroundTexture;
+                }
+                return _darkSimpleBox;
+            }
+        }
+
         static GUIStyle _invisibleButton;
         public static GUIStyle InvisibleButton {
             get {

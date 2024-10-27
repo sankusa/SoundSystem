@@ -12,6 +12,8 @@ namespace SoundSystem {
         Dictionary<string, ReorderableList> _soundBehaviourDic = new();
 
         static float _editorPlayerHeight = EditorGUIUtility.singleLineHeight + 8;
+        static readonly float _sideSpace = 4;
+        static readonly float _afterSpace = 8;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             if (label != GUIContent.none) {
@@ -21,13 +23,22 @@ namespace SoundSystem {
                 EditorGUI.indentLevel++;
             }
 
-            Rect boxRect = new Rect(position) {xMin = position.xMin + EditorGUI.indentLevel * 14 - 2, xMax = position.xMax + 2};
+            Rect boxRect = new Rect(position) {
+                xMin = position.xMin + EditorGUI.indentLevel * 14 - _sideSpace,
+                xMax = position.xMax + _sideSpace,
+                yMax = position.yMax - _afterSpace,
+            };
             GUI.Box(boxRect, "", GUIStyles.SimpleBox);
 
             position.yMin += EditorGUIUtility.standardVerticalSpacing;
 
             EditorSoundPlayerGUIForPropertyDrawer playerGUI = PrepareEditorSoundPlayerGUI(property);
-            Rect playerRect = new Rect(position) {height = _editorPlayerHeight, xMin = position.xMin + EditorGUI.indentLevel * 14};
+            Rect playerRect = new Rect(position) {
+                y = position.y - 2,
+                height = _editorPlayerHeight,
+                xMin = position.xMin + EditorGUI.indentLevel * 14 - _sideSpace,
+                xMax = position.xMax + _sideSpace
+            };
             position.yMin += playerRect.height + EditorGUIUtility.standardVerticalSpacing;
             playerGUI.DrawGUI(playerRect);
 
@@ -38,6 +49,59 @@ namespace SoundSystem {
                 EditorGUI.PropertyField(clipRect, clipProp);
 
                 SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
+                Rect behavioursHeaderRect = new Rect(position) {height = EditorGUIUtility.singleLineHeight};
+                position.yMin += behavioursHeaderRect.height + EditorGUIUtility.standardVerticalSpacing;
+                
+                EditorGUI.LabelField(behavioursHeaderRect, "Sound Behaviours");
+                
+                Rect itemButtonRect = new Rect(behavioursHeaderRect) {xMin = behavioursHeaderRect.xMin + EditorGUIUtility.labelWidth + EditorGUIUtility.standardVerticalSpacing, width = 20};
+                if (GUI.Button(itemButtonRect, Icons.PlusIcon)) {
+                    GenericMenu menu = new GenericMenu();
+                    int previousPriority = int.MinValue;
+                    foreach (Type type in TypeCache
+                        .GetTypesDerivedFrom<SoundBehaviour>()
+                        .OrderBy(x => {
+                            SoundBehaviourMenuItemAttribute menuItemAttribute = x.GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true).FirstOrDefault() as SoundBehaviourMenuItemAttribute;
+                            if (menuItemAttribute == null) return int.MaxValue;
+                            return menuItemAttribute.Priority;
+
+                        })
+                    ) {
+                        SoundBehaviourMenuItemAttribute menuItemAttribute = type
+                            .GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true)
+                            .FirstOrDefault()
+                            as SoundBehaviourMenuItemAttribute;
+
+                        if (menuItemAttribute == null) continue;
+
+                        if (previousPriority != int.MinValue && menuItemAttribute.Priority - previousPriority > 100) menu.AddSeparator("");
+                        previousPriority = menuItemAttribute.Priority;
+
+                        string typeFullName = type.Assembly.GetName().Name + " " + type.FullName;
+                        bool exists = Enumerable
+                            .Range(0, behavioursProp.arraySize)
+                            .Any(i => behavioursProp.GetArrayElementAtIndex(i).managedReferenceFullTypename == typeFullName);
+
+                        if (exists) continue;
+
+                        menu.AddItem(
+                            new GUIContent(menuItemAttribute.MenuName),
+                            false,
+                            () => {
+                                property.serializedObject.Update();
+
+                                behavioursProp.InsertArrayElementAtIndex(behavioursProp.arraySize);
+                                SerializedProperty behaviourProp = behavioursProp.GetArrayElementAtIndex(behavioursProp.arraySize - 1);
+                                behaviourProp.managedReferenceValue = Activator.CreateInstance(type);
+
+                                property.serializedObject.ApplyModifiedProperties();
+                                _soundPlayerGUIDic[property.propertyPath].ReapplyParameters(); 
+                            }
+                        );
+                    }
+                    menu.ShowAsContext();
+                }
+
                 ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
                 float listHeight = soundBehaviourList.GetHeight();
                 soundBehaviourList.DoList(new Rect(position) {width = position.width, height = listHeight, xMin = position.xMin + EditorGUI.indentLevel * 14});
@@ -55,16 +119,16 @@ namespace SoundSystem {
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
             float height = 0;
-            height += EditorGUIUtility.standardVerticalSpacing * 2;
-            height += _editorPlayerHeight;
+            height += _editorPlayerHeight + EditorGUIUtility.standardVerticalSpacing;
             if (label != GUIContent.none) {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
-            height += EditorGUIUtility.singleLineHeight;
+            height += (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * 2;
 
             SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
             ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
-            height += soundBehaviourList.GetHeight();
+            height += soundBehaviourList.GetHeight() - 14;
+            height += _afterSpace;
             return height;
         }
 
@@ -78,59 +142,7 @@ namespace SoundSystem {
 
         ReorderableList PrepareReorderableList(SerializedProperty property, SerializedProperty behavioursProp) {
             if (_soundBehaviourDic.ContainsKey(property.propertyPath)) return _soundBehaviourDic[property.propertyPath];
-            ReorderableList soundBehaviourList = new ReorderableList(property.serializedObject, behavioursProp, true, true, false, false) {
-                drawHeaderCallback = (Rect rect) => {
-                    using (new IndentLevelScope(0)) {
-                        EditorGUI.LabelField(rect, "Sound Behaviours");
-                    }
-                    Rect itemButtonRect = new Rect(rect) {xMin = rect.xMax - 22};
-                    if (GUI.Button(itemButtonRect, Icons.PlusIcon)) {
-                        GenericMenu menu = new GenericMenu();
-                        int previousPriority = int.MinValue;
-                        foreach (Type type in TypeCache
-                            .GetTypesDerivedFrom<SoundBehaviour>()
-                            .OrderBy(x => {
-                                SoundBehaviourMenuItemAttribute menuItemAttribute = x.GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true).FirstOrDefault() as SoundBehaviourMenuItemAttribute;
-                                if (menuItemAttribute == null) return int.MaxValue;
-                                return menuItemAttribute.Priority;
-
-                            })
-                        ) {
-                            SoundBehaviourMenuItemAttribute menuItemAttribute = type
-                                .GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true)
-                                .FirstOrDefault()
-                                as SoundBehaviourMenuItemAttribute;
-
-                            if (menuItemAttribute == null) continue;
-
-                            if (previousPriority != int.MinValue && menuItemAttribute.Priority - previousPriority > 100) menu.AddSeparator("");
-                            previousPriority = menuItemAttribute.Priority;
-
-                            string typeFullName = type.Assembly.GetName().Name + " " + type.FullName;
-                            bool exists = Enumerable
-                                .Range(0, behavioursProp.arraySize)
-                                .Any(i => behavioursProp.GetArrayElementAtIndex(i).managedReferenceFullTypename == typeFullName);
-
-                            if (exists) continue;
-
-                            menu.AddItem(
-                                new GUIContent(menuItemAttribute.MenuName),
-                                false,
-                                () => {
-                                    property.serializedObject.Update();
-
-                                    behavioursProp.InsertArrayElementAtIndex(behavioursProp.arraySize);
-                                    SerializedProperty behaviourProp = behavioursProp.GetArrayElementAtIndex(behavioursProp.arraySize - 1);
-                                    behaviourProp.managedReferenceValue = Activator.CreateInstance(type);
-
-                                    property.serializedObject.ApplyModifiedProperties();
-                                    _soundPlayerGUIDic[property.propertyPath].ReapplyParameters(); 
-                                }
-                            );
-                        }
-                        menu.ShowAsContext();
-                    }
-                },
+            ReorderableList soundBehaviourList = new ReorderableList(property.serializedObject, behavioursProp, true, false, false, false) {
                 drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
                     // 要素の削除が反映される前に描画処理が呼ばれるため
                     if (index >= behavioursProp.arraySize) return;

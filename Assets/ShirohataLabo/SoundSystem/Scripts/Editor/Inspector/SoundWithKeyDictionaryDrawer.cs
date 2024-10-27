@@ -6,6 +6,7 @@ namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKeyDictionary))]
     public class SoundWithKeyDictionaryDrawer : PropertyDrawer {
         ReorderableList _soundList;
+        const float _elementSpaceing = 4;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             SerializedProperty listProp = SoundWithKeyDictionary.GetListProp(property);
@@ -26,11 +27,12 @@ namespace SoundSystem {
                 },
                 drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
                     rect.xMin += 10;
-                    rect.yMax -= EditorGUIUtility.standardVerticalSpacing;;
+                    rect.yMax -= EditorGUIUtility.standardVerticalSpacing + _elementSpaceing;
                     EditorGUI.PropertyField(rect, listProp.GetArrayElementAtIndex(index), true);
                 },
                 elementHeightCallback = (int index) => {
-                    return EditorGUI.GetPropertyHeight(listProp.GetArrayElementAtIndex(index), true);
+                    SerializedProperty elementProp = listProp.GetArrayElementAtIndex(index);
+                    return EditorGUI.GetPropertyHeight(elementProp, true) + (elementProp.isExpanded ? _elementSpaceing : 0);
                 },
                 onAddCallback = (ReorderableList list) => {
                     listProp.InsertArrayElementAtIndex(listProp.arraySize);

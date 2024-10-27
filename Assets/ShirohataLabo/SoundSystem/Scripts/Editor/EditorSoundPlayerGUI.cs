@@ -4,11 +4,11 @@ using UnityEngine;
 namespace SoundSystem {
     public class EditorSoundPlayerGUI {
         RectUtil.LayoutLength[] _contentWidths = new RectUtil.LayoutLength[] {
+            new(19, RectUtil.LayoutType.Fixed),
+            new(19, RectUtil.LayoutType.Fixed),
+            new(19, RectUtil.LayoutType.Fixed),
+            new(1, RectUtil.LayoutType.Expand),
             new(80, RectUtil.LayoutType.Fixed),
-            new(19, RectUtil.LayoutType.Fixed),
-            new(19, RectUtil.LayoutType.Fixed),
-            new(19, RectUtil.LayoutType.Fixed),
-            new(1, RectUtil.LayoutType.Expand)
         };
 
         EditorSoundPlayer _player;
@@ -49,13 +49,13 @@ namespace SoundSystem {
         public void DrawGUILayout() {
             _player.Update();
 
-            using (new EditorGUILayout.VerticalScope(GUIStyles.SimpleBox)) {
+            using (new EditorGUILayout.VerticalScope(GUIStyles.DarkSimpleBox)) {
                 using (new EditorGUILayout.HorizontalScope()) {
-                    _player.DrawLayoutPlayerGroupSelectPopup(GUILayout.Width(80));
                     _player.DrawLayoutPlayButton(GUILayout.Width(19), GUILayout.Height(19));
                     _player.DrawLayoutPauseButton(GUILayout.Width(19), GUILayout.Height(19));
                     _player.DrawLayoutLoopButton(GUILayout.Width(19), GUILayout.Height(19));
                     _player.DrawLayoutTimeSlider();
+                    _player.DrawLayoutPlayerGroupSelectPopup(GUILayout.Width(80));
                 }
             }
         }
@@ -63,15 +63,15 @@ namespace SoundSystem {
         public void DrawGUI(Rect rect) {
             _player.Update();
 
-            GUI.Box(rect, "", GUIStyles.SimpleBox);
+            GUI.Box(rect, "", GUIStyles.DarkSimpleBox);
             Rect[] rects = RectUtil.DivideRectHorizontal(RectUtil.Margin(rect, 4, 4, 4, 4), _contentWidths);
 
             using (new IndentLevelScope(0)) {
-                _player.DrawPlayerGroupSelectPopup(rects[0]);
-                _player.DrawPlayButton(rects[1]);
-                _player.DrawPauseButton(rects[2]);
-                _player.DrawLoopButton(rects[3]);
-                _player.DrawTimeSlider(RectUtil.Margin(rects[4], 4));
+                _player.DrawPlayButton(rects[0]);
+                _player.DrawPauseButton(rects[1]);
+                _player.DrawLoopButton(rects[2]);
+                _player.DrawTimeSlider(RectUtil.Margin(rects[3], 4, 4));
+                _player.DrawPlayerGroupSelectPopup(rects[4]);
             }
         }
     }
