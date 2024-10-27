@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
+    [SoundBehaviourMenuItem("AudioSource/MinDistance", 153)]
     public class MinDistance : SoundBehaviour {
         [SerializeField, Min(0)] float _value = 1;
         public float Value => _value;

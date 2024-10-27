@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
+    [SoundBehaviourMenuItem("Filter/AudioLowPassFilter", 1004)]
     public class AudioLowPassFilter : SoundBehaviour {
         [SerializeField] bool _enable = true;
         public bool Enable => _enable;

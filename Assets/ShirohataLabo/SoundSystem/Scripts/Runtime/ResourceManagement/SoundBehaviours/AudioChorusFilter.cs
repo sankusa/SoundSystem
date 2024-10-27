@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
+    [SoundBehaviourMenuItem("Filter/AudioChorusFilter", 1000)]
     public class AudioChorusFilter : SoundBehaviour {
         [SerializeField] bool _enable = true;
         public bool Enable => _enable;

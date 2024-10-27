@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -79,33 +80,45 @@ namespace SoundSystem {
             if (_soundBehaviourDic.ContainsKey(property.propertyPath)) return _soundBehaviourDic[property.propertyPath];
             ReorderableList soundBehaviourList = new ReorderableList(property.serializedObject, behavioursProp, true, true, false, false) {
                 drawHeaderCallback = (Rect rect) => {
-                    EditorGUI.LabelField(rect, "Sound Behaviours");
-                    Rect itemButtonRect = new Rect(rect) {xMin = rect.xMax - 80};
-                    if (GUI.Button(itemButtonRect, "Behaviours")) {
+                    using (new IndentLevelScope(0)) {
+                        EditorGUI.LabelField(rect, "Sound Behaviours");
+                    }
+                    Rect itemButtonRect = new Rect(rect) {xMin = rect.xMax - 22};
+                    if (GUI.Button(itemButtonRect, Icons.PlusIcon)) {
                         GenericMenu menu = new GenericMenu();
-                        foreach (Type type in TypeCache.GetTypesDerivedFrom<SoundBehaviour>()) {
-                            bool exists = false;
-                            int i = 0;
+                        foreach (Type type in TypeCache
+                            .GetTypesDerivedFrom<SoundBehaviour>()
+                            .OrderBy(x => {
+                                SoundBehaviourMenuItemAttribute menuItemAttribute = x.GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true).FirstOrDefault() as SoundBehaviourMenuItemAttribute;
+                                if (menuItemAttribute == null) return int.MaxValue;
+                                return menuItemAttribute.Priority;
+
+                            })
+                        ) {
+                            SoundBehaviourMenuItemAttribute menuItemAttribute = type
+                                .GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true)
+                                .FirstOrDefault()
+                                as SoundBehaviourMenuItemAttribute;
+
+                            if (menuItemAttribute == null) continue;
+
                             string typeFullName = type.Assembly.GetName().Name + " " + type.FullName;
-                            for (; i < behavioursProp.arraySize; i++) {
-                                if (behavioursProp.GetArrayElementAtIndex(i).managedReferenceFullTypename == typeFullName) {
-                                    exists = true;
-                                    break;
-                                }
-                            }
+                            bool exists = Enumerable
+                                .Range(0, behavioursProp.arraySize)
+                                .Any(i => behavioursProp.GetArrayElementAtIndex(i).managedReferenceFullTypename == typeFullName);
+
+                            if (exists) continue;
+
                             menu.AddItem(
-                                new GUIContent(type.Name),
-                                exists,
+                                new GUIContent(menuItemAttribute.MenuName),
+                                false,
                                 () => {
                                     property.serializedObject.Update();
-                                    if (exists) {
-                                        behavioursProp.DeleteArrayElementAtIndex(i);
-                                    }
-                                    else {
-                                        behavioursProp.InsertArrayElementAtIndex(behavioursProp.arraySize);
-                                        SerializedProperty behaviourProp = behavioursProp.GetArrayElementAtIndex(behavioursProp.arraySize - 1);
-                                        behaviourProp.managedReferenceValue = Activator.CreateInstance(type);
-                                    }
+
+                                    behavioursProp.InsertArrayElementAtIndex(behavioursProp.arraySize);
+                                    SerializedProperty behaviourProp = behavioursProp.GetArrayElementAtIndex(behavioursProp.arraySize - 1);
+                                    behaviourProp.managedReferenceValue = Activator.CreateInstance(type);
+
                                     property.serializedObject.ApplyModifiedProperties();
                                     _soundPlayerGUIDic[property.propertyPath].ReapplyParameters(); 
                                 }
@@ -115,7 +128,17 @@ namespace SoundSystem {
                     }
                 },
                 drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
-                    EditorGUI.PropertyField(rect, behavioursProp.GetArrayElementAtIndex(index), true);
+                    // 要素の削除が反映される前に描画処理が呼ばれるため
+                    if (index >= behavioursProp.arraySize) return;
+
+                    Rect fieldRect = new Rect(rect) {width = rect.width - 22};
+                    EditorGUI.PropertyField(fieldRect, behavioursProp.GetArrayElementAtIndex(index), true);
+
+                    Rect removeButtonRect = new Rect(rect) {xMin = rect.xMax - 20};
+                    if (GUI.Button(removeButtonRect, new GUIContent(Icons.MinusIcon))) {
+                        behavioursProp.DeleteArrayElementAtIndex(index);
+                        property.serializedObject.ApplyModifiedProperties();
+                    }
                 },
                 elementHeightCallback = (int index) => {
                     return EditorGUI.GetPropertyHeight(behavioursProp.GetArrayElementAtIndex(index));

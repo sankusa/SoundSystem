@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
+    [SoundBehaviourMenuItem("Filter/AudioReverbZone", 1006)]
     public class AudioReverbZone : SoundBehaviour {
         [SerializeField] bool _enable = true;
         public bool Enable => _enable;

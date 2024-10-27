@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
+    [SoundBehaviourMenuItem("Filter/AudioEchoFilter", 1002)]
     public class AudioEchoFilter : SoundBehaviour {
         [SerializeField] bool _enable = true;
         public bool Enable => _enable;
