@@ -64,7 +64,7 @@ namespace SoundSystem {
             _sound = sound;
             _customClip = null;
             Player.Reset();
-            if (_sound != null && _sound.CustomClip != null) {
+            if (_sound != null && _sound.Clip.HasClip()) {
                 Player.SetSound(sound);
             }
         }
@@ -77,7 +77,7 @@ namespace SoundSystem {
             else if (_customClip != null && Player.CustomClip != _customClip) {
                 Player.SetCustomClip(_customClip);
             }
-            else if (_sound != null && Player.Sound != _sound && _sound.CustomClip != null) {
+            else if (_sound != null && Player.Sound != _sound && _sound.Clip.HasClip()) {
                 Player.SetSound(_sound);
             }
 

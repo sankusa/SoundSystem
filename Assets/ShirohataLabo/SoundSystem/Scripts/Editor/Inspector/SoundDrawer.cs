@@ -31,10 +31,10 @@ namespace SoundSystem {
             playerGUI.DrawGUI(playerRect);
 
             using (var check = new EditorGUI.ChangeCheckScope()) {
-                SerializedProperty customClipProp = Sound.GetCustomClipProp(property);
-                Rect customClipRect = new(position) {height = EditorGUIUtility.singleLineHeight};
-                position.yMin += customClipRect.height + EditorGUIUtility.standardVerticalSpacing;
-                EditorGUI.PropertyField(customClipRect, customClipProp);
+                SerializedProperty clipProp = Sound.GetClipProp(property);
+                Rect clipRect = new(position) {height = EditorGUIUtility.singleLineHeight};
+                position.yMin += clipRect.height + EditorGUIUtility.standardVerticalSpacing;
+                EditorGUI.PropertyField(clipRect, clipProp);
 
                 SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
                 ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);

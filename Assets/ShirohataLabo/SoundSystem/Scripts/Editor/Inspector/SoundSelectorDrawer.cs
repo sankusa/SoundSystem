@@ -16,7 +16,7 @@ namespace SoundSystem {
             EditorGUI.PropertyField(selectTypeRect, selectTypeProp, label);
             if (EditorGUI.EndChangeCheck()) {
                 if (selectTypeProp.enumValueIndex != (int)SoundSelector.SelectType.Sound) {
-                    Sound.GetCustomClipProp(soundProp).objectReferenceValue = null;
+                    ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
                 }
             }
 

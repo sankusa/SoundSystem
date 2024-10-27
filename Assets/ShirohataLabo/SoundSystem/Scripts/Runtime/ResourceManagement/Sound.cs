@@ -7,15 +7,15 @@ using UnityEditor;
 namespace SoundSystem {
     [System.Serializable]
     public class Sound {
-        [SerializeField] CustomClip _customClip;
-        public CustomClip CustomClip => _customClip;
+        [SerializeField] ClipSlot _clip;
+        public ClipSlot Clip => _clip;
 
         [SerializeReference] List<SoundBehaviour> _behaviours = new();
         public List<SoundBehaviour> Behaviours => _behaviours;
 
 #if UNITY_EDITOR
-        public static SerializedProperty GetCustomClipProp(SerializedProperty soundProp) {
-            return soundProp.FindPropertyRelative(nameof(_customClip));
+        public static SerializedProperty GetClipProp(SerializedProperty soundProp) {
+            return soundProp.FindPropertyRelative(nameof(_clip));
         }
 
         public static SerializedProperty GetBehavioursProp(SerializedProperty soundProp) {

@@ -80,6 +80,16 @@ namespace SoundSystem {
             _volumes = volumes;
         }
 
+        public SoundPlayer SetAudioClip(AudioClip audioClip) {
+            if (audioClip == null) {
+                Debug.LogWarning($"{nameof(AudioClip)} is null");
+                return this;
+            }
+
+            _audioSource.clip = audioClip;
+            return this;
+        }
+
         public SoundPlayer SetCustomClip(CustomClip customClip) {
             if (customClip == null) {
                 Debug.LogWarning($"{nameof(CustomClip)} is null");
@@ -98,7 +108,18 @@ namespace SoundSystem {
             }
 
             _sound = sound;
-            SetCustomClip(_sound.CustomClip);
+
+            switch (_sound.Clip.Type) {
+                case ClipSlot.SlotType.AudioClip:
+                    SetAudioClip(_sound.Clip.AudioClip);
+                    break;
+                case ClipSlot.SlotType.CustomClip:
+                    SetCustomClip(_sound.Clip.CustomClip);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"Invalid {typeof(ClipSlot.SlotType).Name}");
+            }
+
             ApplySoundBehaviours();
             return this;
         }
@@ -408,10 +429,12 @@ namespace SoundSystem {
         }
 
         void ClampTime() {
-            PlayRange playRange = _customClip.PlayRange;
-            if (playRange.Enable) {
-                if (_audioSource.timeSamples < playRange.FromSamples) {
-                    _audioSource.timeSamples = playRange.FromSamples;
+            if (_customClip != null) {
+                PlayRange playRange = _customClip.PlayRange;
+                if (playRange.Enable) {
+                    if (_audioSource.timeSamples < playRange.FromSamples) {
+                        _audioSource.timeSamples = playRange.FromSamples;
+                    }
                 }
             }
         }
@@ -437,11 +460,15 @@ namespace SoundSystem {
         }
 
         void UpdatePitch() {
-            _audioSource.pitch = _customClip.GetPitchMultiplier();
+            float pitch = 1;
+            if (_customClip != null) {
+                pitch = _customClip.GetPitchMultiplier();
+            }
+            _audioSource.pitch = pitch;
         }
 
         void CheckAndHandleEndOfAudio() {
-            if (_customClip.PlayRange.Enable) {
+            if (_customClip != null && _customClip.PlayRange.Enable) {
                 if (_audioSource.timeSamples >= _customClip.PlayRange.ToSamples) {
                     RestartOrComplete();
                 }
@@ -455,7 +482,7 @@ namespace SoundSystem {
 
         void RestartOrComplete() {
             if (Loop) {
-                if (_customClip.PlayRange.Enable) {
+                if (_customClip != null && _customClip.PlayRange.Enable) {
                     _audioSource.timeSamples = _customClip.PlayRange.FromSamples;
                 }
                 else {
