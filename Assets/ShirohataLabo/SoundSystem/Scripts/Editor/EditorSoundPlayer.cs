@@ -196,7 +196,7 @@ namespace SoundSystem {
 
         public void DrawTimeSlider(Rect rect) {
             EditorGUI.BeginChangeCheck();
-            float clipLength = Player.Clip == null ? 0 : Player.Clip.length;
+            float clipLength = Player.AudioClip == null ? 0 : Player.AudioClip.length;
             float newAudioSourceTime = EditorGUI.Slider(rect, Player.Time, 0, clipLength);
             if (EditorGUI.EndChangeCheck()) {
                 // AudioSource.timeにAudioSource.clip.lengthを設定すると再生位置エラーになる

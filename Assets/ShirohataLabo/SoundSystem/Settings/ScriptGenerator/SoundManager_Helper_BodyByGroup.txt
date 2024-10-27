@@ -1,6 +1,10 @@
         public SoundPlayerGroup #GROUPKEY#Group => FindPlayerGroup("#GROUPKEY#");
         public SoundPlayer GetUnused#GROUPKEY#Player() => #GROUPKEY#Group.GetUnusedPlayer();
 
+        public SoundPlayer Play#GROUPKEY#(AudioClip audioClip, Action onComplete = null) {
+            return #GROUPKEY#Group.Play(audioClip, onComplete);
+        }
+
         public SoundPlayer Play#GROUPKEY#(CustomClip customClip, Action onComplete = null) {
             return #GROUPKEY#Group.Play(customClip, onComplete);
         }
@@ -11,6 +15,10 @@
 
         public SoundPlayer Play#GROUPKEY#(string soundKey, Action onComplete = null) {
             return #GROUPKEY#Group.Play(soundKey, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#IfNotPlaying(AudioClip audioClip, Action onComplete = null) {
+            return #GROUPKEY#Group.PlayIfNotPlaying(audioClip, onComplete);
         }
 
         public SoundPlayer Play#GROUPKEY#IfNotPlaying(CustomClip customClip, Action onComplete = null) {
@@ -25,6 +33,10 @@
             return #GROUPKEY#Group.PlayIfNotPlaying(soundKey, onComplete);
         }
 
+        public SoundPlayer Play#GROUPKEY#AsRestart(AudioClip audioClip, Action onComplete = null) {
+            return #GROUPKEY#Group.PlayAsRestart(audioClip, onComplete);
+        }
+
         public SoundPlayer Play#GROUPKEY#AsRestart(CustomClip customClip, Action onComplete = null) {
             return #GROUPKEY#Group.PlayAsRestart(customClip, onComplete);
         }
@@ -35,6 +47,10 @@
 
         public SoundPlayer Play#GROUPKEY#AsRestart(string soundKey, Action onComplete = null) {
             return #GROUPKEY#Group.PlayAsRestart(soundKey, onComplete);
+        }
+
+        public SoundPlayer Play#GROUPKEY#WithFadeIn(AudioClip audioClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return #GROUPKEY#Group.PlayWithFadeIn(audioClip, fadeDuration, onComplete, onFadeComplete);
         }
 
         public SoundPlayer Play#GROUPKEY#WithFadeIn(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
@@ -53,6 +69,10 @@
             #GROUPKEY#Group.Stop();
         }
 
+        public void Stop#GROUPKEY#(AudioClip audioClip) {
+            #GROUPKEY#Group.Stop(audioClip);
+        }
+
         public void Stop#GROUPKEY#(CustomClip customClip) {
             #GROUPKEY#Group.Stop(customClip);
         }
@@ -69,6 +89,10 @@
             #GROUPKEY#Group.StopWithFadeOut(fadeDuration, onComplete);
         }
 
+        public SoundPlayer Switch#GROUPKEY#(AudioClip audioClip, Action onComplete = null) {
+            return #GROUPKEY#Group.Switch(audioClip, onComplete);
+        }
+
         public SoundPlayer Switch#GROUPKEY#(CustomClip customClip, Action onComplete = null) {
             return #GROUPKEY#Group.Switch(customClip, onComplete);
         }
@@ -81,6 +105,10 @@
             return #GROUPKEY#Group.Switch(soundKey, onComplete);
         }
 
+        public SoundPlayer CrossFade#GROUPKEY#(AudioClip audioClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            return #GROUPKEY#Group.CrossFade(audioClip, fadeDuration, onComplete, onFadeComplete);
+        }
+
         public SoundPlayer CrossFade#GROUPKEY#(CustomClip customClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.CrossFade(customClip, fadeDuration, onComplete, onFadeComplete);
         }
@@ -91,6 +119,10 @@
 
         public SoundPlayer CrossFade#GROUPKEY#(string soundKey, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
             return #GROUPKEY#Group.CrossFade(soundKey, fadeDuration, onComplete, onFadeComplete);
+        }
+
+        public SoundPlayer FindPlaying#GROUPKEY#Player(AudioClip audioClip) {
+            return #GROUPKEY#Group.FindPlayingPlayer(audioClip);
         }
 
         public SoundPlayer FindPlaying#GROUPKEY#Player(CustomClip customClip) {

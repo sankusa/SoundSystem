@@ -7,7 +7,7 @@ namespace SoundSystem {
         readonly GameObject _gameObject;
         readonly Transform _transform;
         readonly AudioSource _audioSource;
-        public AudioClip Clip => _audioSource.clip;
+        public AudioClip AudioClip => _audioSource.clip;
         public bool IsPlayable => _audioSource.clip != null;
         public bool IsUsing => _audioSource.clip != null;
         public bool IsPlaying => _audioSource.isPlaying;

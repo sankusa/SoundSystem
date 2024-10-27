@@ -1,8 +1,14 @@
 using System;
-using UnityEngine.Events;
+using UnityEngine;
 
 namespace SoundSystem {
     public partial class SoundPlayer {
+        public SoundPlayer Play(AudioClip audioClip, Action onComplete = null) {
+            SetAudioClip(audioClip);
+            AddOnComplete(onComplete);
+            return Play();
+        }
+
         public SoundPlayer Play(CustomClip customClip, Action onComplete = null) {
             SetCustomClip(customClip);
             AddOnComplete(onComplete);
@@ -17,6 +23,13 @@ namespace SoundSystem {
 
         public SoundPlayer Play(string soundKey, Action onComplete = null) {
             SetSoundByKey(soundKey);
+            AddOnComplete(onComplete);
+            return Play();
+        }
+
+        public SoundPlayer PlayWithFadeIn(AudioClip audioClip, float? fadeDuration = null, Action onComplete = null, Action onFadeComplete = null) {
+            SetAudioClip(audioClip);
+            SetFadeIn(fadeDuration, onFadeComplete);
             AddOnComplete(onComplete);
             return Play();
         }
