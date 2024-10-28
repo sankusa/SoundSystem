@@ -26,7 +26,12 @@ namespace SoundSystem {
                 minWidth = 52,
                 maxWidth = 52,
             };
-            var headerState = new MultiColumnHeaderState(new MultiColumnHeaderState.Column[] {containerColumn, preloadColumn});
+            var pathColumn = new MultiColumnHeaderState.Column() {
+                headerContent = new GUIContent("Folder"),
+                canSort = false,
+                autoResize = true,
+            };
+            var headerState = new MultiColumnHeaderState(new MultiColumnHeaderState.Column[] {containerColumn, preloadColumn, pathColumn});
             var multiColumnHeader = new MultiColumnHeader(headerState);
             multiColumnHeader.ResizeToFit();
 

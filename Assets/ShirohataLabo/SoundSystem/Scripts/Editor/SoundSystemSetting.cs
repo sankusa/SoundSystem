@@ -15,10 +15,7 @@ namespace SoundSystem {
             }
         }
 
-        [SerializeField] DefaultAsset _audioClipFolderRoot;
-        public string AudioClipFolderRoot => AssetDatabase.GetAssetPath(_audioClipFolderRoot);
-
-        [SerializeField] DefaultAsset _customClipFolderRoot;
-        public string CustomClipFolderRoot => AssetDatabase.GetAssetPath(_customClipFolderRoot);
+        [SerializeField] DefaultAsset _clipFolderRoot;
+        public string ClipFolderRoot => AssetDatabase.GetAssetPath(_clipFolderRoot);
     }
 }

@@ -27,6 +27,11 @@ namespace SoundSystem {
         [SerializeField] PlayRange _playRange;
         public PlayRange PlayRange => _playRange;
 
+#if UNITY_EDITOR
+        [SerializeField, TextArea] string _description;
+        public string Description => _description;
+#endif
+
         public float GetVolumeMultiplier(float time) {
             float volume = 1;
             if (_volumeMultiplier.Enable) volume *= _volumeMultiplier.Value;
@@ -53,6 +58,10 @@ namespace SoundSystem {
 
         public static SerializedProperty GetPlayRangeProp(SerializedObject serializedObject) {
             return serializedObject.FindProperty(nameof(_playRange));
+        }
+
+        public static SerializedProperty GetDescriptionProp(SerializedObject serializedObject) {
+            return serializedObject.FindProperty(nameof(_description));
         }
 
         public static void ResetValueBasedOnAudioClip(SerializedObject serializedObject) {

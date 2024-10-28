@@ -30,6 +30,10 @@ namespace SoundSystem {
             var playRange_FromSamplesProp = playRangeProp.FindPropertyRelative("_fromSamples");
             var playrange_ToSamplesProp = playRangeProp.FindPropertyRelative("_toSamples");
 
+            var descriptionProp = serializedObject.FindProperty("_description");
+
+            _editorSoundPlayer.DrawGUILayout();
+
             AudioClip clip = (AudioClip)audioClipProp.objectReferenceValue;
 
             EditorGUILayout.PropertyField(audioClipProp);
@@ -121,9 +125,11 @@ namespace SoundSystem {
                 EditorGUI.indentLevel--;
             }
 
+            GUIUtil.Separator();
+
+            EditorGUILayout.PropertyField(descriptionProp);
+
             serializedObject.ApplyModifiedProperties();
-            
-            _editorSoundPlayer.DrawGUILayout();
         }
     }
 }

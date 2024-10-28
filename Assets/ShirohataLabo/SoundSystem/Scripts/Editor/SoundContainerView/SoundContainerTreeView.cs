@@ -33,7 +33,7 @@ namespace SoundSystem {
             var rows = GetRows() ?? new List<TreeViewItem>();
             rows.Clear();
 
-            int id = 0;
+            // int id = 0;
 
             if (_containers != null) {
                 foreach (SoundContainer container in _containers) {
@@ -41,23 +41,23 @@ namespace SoundSystem {
                     root.AddChild(item);
                     rows.Add(item);
 
-                    SerializedProperty soundListProp = item.SoundListProp;
-                    if (soundListProp.arraySize > 0) {
-                        if (IsExpanded(item.id)) {
-                            for (int i = 0; i < soundListProp.arraySize; i++) {
-                                SerializedProperty soundWithKeyProp = soundListProp.GetArrayElementAtIndex(i);
-                                var soundItem = new SoundContainerTreeViewItem_Sound(soundWithKeyProp, ++id);
-                                item.AddChild(soundItem);
-                                rows.Add(soundItem);
-                            }
-                        }
-                        else {
-                            for (int i = 0; i < soundListProp.arraySize; i++) {
-                                id++;
-                            }
-                            item.children = CreateChildListForCollapsedParent();
-                        }
-                    }
+                    // SerializedProperty soundListProp = item.SoundListProp;
+                    // if (soundListProp.arraySize > 0) {
+                    //     if (IsExpanded(item.id)) {
+                    //         for (int i = 0; i < soundListProp.arraySize; i++) {
+                    //             SerializedProperty soundWithKeyProp = soundListProp.GetArrayElementAtIndex(i);
+                    //             var soundItem = new SoundContainerTreeViewItem_Sound(soundWithKeyProp, ++id);
+                    //             item.AddChild(soundItem);
+                    //             rows.Add(soundItem);
+                    //         }
+                    //     }
+                    //     else {
+                    //         for (int i = 0; i < soundListProp.arraySize; i++) {
+                    //             id++;
+                    //         }
+                    //         item.children = CreateChildListForCollapsedParent();
+                    //     }
+                    // }
                 }
             }
 
@@ -77,8 +77,6 @@ namespace SoundSystem {
             ApplyModifiedPropertiesToAllContainer();
         }
 
-
-
         protected override void RowGUI(RowGUIArgs args) {
             Rect rowRect = new Rect(args.rowRect) {xMin = args.rowRect.xMin + GetContentIndent(args.item)};
             Rect backgroundRect = new(rowRect) {xMin = rowRect.xMin - 16};
@@ -96,12 +94,12 @@ namespace SoundSystem {
 
                             EditorGUI.LabelField(cellRect, new GUIContent(containerItem.Container.name, icon));
 
-                            Rect addButtonRect = new Rect(cellRect) {xMin = cellRect.xMax - 20, yMin = cellRect.yMin + 1};
-                            if (GUI.Button(addButtonRect, Icons.PlusIcon, GUIStyles.InvisibleButton)) {
-                                containerItem.AddElement();
-                                containerItem.SerializedObject.ApplyModifiedProperties();
-                                Reload();
-                            }
+                            // Rect addButtonRect = new Rect(cellRect) {xMin = cellRect.xMax - 20, yMin = cellRect.yMin + 1};
+                            // if (GUI.Button(addButtonRect, Icons.PlusIcon, GUIStyles.InvisibleButton)) {
+                            //     containerItem.AddElement();
+                            //     containerItem.SerializedObject.ApplyModifiedProperties();
+                            //     Reload();
+                            // }
                             break;
                         case 1:
                             bool preload = SoundContainerPreloader.InstanceForEditor.ContainsForEditor(containerItem.Container);
@@ -109,6 +107,10 @@ namespace SoundSystem {
                             if (newPreload != preload) {
                                 SoundContainerPreloader.InstanceForEditor.UpdatePreloadStateForEditor(containerItem.Container, newPreload);
                             }
+                            break;
+                        case 2:
+                            string folderPath = EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(containerItem.Container));
+                            EditorGUI.LabelField(cellRect, new GUIContent(folderPath));
                             break;
                     }
                 }
@@ -146,10 +148,6 @@ namespace SoundSystem {
             if (item is SoundContainerTreeViewItem_SoundContainer containerItem) {
                 containerItem.OnDoubleClick();
             }
-        }
-
-        protected override bool CanBeParent(TreeViewItem item) {
-            return true;
         }
 
         protected override bool CanStartDrag(CanStartDragArgs args) {

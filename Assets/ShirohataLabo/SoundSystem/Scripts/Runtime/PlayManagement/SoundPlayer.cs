@@ -13,10 +13,7 @@ namespace SoundSystem {
         public bool IsPlaying => _audioSource.isPlaying;
         public bool IsStopped => _audioSource.isPlaying == false && IsPaused == false;
         public bool IsPaused { get; private set; }
-        public int TimeSamples {
-            get => _audioSource.timeSamples;
-            set => _audioSource.timeSamples = value;
-        }
+        public int TimeSamples => _audioSource.timeSamples;
         public float Time => _audioSource.clip == null ? 0 : (float)_audioSource.timeSamples / _audioSource.clip.frequency;
         public bool Loop => _audioSource.loop;
 
@@ -177,6 +174,11 @@ namespace SoundSystem {
         public SoundPlayer SetFadeOut(float? duration = null, Action onComplete = null) {
             duration ??= _groupSetting.DefaultFadeDuration;
             _fadeVolume.Fade(0, duration.Value, onComplete);
+            return this;
+        }
+
+        public SoundPlayer SetTimeSamples(int timeSamples) {
+            _audioSource.timeSamples = timeSamples;
             return this;
         }
 

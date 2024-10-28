@@ -3,13 +3,13 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace SoundSystem {
-    public class AudioClipTreeViewItem_AudioClip : TreeViewItem {
+    public class ClipTreeViewItem_AudioClip : TreeViewItem {
         public AudioClip Clip { get; }
 
         bool? _importSettingCheckResult;
         public bool? ImportSettingCheckResult => _importSettingCheckResult;
 
-        public AudioClipTreeViewItem_AudioClip(AudioClip clip) : base(0, 0, clip.name) {
+        public ClipTreeViewItem_AudioClip(AudioClip clip) : base(0, 0, clip.name) {
             Clip = clip;
             id = clip.GetInstanceID();
         }
@@ -30,6 +30,16 @@ namespace SoundSystem {
         public void OnContextClick() {
             GenericMenu menu = new();
             menu.AddItem(
+                new GUIContent("Delete"),
+                false,
+                () => AssetDatabase.MoveAssetToTrash(AssetDatabase.GetAssetPath(Clip))
+            );
+            menu.AddItem(
+                new GUIContent("Create Custom Clip"),
+                false,
+                () => CustomClipUtil.CreateCustomClip(Clip, EditorUtil.GetFolderPath(AssetDatabase.GetAssetPath(Clip)))
+            );
+            menu.AddItem(
                 new GUIContent("Check Import Setting"),
                 false,
                 () => CheckImportSettings()
@@ -42,16 +52,17 @@ namespace SoundSystem {
             menu.ShowAsContext();
         }
 
-        public void CheckImportSettings(StandardAudioClipImportSettings standardSettings) {
-            if (standardSettings == null) return;
+        public bool? CheckImportSettings(StandardAudioClipImportSettings standardSettings) {
+            if (standardSettings == null) return null;
             _importSettingCheckResult = standardSettings.Check(Clip);
+            return _importSettingCheckResult;
         }
 
-        public void CheckImportSettings() {
+        public bool? CheckImportSettings() {
             string assetPath = AssetDatabase.GetAssetPath(Clip);
             string folderPath = EditorUtil.GetFolderPath(assetPath);
             StandardAudioClipImportSettings setting = EditorUtil.FindAssetInNearestAncestorDirectory<StandardAudioClipImportSettings>(folderPath);
-            CheckImportSettings(setting);
+            return CheckImportSettings(setting);
         }
 
         public void ApplyImportSettings(StandardAudioClipImportSettings standardSettings) {

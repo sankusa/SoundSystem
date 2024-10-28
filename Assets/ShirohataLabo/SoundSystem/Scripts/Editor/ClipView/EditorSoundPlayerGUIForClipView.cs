@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoundSystem {
-    public class EditorSoundPlayerGUIForCustomClipView {
+    public class EditorSoundPlayerGUIForClipView {
         EditorSoundPlayer _editorPlayer;
 
         bool _playAuto;
@@ -15,6 +15,17 @@ namespace SoundSystem {
             _editorPlayer.Dispose();
         }
 
+        public void Bind(Object target) {
+            if (target is AudioClip audioClip) {
+                _editorPlayer.Bind(audioClip);
+                if (_playAuto) _editorPlayer.Play();
+            }
+            else if (target is CustomClip customClip) {
+                _editorPlayer.Bind(customClip);
+                if (_playAuto) _editorPlayer.Play();
+            }
+        }
+
         public void Bind(CustomClip customClip) {
             _editorPlayer.Bind(customClip);
             if (_playAuto) _editorPlayer.Play();
@@ -24,21 +35,30 @@ namespace SoundSystem {
             _editorPlayer.Update();
 
             using (new EditorGUILayout.VerticalScope(GUIStyles.SimpleBox)) {
-                if (_editorPlayer.CustomClip == null) {
-                    EditorGUILayout.LabelField("Not Selected");
+                if (_editorPlayer.AudioClip != null) {
+                    string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.AudioClip);
+                    Texture icon = AssetDatabase.GetCachedIcon(assetPath);
+                    EditorGUILayout.LabelField(new GUIContent(_editorPlayer.AudioClip.name, icon));
                 }
-                else {
+                else if (_editorPlayer.CustomClip != null) {
                     string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.CustomClip);
                     Texture icon = AssetDatabase.GetCachedIcon(assetPath);
                     EditorGUILayout.LabelField(new GUIContent(_editorPlayer.CustomClip.name, icon));
                 }
+                else {
+                    EditorGUILayout.LabelField("Not Selected");
+                }
 
-                _editorPlayer.DrawLayoutTimeSlider();
+                
                 using (new EditorGUILayout.HorizontalScope()) {
-                    _editorPlayer.DrawLayoutPlayerGroupSelectPopup();
+                    
                     _editorPlayer.DrawLayoutPlayButton(GUILayout.Width(19), GUILayout.Height(19));
                     _editorPlayer.DrawLayoutPauseButton(GUILayout.Width(19), GUILayout.Height(19));
                     _editorPlayer.DrawLayoutLoopButton(GUILayout.Width(19), GUILayout.Height(19));
+
+                    _editorPlayer.DrawLayoutTimeSlider(GUILayout.MinWidth(100));
+
+                    _editorPlayer.DrawLayoutPlayerGroupSelectPopup(GUILayout.Width(100));
 
                     EditorGUI.BeginChangeCheck();
                     _playAuto = GUILayout.Toggle(_playAuto, "", "Button", GUILayout.Width(19));
@@ -48,8 +68,6 @@ namespace SoundSystem {
                             _editorPlayer.Play();
                         }
                     }
-
-                    GUILayout.FlexibleSpace();
                 }
             }
         }

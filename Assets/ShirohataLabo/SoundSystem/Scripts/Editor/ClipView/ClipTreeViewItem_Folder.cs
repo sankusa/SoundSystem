@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace SoundSystem {
-    public class AudioClipTreeViewItem_Folder : TreeViewItem {
+    public class ClipTreeViewItem_Folder : TreeViewItem {
         string _folderPath;
         public string FolderPath => _folderPath;
 
@@ -15,7 +14,10 @@ namespace SoundSystem {
         StandardAudioClipImportSettings _standardImportSettings;
         public StandardAudioClipImportSettings StandardImportSetting => _standardImportSettings;
 
-        public AudioClipTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
+        bool? _importSettingCheckResult;
+        public bool? ImportSettingCheckResult => _importSettingCheckResult;
+
+        public ClipTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
             _folderPath = folderPath;
             _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(folderPath);
             _standardImportSettings = EditorUtil.LoadAllAsset<StandardAudioClipImportSettings>(_folderPath).FirstOrDefault();
@@ -48,25 +50,37 @@ namespace SoundSystem {
             menu.ShowAsContext();
         }
 
-        public void CheckImportSettings(StandardAudioClipImportSettings standardSettings) {
-            if (children == null) return;
+        public bool? CheckImportSettings(StandardAudioClipImportSettings standardSettings) {
+            if (children == null) return null;
 
             if (_standardImportSettings != null) standardSettings = _standardImportSettings;
 
+            bool? result = null;
             foreach (TreeViewItem item in children) {
-                if (item is AudioClipTreeViewItem_Folder folderItem) {
-                    folderItem.CheckImportSettings(standardSettings);
+                if (item is ClipTreeViewItem_Folder folderItem) {
+                    bool? ret = folderItem.CheckImportSettings(standardSettings);
+                    if (ret != null) {
+                        result ??= true;
+                        result &= ret;
+                    }
                 }
-                else if (item is AudioClipTreeViewItem_AudioClip clipItem) {
-                    clipItem.CheckImportSettings(standardSettings);
+                else if (item is ClipTreeViewItem_AudioClip clipItem) {
+                    bool? ret = clipItem.CheckImportSettings(standardSettings);
+                    if (ret != null) {
+                        result ??= true;
+                        result &= ret;
+                    }
                 }
             }
+            _importSettingCheckResult = result;
+
+            return _importSettingCheckResult;
         }
 
-        public void CheckImportSettings() {
+        public bool? CheckImportSettings() {
             string folderPath = AssetDatabase.GetAssetPath(_folderAsset);
             StandardAudioClipImportSettings setting = EditorUtil.FindAssetInNearestAncestorDirectory<StandardAudioClipImportSettings>(folderPath);
-            CheckImportSettings(setting);
+            return CheckImportSettings(setting);
         }
 
         public void ApplyImportSettings(StandardAudioClipImportSettings standardSettings) {
@@ -75,10 +89,10 @@ namespace SoundSystem {
             if (_standardImportSettings != null) standardSettings = _standardImportSettings;
 
             foreach (TreeViewItem item in children) {
-                if (item is AudioClipTreeViewItem_Folder folderItem) {
+                if (item is ClipTreeViewItem_Folder folderItem) {
                     folderItem.ApplyImportSettings(standardSettings);
                 }
-                else if (item is AudioClipTreeViewItem_AudioClip clipItem) {
+                else if (item is ClipTreeViewItem_AudioClip clipItem) {
                     clipItem.ApplyImportSettings(standardSettings);
                 }
             }

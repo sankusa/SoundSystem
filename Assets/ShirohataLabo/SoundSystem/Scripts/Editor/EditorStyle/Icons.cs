@@ -3,6 +3,16 @@ using UnityEngine;
 
 namespace SoundSystem {
     public static class Icons {
+        static Texture2D _folderIcon;
+        public static Texture2D FolderIcon {
+            get {
+                if (_folderIcon == null) {
+                    _folderIcon = (Texture2D)EditorGUIUtility.IconContent("Folder Icon").image;
+                }
+                return _folderIcon;
+            }
+        }
+
         static Texture2D _audioClipIcon;
         public static Texture2D AudioClipIcon {
             get {
