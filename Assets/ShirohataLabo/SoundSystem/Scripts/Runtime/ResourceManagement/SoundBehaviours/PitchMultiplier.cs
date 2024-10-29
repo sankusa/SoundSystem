@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace SoundSystem.SoundBehaviours {
     [Serializable]
-    [SoundBehaviourMenuItem(nameof(PitchMultiplier), 0)]
+    [SoundBehaviourMenuItem(nameof(PitchMultiplier), 10)]
     public class PitchMultiplier : SoundBehaviour {
         [SerializeField] float _value = 1;
         public float Value => _value;
 
         protected override void ApplyMain(SoundPlayer player) {
-            player.SetPitchMultiplier(_value);
+            player.SetPitchMultiplier(player.PitchMultiplier * _value);
         }
     }
 }

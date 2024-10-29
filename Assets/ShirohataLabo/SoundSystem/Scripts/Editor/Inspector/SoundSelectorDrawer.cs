@@ -15,9 +15,9 @@ namespace SoundSystem {
             EditorGUI.BeginChangeCheck();
             EditorGUI.PropertyField(selectTypeRect, selectTypeProp, label);
             if (EditorGUI.EndChangeCheck()) {
-                if (selectTypeProp.enumValueIndex != (int)SoundSelector.SelectType.Sound) {
-                    ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
-                }
+                // if (selectTypeProp.enumValueIndex != (int)SoundSelector.SelectType.Sound) {
+                //     ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
+                // }
             }
 
             EditorGUI.indentLevel++;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using SoundSystem.SoundBehaviours;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -7,16 +8,16 @@ using UnityEditor;
 namespace SoundSystem {
     [System.Serializable]
     public class Sound {
-        [SerializeField] ClipSlot _clip;
-        public ClipSlot Clip => _clip;
+        // [SerializeField] ClipSlot _clip;
+        // public ClipSlot Clip => _clip;
 
-        [SerializeReference] List<SoundBehaviour> _behaviours = new();
+        [SerializeReference] List<SoundBehaviour> _behaviours = new() {new Clip()};
         public List<SoundBehaviour> Behaviours => _behaviours;
 
 #if UNITY_EDITOR
-        public static SerializedProperty GetClipProp(SerializedProperty soundProp) {
-            return soundProp.FindPropertyRelative(nameof(_clip));
-        }
+        // public static SerializedProperty GetClipProp(SerializedProperty soundProp) {
+        //     return soundProp.FindPropertyRelative(nameof(_clip));
+        // }
 
         public static SerializedProperty GetBehavioursProp(SerializedProperty soundProp) {
             return soundProp.FindPropertyRelative(nameof(_behaviours));

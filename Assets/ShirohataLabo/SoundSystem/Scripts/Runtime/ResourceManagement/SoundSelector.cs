@@ -10,7 +10,7 @@ namespace SoundSystem {
         }
 
         [SerializeField] SelectType _selectType;
-        [SerializeField] Sound _sound;
+        [SerializeField] Sound _sound = new Sound();
         [SerializeField, SoundKey] string _soundKey;
 
         public Sound Resolve() {

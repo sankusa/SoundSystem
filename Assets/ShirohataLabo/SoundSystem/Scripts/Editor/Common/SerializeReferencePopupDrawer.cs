@@ -24,6 +24,7 @@ namespace SoundSystem {
             if (selectedIndex != currentIndex) {
                 Type selectedType = _subclasses[selectedIndex];
                 property.managedReferenceValue = selectedType == null ? null : Activator.CreateInstance(selectedType);
+                return;
             }
 
             EditorGUI.PropertyField(position, property, label, true); 

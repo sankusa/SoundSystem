@@ -1,3 +1,4 @@
+using SoundSystem.SoundBehaviours;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -6,7 +7,7 @@ namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundWithKeyDictionary))]
     public class SoundWithKeyDictionaryDrawer : PropertyDrawer {
         ReorderableList _soundList;
-        const float _elementSpaceing = 4;
+        static readonly float _elementSpaceing = 4;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             SerializedProperty listProp = SoundWithKeyDictionary.GetListProp(property);
@@ -39,8 +40,11 @@ namespace SoundSystem {
                     SerializedProperty newElementProp = listProp.GetArrayElementAtIndex(listProp.arraySize - 1);
                     SoundWithKey.GetKeyProp(newElementProp).stringValue = "";
                     SerializedProperty soundProp = SoundWithKey.GetSoundProp(newElementProp);
-                    ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
-                    Sound.GetBehavioursProp(soundProp).ClearArray();
+                    // ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
+                    SerializedProperty behavioursProp = Sound.GetBehavioursProp(soundProp);
+                    behavioursProp.ClearArray();
+                    behavioursProp.arraySize = 1;
+                    behavioursProp.GetArrayElementAtIndex(0).managedReferenceValue = new Clip();
                 }
             };
         }

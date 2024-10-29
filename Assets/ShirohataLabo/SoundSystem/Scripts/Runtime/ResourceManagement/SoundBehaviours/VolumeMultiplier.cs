@@ -9,7 +9,7 @@ namespace SoundSystem.SoundBehaviours {
         public float Value => _value;
 
         protected override void ApplyMain(SoundPlayer player) {
-            player.SetVolumeMultiplier(_value);
+            player.SetVolumeMultiplier(player.VolumeMultiplier * _value);
         }
     }
 }

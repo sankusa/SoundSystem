@@ -106,16 +106,16 @@ namespace SoundSystem {
 
             _sound = sound;
 
-            switch (_sound.Clip.Type) {
-                case ClipSlot.SlotType.AudioClip:
-                    SetAudioClip(_sound.Clip.AudioClip);
-                    break;
-                case ClipSlot.SlotType.CustomClip:
-                    SetCustomClip(_sound.Clip.CustomClip);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException($"Invalid {typeof(ClipSlot.SlotType).Name}");
-            }
+            // switch (_sound.Clip.Type) {
+            //     case ClipSlot.SlotType.AudioClip:
+            //         SetAudioClip(_sound.Clip.AudioClip);
+            //         break;
+            //     case ClipSlot.SlotType.CustomClip:
+            //         SetCustomClip(_sound.Clip.CustomClip);
+            //         break;
+            //     default:
+            //         throw new ArgumentOutOfRangeException($"Invalid {typeof(ClipSlot.SlotType).Name}");
+            // }
 
             ApplySoundBehaviours();
             return this;

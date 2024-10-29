@@ -29,7 +29,6 @@ namespace SoundSystem {
             if(source == null) return null;
 
             Type type = source.GetType();
-
             while(type != null) {
                 FieldInfo fieldInfo = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                 if(fieldInfo != null) return fieldInfo.GetValue(source);

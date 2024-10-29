@@ -63,7 +63,8 @@ namespace SoundSystem {
         public void DrawGUI(Rect rect) {
             _player.Update();
 
-            GUI.Box(rect, "", GUIStyles.DarkSimpleBox);
+            GUI.Box(rect, "", GUIStyles.SimpleBox);
+            GUI.Box(new RectOffset(1, 1, 1, 1).Remove(rect), "", GUIStyles.DarkSimpleBox);
             Rect[] rects = RectUtil.DivideRectHorizontal(RectUtil.Margin(rect, 4, 4, 4, 4), _contentWidths);
 
             using (new IndentLevelScope(0)) {
