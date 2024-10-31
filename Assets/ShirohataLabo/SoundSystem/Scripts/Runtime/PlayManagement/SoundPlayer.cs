@@ -48,7 +48,7 @@ namespace SoundSystem {
 
         readonly Fader _fadeVolume = new();
 
-        SoundPlayerGroupSetting _groupSetting;
+        readonly SoundPlayerGroupStatus _groupStatus;
 
         event Action _onComplete;
 
@@ -64,15 +64,15 @@ namespace SoundSystem {
         public UnityEngine.AudioChorusFilter AudioChorusFilter { get; private set; }
         public UnityEngine.AudioReverbZone AudioReverbZone { get; private set; }
 
-        public SoundPlayer(GameObject parentObject, SoundPlayerGroupSetting groupSetting, List<Volume> volumes) {
+        public SoundPlayer(GameObject parentObject, SoundPlayerGroupStatus groupStatus, List<Volume> volumes) {
             _gameObject = new("Player");
             _transform = _gameObject.transform;
             _transform.SetParent(parentObject.transform);
             AudioSource audioSource = _gameObject.AddComponent<AudioSource>();
             _audioSource = audioSource;
 
-            _audioSource.outputAudioMixerGroup = groupSetting.OutputAudioMixerGroup;
-            _groupSetting = groupSetting;
+            _audioSource.outputAudioMixerGroup = groupStatus.Setting.OutputAudioMixerGroup;
+            _groupStatus = groupStatus;
 
             _volumes = volumes;
         }
@@ -105,6 +105,8 @@ namespace SoundSystem {
             }
 
             _sound = sound;
+
+            _sound.Clip.SetClip(this);
 
             // switch (_sound.Clip.Type) {
             //     case ClipSlot.SlotType.AudioClip:
@@ -154,25 +156,25 @@ namespace SoundSystem {
         }
 
         public SoundPlayer SetFadeWithFrom(float from, float to, float? duration = null, Action onComplete = null) {
-            duration ??= _groupSetting.DefaultFadeDuration;
+            duration ??= _groupStatus.Setting.DefaultFadeDuration;
             _fadeVolume.Fade(from, to, duration.Value, onComplete);
             return this;
         }
 
         public SoundPlayer SetFade(float to, float? duration = null, Action onComplete = null) {
-            duration ??= _groupSetting.DefaultFadeDuration;
+            duration ??= _groupStatus.Setting.DefaultFadeDuration;
             _fadeVolume.Fade(to, duration.Value, onComplete);
             return this;
         }
 
         public SoundPlayer SetFadeIn(float? duration = null, Action onComplete = null) {
-            duration ??= _groupSetting.DefaultFadeDuration;
+            duration ??= _groupStatus.Setting.DefaultFadeDuration;
             _fadeVolume.Fade(1, duration.Value, onComplete);
             return this;
         }
 
         public SoundPlayer SetFadeOut(float? duration = null, Action onComplete = null) {
-            duration ??= _groupSetting.DefaultFadeDuration;
+            duration ??= _groupStatus.Setting.DefaultFadeDuration;
             _fadeVolume.Fade(0, duration.Value, onComplete);
             return this;
         }
@@ -329,6 +331,11 @@ namespace SoundSystem {
         }
 
         public void ApplySoundBehaviours() {
+            foreach (Sound sound in _groupStatus.BaseSounds) {
+                foreach (SoundBehaviour behaviour in sound.Behaviours) {
+                    behaviour.ApplyTo(this);
+                }
+            }
             if (_sound != null) {
                 foreach (SoundBehaviour behaviour in _sound.Behaviours) {
                     behaviour.ApplyTo(this);
@@ -391,7 +398,7 @@ namespace SoundSystem {
             _audioSource.Stop();
             _audioSource.clip = null;
             _audioSource.pitch = 1;
-            _audioSource.loop = _groupSetting.DefaultLoop;
+            _audioSource.loop = _groupStatus.Setting.DefaultLoop;
             _audioSource.timeSamples = 0;
 
             ResetSoundBehaviours();

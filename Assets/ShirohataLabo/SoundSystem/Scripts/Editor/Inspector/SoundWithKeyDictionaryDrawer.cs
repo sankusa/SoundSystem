@@ -1,3 +1,4 @@
+using SoundSystem.ClipResolvers;
 using SoundSystem.SoundBehaviours;
 using UnityEditor;
 using UnityEditorInternal;
@@ -40,11 +41,9 @@ namespace SoundSystem {
                     SerializedProperty newElementProp = listProp.GetArrayElementAtIndex(listProp.arraySize - 1);
                     SoundWithKey.GetKeyProp(newElementProp).stringValue = "";
                     SerializedProperty soundProp = SoundWithKey.GetSoundProp(newElementProp);
-                    // ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
+                    Sound.GetClipProp(soundProp).managedReferenceValue = new Clip();
                     SerializedProperty behavioursProp = Sound.GetBehavioursProp(soundProp);
                     behavioursProp.ClearArray();
-                    behavioursProp.arraySize = 1;
-                    behavioursProp.GetArrayElementAtIndex(0).managedReferenceValue = new Clip();
                 }
             };
         }

@@ -128,7 +128,7 @@ namespace SoundSystem {
             };
             _players = new();
             foreach (SoundPlayerGroupSetting setting in _soundManagerConfig.PlayerGroupSettings) {
-                _players.Add(new SoundPlayer(_playerRoot, setting, new List<Volume>()));
+                _players.Add(new SoundPlayer(_playerRoot, new SoundPlayerGroupStatus(setting), new List<Volume>()));
             }
         }
 

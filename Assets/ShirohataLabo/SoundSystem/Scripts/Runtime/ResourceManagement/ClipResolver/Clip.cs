@@ -1,13 +1,12 @@
 using System;
 using UnityEngine;
 
-namespace SoundSystem.SoundBehaviours {
+namespace SoundSystem.ClipResolvers {
     [Serializable]
-    [SoundBehaviourMenuItem(nameof(Clip), -1000)]
-    public class Clip : SoundBehaviour {
+    public class Clip : IClipResolver {
         [SerializeField] ClipSlot _clip;
 
-        protected override void ApplyMain(SoundPlayer player) {
+        public void SetClip(SoundPlayer player) {
             if (_clip.HasClip() == false) return;
             switch (_clip.Type) {
                 case ClipSlot.SlotType.AudioClip:

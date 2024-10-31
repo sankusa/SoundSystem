@@ -49,10 +49,10 @@ namespace SoundSystem {
             position.yMin += EditorGUIUtility.standardVerticalSpacing; 
 
             using (var check = new EditorGUI.ChangeCheckScope()) {
-                // SerializedProperty clipProp = Sound.GetClipProp(property);
-                // Rect clipRect = new(position) {height = EditorGUIUtility.singleLineHeight};
-                // position.yMin += clipRect.height + EditorGUIUtility.standardVerticalSpacing;
-                // EditorGUI.PropertyField(clipRect, clipProp);
+                SerializedProperty clipProp = Sound.GetClipProp(property);
+                Rect clipRect = new(position) {height = EditorGUI.GetPropertyHeight(clipProp)};
+                position.yMin += clipRect.height + EditorGUIUtility.standardVerticalSpacing;
+                EditorGUI.PropertyField(clipRect, clipProp, true);
 
                 SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
                 // Rect behavioursHeaderRect = new Rect(position) {xMin = position.xMin + 4, height = EditorGUIUtility.singleLineHeight};
@@ -82,6 +82,8 @@ namespace SoundSystem {
             if (label != GUIContent.none) {
                 height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
+
+            height += EditorGUI.GetPropertyHeight(Sound.GetClipProp(property));
 
             SerializedProperty behavioursProp = Sound.GetBehavioursProp(property);
             ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);

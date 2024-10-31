@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SoundSystem.SoundBehaviours {
+namespace SoundSystem.ClipResolvers {
     [Serializable]
-    [SoundBehaviourMenuItem(nameof(RandomClip), -999)]
-    public class RandomClip : SoundBehaviour {
+    public class RandomClip : IClipResolver {
         [SerializeField] List<ClipSlot> _clips;
 
-        protected override void ApplyMain(SoundPlayer player) {
+        public void SetClip(SoundPlayer player) {
             if (_clips.Count == 0) return;
             int index = UnityEngine.Random.Range(0, _clips.Count);
             ClipSlot clip = _clips[index];

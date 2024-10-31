@@ -7,23 +7,25 @@ namespace SoundSystem {
         public string GroupKey { get; }
         readonly List<SoundPlayer> _players = new();
         public IReadOnlyList<SoundPlayer> Players => _players;
-        readonly SoundPlayerGroupSetting _groupSetting;
 
         readonly List<Volume> _volumes;
         public IReadOnlyList<Volume> Volumes => _volumes;
 
+        public SoundPlayerGroupStatus Status { get; }
+
         public SoundPlayerGroup(GameObject parentObject, SoundPlayerGroupSetting groupSetting, List<Volume> allVolumes) {
+            Status = new SoundPlayerGroupStatus(groupSetting);
+
             GameObject gameObject = new GameObject(groupSetting.Key);
             gameObject.transform.SetParent(parentObject.transform);
-
-            _groupSetting = groupSetting;
-            GroupKey = _groupSetting.Key;
+            
+            GroupKey = Status.Setting.Key;
 
             List<Volume> volumes = allVolumes.Where(x => groupSetting.VolumeKeys.Contains(x.Key)).ToList();
             _volumes = volumes;
 
-            for (int i = 0; i < _groupSetting.PlayerCount; i++) {
-                _players.Add(new SoundPlayer(gameObject, _groupSetting, volumes));
+            for (int i = 0; i < Status.Setting.PlayerCount; i++) {
+                _players.Add(new SoundPlayer(gameObject, Status, volumes));
             }
         }
 
