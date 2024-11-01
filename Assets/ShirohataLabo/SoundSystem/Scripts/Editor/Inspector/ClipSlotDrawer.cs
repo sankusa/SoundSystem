@@ -7,7 +7,7 @@ namespace SoundSystem {
     [CustomPropertyDrawer(typeof(ClipSlot))]
     public class ClipSlotDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-            Rect labelRect = new Rect(position) {width = EditorGUIUtility.labelWidth};
+            Rect labelRect = new Rect(position) {width = label == GUIContent.none ? 0 : EditorGUIUtility.labelWidth};
             EditorGUI.LabelField(labelRect, label);
 
             SerializedProperty typeProp = property.FindPropertyRelative("_type");

@@ -10,7 +10,7 @@ using UnityEditor;
 namespace SoundSystem {
     [System.Serializable]
     public class Sound {
-        [SerializeReference, SerializeReferencePopup] IClipResolver _clip = new Clip();
+        [SerializeReference, ClipResolverPopup] IClipResolver _clip = new Clip();
         public IClipResolver Clip => _clip;
 
         [SerializeField] SoundBehaviourList _soundBehaviourList = new();
