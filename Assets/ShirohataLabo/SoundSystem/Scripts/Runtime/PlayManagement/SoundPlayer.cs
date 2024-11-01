@@ -269,6 +269,13 @@ namespace SoundSystem {
         public void Reset() {
             Behaviours_OnReset();
             ResetSoundBehaviours();
+            AudioHighPassFilter.DestroyFlexible();
+            AudioLowPassFilter.DestroyFlexible();
+            AudioEchoFilter.DestroyFlexible();
+            AudioDistortionFilter.DestroyFlexible();
+            AudioReverbFilter.DestroyFlexible();
+            AudioChorusFilter.DestroyFlexible();
+            AudioReverbZone.DestroyFlexible();
 
             PlayScopeStatusDictionary.Clear();
 

@@ -100,6 +100,7 @@ namespace SoundSystem {
         internal UnityEngine.AudioHighPassFilter GetOrCreateAudioHighPassFilter() {
             if (AudioHighPassFilter == null) {
                 AudioHighPassFilter = _gameObject.AddComponent<UnityEngine.AudioHighPassFilter>();
+                AudioHighPassFilter.DisableAndReset();
             }
             return AudioHighPassFilter;
         }
