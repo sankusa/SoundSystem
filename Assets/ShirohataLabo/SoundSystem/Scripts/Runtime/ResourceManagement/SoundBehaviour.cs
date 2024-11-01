@@ -6,19 +6,36 @@ using UnityEditor;
 
 namespace SoundSystem {
     [Serializable]
-    public abstract class SoundBehaviour {
+    public abstract partial class SoundBehaviour {
         [SerializeField] protected bool _active = true;
         public bool Active {
             get => _active;
             set => _active = value;
         }
 
-        public void ApplyTo(SoundPlayer player) {
+        public virtual void OnUpdate(SoundPlayer player, float deltaTime) {
             if (_active == false) return;
-            ApplyMain(player);
+            OnUpdateIfActive(player, deltaTime);
         }
+        protected virtual void OnUpdateIfActive(SoundPlayer player, float deltaTime) {}
 
-        protected abstract void ApplyMain(SoundPlayer player);
+        public virtual void OnReset(SoundPlayer player) {
+            if (_active == false) return;
+            OnResetIfActive(player);
+        }
+        protected virtual void OnResetIfActive(SoundPlayer player) {}
+
+        public virtual void OnPause(SoundPlayer player) {
+            if (_active == false) return;
+            OnPauseIfActive(player);
+        }
+        protected virtual void OnPauseIfActive(SoundPlayer player) {}
+
+        public virtual void OnResume(SoundPlayer player) {
+            if (_active == false) return;
+            OnResumeIfActive(player);
+        }
+        protected virtual void OnResumeIfActive(SoundPlayer player) {}
 
 #if UNITY_EDITOR
         public static SerializedProperty GetActiveProp(SerializedProperty soundBehaviourProp) {

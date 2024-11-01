@@ -138,11 +138,6 @@ namespace SoundSystem {
             Object.DestroyImmediate(_playerRoot);
         }
 
-        public void ReapplySoundBehaviours() {
-            Player.ResetSoundBehaviours();
-            Player.ApplySoundBehaviours();
-        }
-
         public void SwitchPlayerIndex(int index) {
             Player.Stop();
             _currentPlayerIndex = index;

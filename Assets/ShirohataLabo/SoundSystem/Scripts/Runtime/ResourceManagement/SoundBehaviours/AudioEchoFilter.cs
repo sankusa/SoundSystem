@@ -20,9 +20,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField, Range(0, 1)] float _wetMix = 1f;
         public float WetMix => _wetMix;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.EnableAudioEchoFilter();
-            UnityEngine.AudioEchoFilter filter = player.AudioEchoFilter;
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            UnityEngine.AudioEchoFilter filter = GetOrCreateAudioEchoFilter(player);
             filter.enabled = _enable;
             filter.delay = _delay;
             filter.dryMix = _dryMix;

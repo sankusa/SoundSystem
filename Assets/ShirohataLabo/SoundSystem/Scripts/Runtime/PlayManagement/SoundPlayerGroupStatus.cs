@@ -5,7 +5,7 @@ namespace SoundSystem {
     public class SoundPlayerGroupStatus {
         public SoundPlayerGroupSetting Setting { get; }
 
-        public List<Sound> BaseSounds = new();
+        public List<SoundBehaviour> BaseSoundBehaviours = new();
 
         public SoundPlayerGroupStatus(SoundPlayerGroupSetting setting) {
             Setting = setting;

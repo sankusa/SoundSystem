@@ -29,9 +29,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField, Range(0f, 1f)] float _depth = 0.03f;
         public float Depth => _depth;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.EnableAudioChorusFilter();
-            UnityEngine.AudioChorusFilter filter = player.AudioChorusFilter;
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            UnityEngine.AudioChorusFilter filter = GetOrCreateAudioChorusFilter(player);
             filter.enabled = _enable;
             filter.dryMix = _dryMix;
             filter.wetMix1 = _wetMix1;

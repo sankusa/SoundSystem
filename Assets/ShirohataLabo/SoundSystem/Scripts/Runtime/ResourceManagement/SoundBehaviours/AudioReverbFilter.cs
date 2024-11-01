@@ -53,9 +53,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField, Range(0f, 100f)] float _density = 100f;
         public float Density => _density;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.EnableAudioReverbFilter();
-            UnityEngine.AudioReverbFilter filter = player.AudioReverbFilter;
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            UnityEngine.AudioReverbFilter filter = GetOrCreateAudioReverbFilter(player);
             filter.enabled = _enable;
             filter.reverbPreset = _reverbPreset;
             filter.dryLevel = _dryLevel;

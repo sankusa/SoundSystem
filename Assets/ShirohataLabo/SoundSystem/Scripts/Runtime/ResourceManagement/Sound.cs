@@ -13,16 +13,16 @@ namespace SoundSystem {
         [SerializeReference, SerializeReferencePopup] IClipResolver _clip = new Clip();
         public IClipResolver Clip => _clip;
 
-        [SerializeReference] List<SoundBehaviour> _behaviours = new();
-        public List<SoundBehaviour> Behaviours => _behaviours;
+        [SerializeField] SoundBehaviourList _soundBehaviourList = new();
+        public SoundBehaviourList SoundBehaviourList => _soundBehaviourList;
 
 #if UNITY_EDITOR
         public static SerializedProperty GetClipProp(SerializedProperty soundProp) {
             return soundProp.FindPropertyRelative(nameof(_clip));
         }
 
-        public static SerializedProperty GetBehavioursProp(SerializedProperty soundProp) {
-            return soundProp.FindPropertyRelative(nameof(_behaviours));
+        public static SerializedProperty GetSoundBehaviourListProp(SerializedProperty soundProp) {
+            return soundProp.FindPropertyRelative(nameof(_soundBehaviourList));
         }
 #endif
     }

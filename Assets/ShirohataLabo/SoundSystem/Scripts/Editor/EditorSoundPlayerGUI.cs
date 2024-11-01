@@ -42,10 +42,6 @@ namespace SoundSystem {
             Player.Resume();
         }
 
-        public void ReapplyParameters() {
-            _player.ReapplySoundBehaviours();
-        }
-
         public void DrawGUILayout() {
             _player.Update();
 

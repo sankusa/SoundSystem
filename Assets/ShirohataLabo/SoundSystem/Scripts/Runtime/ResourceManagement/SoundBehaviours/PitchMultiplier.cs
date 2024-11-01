@@ -8,8 +8,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField] float _value = 1;
         public float Value => _value;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.SetPitchMultiplier(player.PitchMultiplier * _value);
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            SetPitchMultiplier(player, GetPitchMultiplier(player) * _value);
         }
     }
 }

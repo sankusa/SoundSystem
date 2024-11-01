@@ -8,8 +8,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField] bool _value;
         public bool Value => _value;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.SetIgnoreListenerVolume(_value);
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            SetIgnoreListenerVolume(player, _value);
         }
     }
 }

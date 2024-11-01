@@ -5,7 +5,7 @@ namespace SoundSystem {
     public class BaseSoundRegistrar : MonoBehaviour {
         [SerializeField] bool _autoRegister = true;
         [SerializeField, SoundPlayerGroupKey] string _soundPlayerGroup;
-        [SerializeField] SoundSelector _sound;
+        [SerializeField] SoundBehaviourList _soundBehaviourList;
 
         void Awake() {
             if (_autoRegister) Register();
@@ -20,8 +20,8 @@ namespace SoundSystem {
                 .Instance
                 .FindPlayerGroup(_soundPlayerGroup)
                 .Status
-                .BaseSounds
-                .Add(_sound.Resolve());
+                .BaseSoundBehaviours
+                .Add(_soundBehaviourList);
         }
 
         public void Deregister() {
@@ -29,8 +29,8 @@ namespace SoundSystem {
                 .Instance
                 .FindPlayerGroup(_soundPlayerGroup)
                 .Status
-                .BaseSounds
-                .Remove(_sound.Resolve());
+                .BaseSoundBehaviours
+                .Remove(_soundBehaviourList);
         }
     }
 }

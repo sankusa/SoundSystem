@@ -42,8 +42,8 @@ namespace SoundSystem {
                     SoundWithKey.GetKeyProp(newElementProp).stringValue = "";
                     SerializedProperty soundProp = SoundWithKey.GetSoundProp(newElementProp);
                     Sound.GetClipProp(soundProp).managedReferenceValue = new Clip();
-                    SerializedProperty behavioursProp = Sound.GetBehavioursProp(soundProp);
-                    behavioursProp.ClearArray();
+                    SerializedProperty soundBehaviourListProp = Sound.GetSoundBehaviourListProp(soundProp);
+                    SoundBehaviourList.GetBehavioursProp(soundBehaviourListProp).ClearArray();
                 }
             };
         }

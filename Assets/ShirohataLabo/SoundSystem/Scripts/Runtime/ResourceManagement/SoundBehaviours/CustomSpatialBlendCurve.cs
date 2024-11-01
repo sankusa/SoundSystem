@@ -8,8 +8,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField] AnimationCurve _curve = new();
         public AnimationCurve Curve => _curve;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.SetCustomCurve(AudioSourceCurveType.SpatialBlend, _curve);
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            SetCustomCurve(player, AudioSourceCurveType.SpatialBlend, _curve);
         }
     }
 }

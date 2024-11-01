@@ -8,8 +8,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField, Range(-1, 1)] float _value;
         public float Value => _value;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.SetStereoPan(_value);
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            SetStereoPan(player, _value);
         }
     }
 }

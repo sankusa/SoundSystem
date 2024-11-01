@@ -14,9 +14,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField, Range(1, 10)] float _highpassResonanceQ = 1;
         public float HighPassResonanceQ => _highpassResonanceQ;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.EnableAudioHighPassFilter();
-            UnityEngine.AudioHighPassFilter filter = player.AudioHighPassFilter;
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            UnityEngine.AudioHighPassFilter filter = GetOrCreateAudioHighPassFilter(player);
             filter.enabled = _enable;
             filter.cutoffFrequency = _cutoffFrequency;
             filter.highpassResonanceQ = _highpassResonanceQ;

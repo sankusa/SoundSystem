@@ -76,9 +76,5 @@ namespace SoundSystem {
         public void Bind(Sound sound) {
             _playerGUI.Bind(sound);
         }
-
-        public void ReapplyParameters() {
-            _playerGUI.ReapplyParameters();
-        }
     }
 }

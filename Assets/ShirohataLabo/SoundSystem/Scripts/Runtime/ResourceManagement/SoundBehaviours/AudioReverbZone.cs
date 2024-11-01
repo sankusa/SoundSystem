@@ -56,9 +56,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField, Range(0f, 100f)] float _density = 100f;
         public float Density => _density;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.EnableAudioReverbZone();
-            UnityEngine.AudioReverbZone reverbZone = player.AudioReverbZone;
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            UnityEngine.AudioReverbZone reverbZone = GetOrCreateAudioReverbZone(player);
             reverbZone.enabled = _enable;
             reverbZone.minDistance = _minDistance;
             reverbZone.maxDistance = _maxDistance;

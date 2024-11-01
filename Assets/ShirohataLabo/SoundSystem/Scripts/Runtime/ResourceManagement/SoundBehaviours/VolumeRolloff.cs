@@ -8,8 +8,8 @@ namespace SoundSystem.SoundBehaviours {
         [SerializeField] AudioRolloffMode _mode = AudioRolloffMode.Logarithmic;
         public AudioRolloffMode Mode => _mode;
 
-        protected override void ApplyMain(SoundPlayer player) {
-            player.SetVolumeRollof(_mode);
+        protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
+            SetVolumeRollof(player, _mode);
         }
     }
 }
