@@ -2,182 +2,78 @@ using UnityEngine;
 
 namespace SoundSystem {
     public partial class SoundPlayer {
-        internal float VolumeMultiplier { get; private set; } = 1;
-        internal float PitchMultiplier { get; private set; } = 1;
-        internal UnityEngine.AudioHighPassFilter AudioHighPassFilter { get; private set; }
-        internal UnityEngine.AudioLowPassFilter AudioLowPassFilter { get; private set; }
-        internal UnityEngine.AudioEchoFilter AudioEchoFilter { get; private set; }
-        internal UnityEngine.AudioDistortionFilter AudioDistortionFilter { get; private set; }
-        internal UnityEngine.AudioReverbFilter AudioReverbFilter { get; private set; }
-        internal UnityEngine.AudioChorusFilter AudioChorusFilter { get; private set; }
-        internal UnityEngine.AudioReverbZone AudioReverbZone { get; private set; }
-
-        internal SoundPlayer SetVolumeMultiplier(float volumeMultiplier) {
-            VolumeMultiplier = volumeMultiplier;
-            return this;
-        }
-
-        internal SoundPlayer SetPitchMultiplier(float pitchMultiplier) {
-            PitchMultiplier = pitchMultiplier;
-            return this;
-        }
-
-        internal SoundPlayer SetBypassEffects(bool bypassEffects) {
-            _audioSource.bypassEffects = bypassEffects;
-            return this;
-        }
-
-        internal SoundPlayer SetBypassListenerEffects(bool bypassListenerEffects) {
-            _audioSource.bypassListenerEffects = bypassListenerEffects;
-            return this;
-        }
-
-        internal SoundPlayer SetBypassReverbZones(bool bypassReverbZones) {
-            _audioSource.bypassReverbZones = bypassReverbZones;
-            return this;
-        }
-
-        internal SoundPlayer SetIgnoreListenerPause(bool ignoreListenerPause) {
-            _audioSource.ignoreListenerPause = ignoreListenerPause;
-            return this;
-        }
-
-        internal SoundPlayer SetIgnoreListenerVolume(bool ignoreListenerVolume) {
-            _audioSource.ignoreListenerVolume = ignoreListenerVolume;
-            return this;
-        }
-
-        internal SoundPlayer SetStereoPan(float stereoPan) {
-            _audioSource.panStereo = stereoPan;
-            return this;
-        }
-
-        internal SoundPlayer SetSpatialBlend(float spatialBlend) {
-            _audioSource.spatialBlend = spatialBlend;
-            return this;
-        }
-
-        internal SoundPlayer SetReverbZoneMix(float reverbZoneMix) {
-            _audioSource.reverbZoneMix = reverbZoneMix;
-            return this;
-        }
-
-        internal SoundPlayer SetDopplerLevel(float dopplerLevel) {
-            _audioSource.dopplerLevel = dopplerLevel;
-            return this;
-        }
-
-        internal SoundPlayer SetSpread(float spread) {
-            _audioSource.spread = spread;
-            return this;
-        }
-
-        internal SoundPlayer SetVolumeRollof(AudioRolloffMode rolloffMode) {
-            _audioSource.rolloffMode = rolloffMode;
-            return this;
-        }
-
-        internal SoundPlayer SetMinDistance(float minDistance) {
-            _audioSource.minDistance = minDistance;
-            return this;
-        }
-
-        internal SoundPlayer SetMaxDistance(float maxDistance) {
-            _audioSource.maxDistance = maxDistance;
-            return this;
-        }
+        AudioChorusFilterAccessor ChorusFilterAccessor { get; set; }
+        AudioDistortionFilterAccessor DistortionFilterAccessor { get; set; }
+        AudioEchoFilterAccessor EchoFilterAccessor { get; set; }
+        AudioHighPassFilterAccessor HighPassFilterAccessor { get; set; }
+        AudioLowPassFilterAccessor LowPassFilterAccessor { get; set; }
+        AudioReverbFilterAccessor ReverbFilterAccessor { get; set; }
+        AudioReverbZoneAccessor ReverbZoneAccessor { get; set; }
 
         internal AnimationCurve GetCustomCurve(AudioSourceCurveType type) {
             return _audioSource.GetCustomCurve(type);
         }
 
         internal SoundPlayer SetCustomCurve(AudioSourceCurveType type, AnimationCurve curve) {
-            if (curve.keys.Length == 0) return this;
+            if (curve.length == 0) return this;
             _audioSource.SetCustomCurve(type, curve);
             return this;
         }
 
-        internal UnityEngine.AudioHighPassFilter GetOrCreateAudioHighPassFilter() {
-            if (AudioHighPassFilter == null) {
-                AudioHighPassFilter = _gameObject.AddComponent<UnityEngine.AudioHighPassFilter>();
-                AudioHighPassFilter.DisableAndReset();
+        internal AudioChorusFilterAccessor GetOrCreateAudioChorusFilter() {
+            if (ChorusFilterAccessor == null) {
+                ChorusFilterAccessor = new AudioChorusFilterAccessor(_gameObject);
             }
-            return AudioHighPassFilter;
+            ChorusFilterAccessor.CreateFilterIfNull();
+            return ChorusFilterAccessor;
         }
 
-        internal UnityEngine.AudioLowPassFilter GetOrCreateAudioLowPassFilter() {
-            if (AudioLowPassFilter == null) {
-                AudioLowPassFilter = _gameObject.AddComponent<UnityEngine.AudioLowPassFilter>();
-                AudioLowPassFilter.DisableAndReset();
+        internal AudioDistortionFilterAccessor GetOrCreateAudioDistortionFilter() {
+            if (DistortionFilterAccessor == null) {
+                DistortionFilterAccessor = new AudioDistortionFilterAccessor(_gameObject);
             }
-            return AudioLowPassFilter;
+            DistortionFilterAccessor.CreateFilterIfNull();
+            return DistortionFilterAccessor;
         }
 
-        internal UnityEngine.AudioEchoFilter GetOrCreateAudioEchoFilter() {
-            if (AudioEchoFilter == null) {
-                AudioEchoFilter = _gameObject.AddComponent<UnityEngine.AudioEchoFilter>();
-                AudioEchoFilter.DisableAndReset();
+        internal AudioEchoFilterAccessor GetOrCreateAudioEchoFilter() {
+            if (EchoFilterAccessor == null) {
+                EchoFilterAccessor = new AudioEchoFilterAccessor(_gameObject);
             }
-            return AudioEchoFilter;
+            EchoFilterAccessor.CreateFilterIfNull();
+            return EchoFilterAccessor;
         }
 
-        internal UnityEngine.AudioDistortionFilter GetOrCreateAudioDistortionFilter() {
-            if (AudioDistortionFilter == null) {
-                AudioDistortionFilter = _gameObject.AddComponent<UnityEngine.AudioDistortionFilter>();
-                AudioDistortionFilter.DisableAndReset();
+        internal AudioHighPassFilterAccessor GetOrCreateAudioHighPassFilter() {
+            if (HighPassFilterAccessor == null) {
+                HighPassFilterAccessor = new AudioHighPassFilterAccessor(_gameObject);
             }
-            return AudioDistortionFilter;
+            HighPassFilterAccessor.CreateFilterIfNull();
+            return HighPassFilterAccessor;
         }
 
-        internal UnityEngine.AudioReverbFilter GetOrCreateAudioReverbFilter() {
-            if (AudioReverbFilter == null) {
-                AudioReverbFilter = _gameObject.AddComponent<UnityEngine.AudioReverbFilter>();
-                AudioReverbFilter.DisableAndReset();
+        internal AudioLowPassFilterAccessor GetOrCreateAudioLowPassFilter() {
+            if (LowPassFilterAccessor == null) {
+                LowPassFilterAccessor = new AudioLowPassFilterAccessor(_gameObject);
             }
-            return AudioReverbFilter;
+            LowPassFilterAccessor.CreateFilterIfNull();
+            return LowPassFilterAccessor;
         }
 
-        internal UnityEngine.AudioChorusFilter GetOrCreateAudioChorusFilter() {
-            if (AudioChorusFilter == null) {
-                AudioChorusFilter = _gameObject.AddComponent<UnityEngine.AudioChorusFilter>();
-                AudioChorusFilter.DisableAndReset();
+        internal AudioReverbFilterAccessor GetOrCreateAudioReverbFilter() {
+            if (ReverbFilterAccessor == null) {
+                ReverbFilterAccessor = new AudioReverbFilterAccessor(_gameObject);
             }
-            return AudioChorusFilter;
+            ReverbFilterAccessor.CreateFilterIfNull();
+            return ReverbFilterAccessor;
         }
 
-        internal UnityEngine.AudioReverbZone GetOrCreateAudioReverbZone() {
-            if (AudioReverbZone == null) {
-                AudioReverbZone = _gameObject.AddComponent<UnityEngine.AudioReverbZone>();
-                AudioReverbZone.DisableAndReset();
+        internal AudioReverbZoneAccessor GetOrCreateAudioReverbZone() {
+            if (ReverbZoneAccessor == null) {
+                ReverbZoneAccessor = new AudioReverbZoneAccessor(_gameObject);
             }
-            return AudioReverbZone;
-        }
-
-        void ResetSoundBehaviours() {
-            VolumeMultiplier = 1;
-            PitchMultiplier = 1;
-            _audioSource.bypassEffects = false;
-            _audioSource.bypassListenerEffects = false;
-            _audioSource.bypassReverbZones = false;
-            _audioSource.ignoreListenerPause = false;
-            _audioSource.ignoreListenerVolume = false;
-            _audioSource.panStereo = 0;
-            _audioSource.spatialBlend = 0;
-            _audioSource.reverbZoneMix = 1;
-            _audioSource.dopplerLevel = 1;
-            _audioSource.spread = 0;
-            _audioSource.rolloffMode = AudioRolloffMode.Logarithmic;
-            _audioSource.minDistance = 1;
-            _audioSource.maxDistance = 500;
-
-            // Filters
-            AudioHighPassFilter.DisableAndReset();
-            AudioLowPassFilter.DisableAndReset();
-            AudioEchoFilter.DisableAndReset();
-            AudioDistortionFilter.DisableAndReset();
-            AudioReverbFilter.DisableAndReset();
-            AudioChorusFilter.DisableAndReset();
-            AudioReverbZone.DisableAndReset();
+            ReverbZoneAccessor.CreateFilterIfNull();
+            return ReverbZoneAccessor;
         }
     }
 }

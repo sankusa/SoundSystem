@@ -23,7 +23,7 @@ namespace SoundSystem.SoundBehaviours {
             set => _maxDistance = value;
         }
 
-        [SerializeField] AudioReverbPreset _reverbPreset =AudioReverbPreset.User;
+        [SerializeField] AudioReverbPreset _reverbPreset = AudioReverbPreset.User;
         public AudioReverbPreset ReverbPreset {
             get => _reverbPreset;
             set => _reverbPreset = value;
@@ -84,13 +84,13 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         [SerializeField, Range(1000, 20000)] int _hfReference = 5000;
-        public int HfReference {
+        public int HFReference {
             get => _hfReference;
             set => _hfReference = value;
         }
 
         [SerializeField, Range(20, 1000)] int _lfReference = 250;
-        public int LfReference {
+        public int LFReference {
             get => _lfReference;
             set => _lfReference = value;
         }
@@ -108,24 +108,24 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            UnityEngine.AudioReverbZone reverbZone = GetOrCreateAudioReverbZone(player);
-            reverbZone.enabled = _enable;
-            reverbZone.minDistance = _minDistance;
-            reverbZone.maxDistance = _maxDistance;
-            reverbZone.reverbPreset = _reverbPreset;
-            reverbZone.room = _room;
-            reverbZone.roomHF = _roomHF;
-            reverbZone.roomLF = _roomLF;
-            reverbZone.decayTime = _decayTime;
-            reverbZone.decayHFRatio = _decayHFRatio;
-            reverbZone.reflections = _reflections;
-            reverbZone.reflectionsDelay = _reflectionsDelay;
-            reverbZone.reverb = _reverb;
-            reverbZone.reverbDelay = _reverbDelay;
-            reverbZone.HFReference = _hfReference;
-            reverbZone.LFReference = _lfReference;
-            reverbZone.diffusion = _diffusion;
-            reverbZone.density = _density;
+            AudioReverbZoneAccessor accessor = GetOrCreateAudioReverbZone(player);
+            accessor.Enable = _enable;
+            accessor.MinDistance = _minDistance;
+            accessor.MaxDistance = _maxDistance;
+            accessor.ReverbPreset = _reverbPreset;
+            accessor.Room = _room;
+            accessor.RoomHF = _roomHF;
+            accessor.RoomLF = _roomLF;
+            accessor.DecayTime = _decayTime;
+            accessor.DecayHFRatio = _decayHFRatio;
+            accessor.Reflections = _reflections;
+            accessor.ReflectionsDelay = _reflectionsDelay;
+            accessor.Reverb = _reverb;
+            accessor.ReverbDelay = _reverbDelay;
+            accessor.HFReference = _hfReference;
+            accessor.LFReference = _lfReference;
+            accessor.Diffusion = _diffusion;
+            accessor.Density = _density;
         }
     }
 }

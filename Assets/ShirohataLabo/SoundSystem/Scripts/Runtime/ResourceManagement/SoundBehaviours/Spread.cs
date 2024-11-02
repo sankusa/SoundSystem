@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetSpread(player, _value);
+            GetAudioSourceAccessor(player).Spread = _value;
         }
     }
 }

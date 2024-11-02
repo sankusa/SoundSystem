@@ -11,7 +11,7 @@ namespace SoundSystem.SoundBehaviours {
             set => _enable = value;
         }
 
-        [SerializeField] AudioReverbPreset _reverbPreset =AudioReverbPreset.User;
+        [SerializeField] AudioReverbPreset _reverbPreset = AudioReverbPreset.User;
         public AudioReverbPreset ReverbPreset {
             get => _reverbPreset;
             set => _reverbPreset = value;
@@ -102,23 +102,23 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            UnityEngine.AudioReverbFilter filter = GetOrCreateAudioReverbFilter(player);
-            filter.enabled = _enable;
-            filter.reverbPreset = _reverbPreset;
-            filter.dryLevel = _dryLevel;
-            filter.room = _room;
-            filter.roomHF = _roomHF;
-            filter.roomLF = _roomLF;
-            filter.decayTime = _decayTime;
-            filter.decayHFRatio = _decayHFRatio;
-            filter.reflectionsLevel = _reflectionsLevel;
-            filter.reflectionsDelay = _reflectionsDelay;
-            filter.reverbLevel = _reverbLevel;
-            filter.reverbDelay = _reverbDelay;
-            filter.hfReference = _hfReference;
-            filter.lfReference = _lfReference;
-            filter.diffusion = _diffusion;
-            filter.density = _density;
+            AudioReverbFilterAccessor accessor = GetOrCreateAudioReverbFilter(player);
+            accessor.Enable = _enable;
+            accessor.ReverbPreset = _reverbPreset;
+            accessor.DryLevel = _dryLevel;
+            accessor.Room = _room;
+            accessor.RoomHF = _roomHF;
+            accessor.RoomLF = _roomLF;
+            accessor.DecayTime = _decayTime;
+            accessor.DecayHFRatio = _decayHFRatio;
+            accessor.ReflectionsLevel = _reflectionsLevel;
+            accessor.ReflectionsDelay = _reflectionsDelay;
+            accessor.ReverbLevel = _reverbLevel;
+            accessor.ReverbDelay = _reverbDelay;
+            accessor.HfReference = _hfReference;
+            accessor.LfReference = _lfReference;
+            accessor.Diffusion = _diffusion;
+            accessor.Density = _density;
         }
     }
 }

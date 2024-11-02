@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetIgnoreListenerPause(player, _value);
+            GetAudioSourceAccessor(player).IgnoreListenerPause = _value;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetVolumeMultiplier(player, GetVolumeMultiplier(player) * _value);
+            GetAudioSourceAccessor(player).Volume *= _value;
         }
     }
 }

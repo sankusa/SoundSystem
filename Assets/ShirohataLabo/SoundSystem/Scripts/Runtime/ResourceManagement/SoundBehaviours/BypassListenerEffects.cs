@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetBypassListenerEffects(player, _value);
+            GetAudioSourceAccessor(player).BypassListenerEffects = _value;
         }
     }
 }

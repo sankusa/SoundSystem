@@ -87,7 +87,7 @@ namespace SoundSystem {
         public void Update() {
             // 再生対象が変更されていたら反映
             if (_audioClip == null && _customClip == null && _sound == null) {
-                if (Player.IsUsing) Player.Reset();
+                if (Player.AudioClip != null || Player.CustomClip != null || Player.Sound != null) Player.Reset();
             }
             else if (_audioClip != null && Player.AudioClip != _audioClip) {
                 Player.SetAudioClip(_audioClip);

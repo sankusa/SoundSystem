@@ -27,7 +27,8 @@ namespace SoundSystem.SoundBehaviours {
             else {
                 value = (float)player.PlayScopeStatusDictionary[this];
             }
-            player.SetVolumeMultiplier(player.VolumeMultiplier * value);
+
+            GetAudioSourceAccessor(player).Volume *= value;
         }
     }
 }

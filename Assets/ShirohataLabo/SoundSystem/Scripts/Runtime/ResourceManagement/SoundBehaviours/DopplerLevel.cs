@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetDopplerLevel(player, _value);
+            GetAudioSourceAccessor(player).DopplerLevel = _value;
         }
     }
 }

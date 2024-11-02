@@ -8,9 +8,9 @@ namespace SoundSystem {
         public GameObject GameObject => _gameObject;
         readonly Transform _transform;
         readonly AudioSource _audioSource;
+        internal AudioSourceAccessor AudioSourceAccessor { get; }
         public AudioClip AudioClip => _audioSource.clip;
         public bool IsPlayable => _audioSource.clip != null;
-        public bool IsUsing => _audioSource.clip != null;
         public bool IsPlaying => _audioSource.isPlaying;
         public bool IsStopped => _audioSource.isPlaying == false && IsPaused == false;
         public bool IsPaused { get; private set; }
@@ -18,25 +18,13 @@ namespace SoundSystem {
         public float Time => _audioSource.clip == null ? 0 : (float)_audioSource.timeSamples / _audioSource.clip.frequency;
         public bool Loop => _audioSource.loop;
 
-        public bool BypassEffects => _audioSource.bypassEffects;
-        public bool BypassListenerEffects => _audioSource.bypassListenerEffects;
-        public bool BypassReverbZones => _audioSource.bypassReverbZones;
-        public bool IgnoreListenerPause => _audioSource.ignoreListenerPause;
-        public bool IgnoreListenerVolume => _audioSource.ignoreListenerVolume;
-        public float StereoPan => _audioSource.panStereo;
-        public float SpatialBlend => _audioSource.spatialBlend;
-        public float ReverbZoneMix => _audioSource.reverbZoneMix;
-        public float DopplerLevel => _audioSource.dopplerLevel;
-        public float Spread => _audioSource.spread;
-        public AudioRolloffMode VolumeRollof => _audioSource.rolloffMode;
-        public float MinDistance => _audioSource.minDistance;
-        public float MaxDistance => _audioSource.maxDistance;
-
         // ・AudioSource.isPlayingはポーズ時にfalseになってしまう
         // ・AudioSourceは再生位置が終端に達した場合、SoundPlayerが検知する前に自律的に状態をリセットしてしまう場合がある
         // 上記理由からフラグを別途定義
-        bool _isPlayStarted;
-        public bool IsPlayStarted => _isPlayStarted;
+        public bool IsPlayStarted { get; private set; }
+
+        // SoundPlayerGroupが管理する使用状態
+        public bool IsUsing { get; private set; }
 
         Sound _sound;
         public Sound Sound => _sound;
@@ -69,6 +57,14 @@ namespace SoundSystem {
             _groupStatus = groupStatus;
 
             _volumes = volumes;
+
+            AudioSourceAccessor = new AudioSourceAccessor(_audioSource);
+            AudioSourceAccessor.Reset();
+            AudioSourceAccessor.Apply();
+        }
+
+        public void StartUsing() {
+            IsUsing = true;
         }
 
         public SoundPlayer SetAudioClip(AudioClip audioClip) {
@@ -185,14 +181,47 @@ namespace SoundSystem {
             return this;
         }
 
-        void Behaviours_OnUpdate(float deltaTime) {
-            ResetSoundBehaviours();
+        void UpdateBehaviours(float deltaTime) {
+            // Reset
+            ChorusFilterAccessor?.Reset();
+            DistortionFilterAccessor?.Reset();
+            EchoFilterAccessor?.Reset();
+            HighPassFilterAccessor?.Reset();
+            LowPassFilterAccessor?.Reset();
+            ReverbFilterAccessor?.Reset();
+            ReverbZoneAccessor?.Reset();
+            AudioSourceAccessor.Reset();
+
+            // Update Volume
+            if (_customClip != null) {
+                AudioSourceAccessor.Volume *= _customClip.GetVolumeMultiplier(_audioSource.time);
+            }
+            AudioSourceAccessor.Volume *= Volume.MultiplyVolume(_volumes);
+            AudioSourceAccessor.Volume *= _fadeVolume.Value;
+            // Update Mute
+            AudioSourceAccessor.Mute |= Volume.SumMute(_volumes);
+            // Update Pitch
+            if (_customClip != null) {
+                AudioSourceAccessor.Pitch *= _customClip.GetPitchMultiplier();
+            }
+
+            // SoundBehaviour.OnUpdate
             foreach (SoundBehaviour behaviour in _groupStatus.BaseSoundBehaviours) {
                 behaviour.OnUpdate(this, deltaTime);
             }
             foreach (SoundBehaviour behaviour in SoundBehaviours) {
                 behaviour.OnUpdate(this, deltaTime);
             }
+
+            // Apply
+            ChorusFilterAccessor?.ApplyIfChanged();
+            DistortionFilterAccessor?.ApplyIfChanged();
+            EchoFilterAccessor?.ApplyIfChanged();
+            HighPassFilterAccessor?.ApplyIfChanged();
+            LowPassFilterAccessor?.ApplyIfChanged();
+            ReverbFilterAccessor?.ApplyIfChanged();
+            ReverbZoneAccessor?.ApplyIfChanged();
+            AudioSourceAccessor.ApplyIfChanged();
         }
 
         void Behaviours_OnReset() {
@@ -228,19 +257,17 @@ namespace SoundSystem {
                 return this;
             }
 
+            ClampTime();
+
             if (_fadeVolume.IsFading == false) {
                 _fadeVolume.Value = 1;
             }
 
-            Behaviours_OnUpdate(0);
+            UpdateBehaviours(0);
             UpdatePosition();
-            ClampTime();
-            UpdateVolume();
-            UpdateMute();
-            UpdatePitch();
 
             _audioSource.Play();
-            _isPlayStarted = true;
+            IsPlayStarted = true;
             return this;
         }
 
@@ -268,14 +295,15 @@ namespace SoundSystem {
 
         public void Reset() {
             Behaviours_OnReset();
-            ResetSoundBehaviours();
-            AudioHighPassFilter.DestroyFlexible();
-            AudioLowPassFilter.DestroyFlexible();
-            AudioEchoFilter.DestroyFlexible();
-            AudioDistortionFilter.DestroyFlexible();
-            AudioReverbFilter.DestroyFlexible();
-            AudioChorusFilter.DestroyFlexible();
-            AudioReverbZone.DestroyFlexible();
+
+            ChorusFilterAccessor?.Clear();
+            DistortionFilterAccessor?.Clear();
+            EchoFilterAccessor?.Clear();
+            HighPassFilterAccessor?.Clear();
+            LowPassFilterAccessor?.Clear();
+            ReverbFilterAccessor?.Clear();
+            ReverbZoneAccessor?.Clear();
+            AudioSourceAccessor.Clear();
 
             PlayScopeStatusDictionary.Clear();
 
@@ -283,7 +311,7 @@ namespace SoundSystem {
             _customClip = null;
             _fadeVolume.Clear();
             _onComplete = null;
-            _isPlayStarted = false;
+            IsPlayStarted = false;
             IsPaused = false;
             _transform.localPosition = Vector3.zero;
             _spawnPoint = null;
@@ -291,27 +319,24 @@ namespace SoundSystem {
             // Reset AudioSource
             _audioSource.Stop();
             _audioSource.clip = null;
-            _audioSource.pitch = 1;
             _audioSource.loop = _groupStatus.Setting.DefaultLoop;
             _audioSource.timeSamples = 0;
+
+            IsUsing = false;
         }
 
         public void Update(float deltaTime) {
-            if (IsUsing == false) return;
-            if (_isPlayStarted == false) return;
+            if (IsPlayStarted == false) return;
             // AudioSourceが自律的に停止した場合
             if (IsStopped) {
                 RestartOrComplete();
                 return;
             }
             if (_audioSource.isPlaying == false) return;
-            Behaviours_OnUpdate(deltaTime);
-            UpdatePosition();
-            _fadeVolume.Update(deltaTime);
             ClampTime();
-            UpdateVolume();
-            UpdateMute();
-            UpdatePitch();
+            _fadeVolume.Update(deltaTime);
+            UpdateBehaviours(deltaTime);
+            UpdatePosition();
             CheckAndHandleEndOfAudio();
         }
 
@@ -329,31 +354,6 @@ namespace SoundSystem {
         void UpdatePosition() {
             if (_spawnPoint == null) return;
             _transform.localPosition = _spawnPoint.position;
-        }
-
-        void UpdateVolume() {
-            float volume = 1f;
-            if (_customClip != null) {
-                volume *= _customClip.GetVolumeMultiplier(_audioSource.time);
-            }
-            volume *= VolumeMultiplier;
-            volume *= Volume.MultiplyVolume(_volumes);
-            volume *= _fadeVolume.Value;
-
-            _audioSource.volume = volume;
-        }
-
-        void UpdateMute() {
-            _audioSource.mute = Volume.SumMute(_volumes);
-        }
-
-        void UpdatePitch() {
-            float pitch = 1;
-            if (_customClip != null) {
-                pitch = _customClip.GetPitchMultiplier();
-            }
-            pitch *= PitchMultiplier;
-            _audioSource.pitch = pitch;
         }
 
         void CheckAndHandleEndOfAudio() {

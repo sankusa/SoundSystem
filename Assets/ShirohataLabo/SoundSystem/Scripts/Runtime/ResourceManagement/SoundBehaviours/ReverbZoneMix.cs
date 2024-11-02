@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetReverbZoneMix(player, _value);
+            GetAudioSourceAccessor(player).ReverbZoneMix = _value;
         }
     }
 }

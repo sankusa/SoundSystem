@@ -48,6 +48,7 @@ namespace SoundSystem {
             // 再生したプレイヤーは最後尾にすることで、再生開始が一番古いものが先頭に来る
             _players.Remove(target);
             _players.Add(target);
+            target.StartUsing();
             return target;
         }
     }

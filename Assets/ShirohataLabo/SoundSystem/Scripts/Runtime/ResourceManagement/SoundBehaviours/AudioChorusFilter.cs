@@ -54,15 +54,15 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            UnityEngine.AudioChorusFilter filter = GetOrCreateAudioChorusFilter(player);
-            filter.enabled = _enable;
-            filter.dryMix = _dryMix;
-            filter.wetMix1 = _wetMix1;
-            filter.wetMix2 = _wetMix2;
-            filter.wetMix3 = _wetMix3;
-            filter.delay = _delay;
-            filter.rate = _rate;
-            filter.depth = _depth;
+            AudioChorusFilterAccessor accessor = GetOrCreateAudioChorusFilter(player);
+            accessor.Enable = _enable;
+            accessor.DryMix = _dryMix;
+            accessor.WetMix1 = _wetMix1;
+            accessor.WetMix2 = _wetMix2;
+            accessor.WetMix3 = _wetMix3;
+            accessor.Delay = _delay;
+            accessor.Rate = _rate;
+            accessor.Depth = _depth;
         }
     }
 }

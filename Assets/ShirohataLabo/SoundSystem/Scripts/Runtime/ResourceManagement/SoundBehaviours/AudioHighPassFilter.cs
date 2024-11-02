@@ -18,16 +18,16 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         [SerializeField, Range(1, 10)] float _highpassResonanceQ = 1;
-        public float HighPassResonanceQ {
+        public float HighpassResonanceQ {
             get => _highpassResonanceQ;
             set => _highpassResonanceQ = value;
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            UnityEngine.AudioHighPassFilter filter = GetOrCreateAudioHighPassFilter(player);
-            filter.enabled = _enable;
-            filter.cutoffFrequency = _cutoffFrequency;
-            filter.highpassResonanceQ = _highpassResonanceQ;
+            AudioHighPassFilterAccessor accessor = GetOrCreateAudioHighPassFilter(player);
+            accessor.Enable = _enable;
+            accessor.CutoffFrequency = _cutoffFrequency;
+            accessor.HighpassResonanceQ = _highpassResonanceQ;
         }
     }
 }

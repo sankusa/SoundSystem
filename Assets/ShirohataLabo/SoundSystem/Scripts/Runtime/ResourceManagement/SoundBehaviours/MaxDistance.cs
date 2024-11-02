@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetMaxDistance(player, _value);
+            GetAudioSourceAccessor(player).MaxDistance = _value;
         }
     }
 }

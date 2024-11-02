@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetVolumeRollof(player, _mode);
+            GetAudioSourceAccessor(player).VolumeRolloff = _mode;
         }
     }
 }

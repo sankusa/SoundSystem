@@ -11,8 +11,8 @@ namespace SoundSystem.SoundBehaviours {
             set => _enable = value;
         }
 
-        [SerializeField, Range(10, 5000)] int _delay = 500;
-        public int Delay {
+        [SerializeField, Range(10, 5000)] float _delay = 500;
+        public float Delay {
             get => _delay;
             set => _delay = value;
         }
@@ -36,11 +36,11 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            UnityEngine.AudioEchoFilter filter = GetOrCreateAudioEchoFilter(player);
-            filter.enabled = _enable;
-            filter.delay = _delay;
-            filter.dryMix = _dryMix;
-            filter.wetMix = _wetMix;
+            AudioEchoFilterAccessor accessor = GetOrCreateAudioEchoFilter(player);
+            accessor.Enable = _enable;
+            accessor.Delay = _delay;
+            accessor.DryMix = _dryMix;
+            accessor.WetMix = _wetMix;
         }
     }
 }

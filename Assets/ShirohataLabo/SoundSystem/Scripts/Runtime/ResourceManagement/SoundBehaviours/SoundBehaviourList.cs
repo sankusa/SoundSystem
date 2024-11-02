@@ -24,13 +24,13 @@ namespace SoundSystem {
 
         public override void OnPause(SoundPlayer player) {
             foreach (SoundBehaviour behaviour in _behaviours) {
-                behaviour.OnReset(player);
+                behaviour.OnPause(player);
             }
         }
 
         public override void OnResume(SoundPlayer player) {
             foreach (SoundBehaviour behaviour in _behaviours) {
-                behaviour.OnReset(player);
+                behaviour.OnResume(player);
             }
         }
 

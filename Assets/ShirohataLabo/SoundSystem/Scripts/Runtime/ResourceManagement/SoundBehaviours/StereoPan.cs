@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetStereoPan(player, _value);
+            GetAudioSourceAccessor(player).StereoPan = _value;
         }
     }
 }

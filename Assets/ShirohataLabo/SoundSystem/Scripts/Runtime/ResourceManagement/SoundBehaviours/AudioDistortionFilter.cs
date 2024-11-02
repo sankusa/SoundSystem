@@ -18,9 +18,9 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            UnityEngine.AudioDistortionFilter filter = GetOrCreateAudioDistortionFilter(player);
-            filter.enabled = _enable;
-            filter.distortionLevel = _distortionLevel;
+            AudioDistortionFilterAccessor accessor = GetOrCreateAudioDistortionFilter(player);
+            accessor.Enable = _enable;
+            accessor.DistortionLevel = _distortionLevel;
         }
     }
 }

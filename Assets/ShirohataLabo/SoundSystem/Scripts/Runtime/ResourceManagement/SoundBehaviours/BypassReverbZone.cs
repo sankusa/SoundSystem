@@ -12,7 +12,7 @@ namespace SoundSystem.SoundBehaviours {
         }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
-            SetBypassReverbZones(player, _value);
+            GetAudioSourceAccessor(player).BypassReverbZones = _value;
         }
     }
 }
