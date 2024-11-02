@@ -6,52 +6,100 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(AudioReverbFilter), 1005)]
     public class AudioReverbFilter : SoundBehaviour {
         [SerializeField] bool _enable = true;
-        public bool Enable => _enable;
+        public bool Enable {
+            get => _enable;
+            set => _enable = value;
+        }
 
         [SerializeField] AudioReverbPreset _reverbPreset =AudioReverbPreset.User;
-        public AudioReverbPreset ReverbPreset => _reverbPreset;
+        public AudioReverbPreset ReverbPreset {
+            get => _reverbPreset;
+            set => _reverbPreset = value;
+        }
 
         [SerializeField, Range(-10000, 0)] int _dryLevel;
-        public int DryLevel => _dryLevel;
+        public int DryLevel {
+            get => _dryLevel;
+            set => _dryLevel = value;
+        }
 
         [SerializeField, Range(-10000, 0)] int _room;
-        public int Room => _room;
+        public int Room {
+            get => _room;
+            set => _room = value;
+        }
 
         [SerializeField, Range(-10000, 0)] int _roomHF;
-        public int RoomHF => _roomHF;
+        public int RoomHF {
+            get => _roomHF;
+            set => _roomHF = value;
+        }
 
         [SerializeField, Range(-10000, 0)] int _roomLF;
-        public int RoomLF => _roomLF;
+        public int RoomLF {
+            get => _roomLF;
+            set => _roomLF = value;
+        }
 
         [SerializeField, Range(0.1f, 20f)] float _decayTime = 1f;
-        public float DecayTime => _decayTime;
+        public float DecayTime {
+            get => _decayTime;
+            set => _decayTime = value;
+        }
 
         [SerializeField, Range(0.1f, 2)] float _decayHFRatio = 0.5f;
-        public float DecayHFRatio => _decayHFRatio;
+        public float DecayHFRatio {
+            get => _decayHFRatio;
+            set => _decayHFRatio = value;
+        }
 
         [SerializeField, Range(-10000, 1000)] int _reflectionsLevel = -10000;
-        public int ReflectionsLevel => _reflectionsLevel;
+        public int ReflectionsLevel {
+            get => _reflectionsLevel;
+            set => _reflectionsLevel = value;
+        }
 
         [SerializeField, Range(0, 0.3f)] float _reflectionsDelay = 0;
-        public float ReflectionsDelay => _reflectionsDelay;
+        public float ReflectionsDelay {
+            get => _reflectionsDelay;
+            set => _reflectionsDelay = value;
+        }
 
         [SerializeField, Range(-10000, 2000)] int _reverbLevel;
-        public int ReverbLevel => _reverbLevel;
+        public int ReverbLevel {
+            get => _reverbLevel;
+            set => _reverbLevel = value;
+        }
 
         [SerializeField, Range(0f, 0.1f)] float _reverbDelay = 0.04f;
-        public float ReverbDelay => _reverbDelay;
+        public float ReverbDelay {
+            get => _reverbDelay;
+            set => _reverbDelay = value;
+        }
 
         [SerializeField, Range(1000, 20000)] int _hfReference = 5000;
-        public int HfReference => _hfReference;
+        public int HfReference {
+            get => _hfReference;
+            set => _hfReference = value;
+        }
 
         [SerializeField, Range(20, 1000)] int _lfReference = 250;
-        public int LfReference => _lfReference;
+        public int LfReference {
+            get => _lfReference;
+            set => _lfReference = value;
+        }
 
         [SerializeField, Range(0f, 100f)] float _diffusion = 100f;
-        public float Diffusion => _diffusion;
+        public float Diffusion {
+            get => _diffusion;
+            set => _diffusion = value;
+        }
 
         [SerializeField, Range(0f, 100f)] float _density = 100f;
-        public float Density => _density;
+        public float Density {
+            get => _density;
+            set => _density = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             UnityEngine.AudioReverbFilter filter = GetOrCreateAudioReverbFilter(player);

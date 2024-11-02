@@ -6,7 +6,10 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(DopplerLevel), 550)]
     public class DopplerLevel : SoundBehaviour {
         [SerializeField, Range(0, 5)] float _value = 1;
-        public float Value => _value;
+        public float Value {
+            get => _value;
+            set => _value = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             SetDopplerLevel(player, _value);

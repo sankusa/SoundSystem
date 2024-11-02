@@ -6,7 +6,10 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(CustomVolumeCurve), 556)]
     public class CustomVolumeCurve : SoundBehaviour {
         [SerializeField] AnimationCurve _curve = new();
-        public AnimationCurve Curve => _curve;
+        public AnimationCurve Curve {
+            get => _curve;
+            set => _curve = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             SetCustomCurve(player, AudioSourceCurveType.CustomRolloff, _curve);

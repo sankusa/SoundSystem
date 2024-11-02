@@ -6,7 +6,16 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(RandomVolumeMultiplier), 1)]
     public class RandomVolumeMultiplier : SoundBehaviour {
         [SerializeField, Range(0, 1)] float _min = 0;
+        public float Min {
+            get => _min;
+            set => _min = value;
+        }
+
         [SerializeField, Range(0, 1)] float _max = 1;
+        public float Max {
+            get => _max;
+            set => _max = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             float value;

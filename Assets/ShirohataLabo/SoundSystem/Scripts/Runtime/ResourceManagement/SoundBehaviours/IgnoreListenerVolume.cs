@@ -6,7 +6,10 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(IgnoreListenerVolume), 600)]
     public class IgnoreListenerVolume : SoundBehaviour {
         [SerializeField] bool _value;
-        public bool Value => _value;
+        public bool Value {
+            get => _value;
+            set => _value = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             SetIgnoreListenerVolume(player, _value);

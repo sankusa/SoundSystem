@@ -6,7 +6,10 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(BypassEffects), 500)]
     public class BypassEffects : SoundBehaviour {
         [SerializeField] bool _value = true;
-        public bool Value => _value;
+        public bool Value {
+            get => _value;
+            set => _value = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             SetBypassEffects(player, _value);

@@ -6,7 +6,10 @@ namespace SoundSystem.SoundBehaviours {
     [SoundBehaviourMenuItem(nameof(MaxDistance), 554)]
     public class MaxDistance : SoundBehaviour {
         [SerializeField, Min(0)] float _value = 1;
-        public float Value => _value;
+        public float Value {
+            get => _value;
+            set => _value = value;
+        }
 
         protected override void OnUpdateIfActive(SoundPlayer player, float deltaTime) {
             SetMaxDistance(player, _value);
