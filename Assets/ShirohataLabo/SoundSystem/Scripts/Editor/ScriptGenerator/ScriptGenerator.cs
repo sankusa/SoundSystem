@@ -37,20 +37,6 @@ namespace SoundSystem {
             SaveScriptFile(filePath, script);
         }
 
-        public static void GenerateSoundPlayerGroupKeyScript(SoundManagerConfig soundManagerConfig) {
-            ScriptGeneratorSetting setting = EditorUtil.LoadAllAsset<ScriptGeneratorSetting>().First();
-            string targetFolder = setting.TargetFolderPath;
-            string script = setting.SoundPlayerGroupKeyScriptFrame;
-            string scriptBody = string.Empty;
-            foreach (string groupKey in soundManagerConfig.PlayerGroupSettings.Select(x => x.Key)) {
-                scriptBody += setting.SoundPlayerGroupKeyScriptBodyByKey.Replace("#SOUNDPLAYERGROUPKEY#", groupKey);
-            }
-            script = script.Replace("#BODY#", scriptBody);
-
-            string filePath = targetFolder + "/" + setting.SoundPlayerGroupKeyScriptName + ".cs";
-            SaveScriptFile(filePath, script);
-        }
-
         static void SaveScriptFile(string filePath, string script) {
             File.WriteAllText(filePath, script);
             AssetDatabase.Refresh();

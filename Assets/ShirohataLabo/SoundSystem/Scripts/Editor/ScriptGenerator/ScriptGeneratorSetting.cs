@@ -28,15 +28,5 @@ namespace SoundSystem {
 
         [SerializeField] string _soundKeyScriptName;
         public string SoundKeyScriptName => _soundKeyScriptName;
-
-
-        [SerializeField] TextAsset _soundPlayerGroupKeyScriptFrame;
-        public string SoundPlayerGroupKeyScriptFrame => _soundPlayerGroupKeyScriptFrame.text;
-
-        [SerializeField] TextAsset _soundPlayerGroupKeyScriptBodyByKey;
-        public string SoundPlayerGroupKeyScriptBodyByKey => _soundPlayerGroupKeyScriptBodyByKey.text;
-
-        [SerializeField] string _soundPlayerGroupKeyScriptName;
-        public string SoundPlayerGroupKeyScriptName => _soundPlayerGroupKeyScriptName;
     }
 }

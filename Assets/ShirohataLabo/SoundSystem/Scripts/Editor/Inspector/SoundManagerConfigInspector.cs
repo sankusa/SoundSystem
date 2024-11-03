@@ -8,9 +8,6 @@ namespace SoundSystem {
             if (GUILayout.Button("Generate SoundManager_Helper Script")) {
                 ScriptGenerator.GenerateSoundManagerHelperScript(target as SoundManagerConfig);
             }
-            if (GUILayout.Button("Generate SoundPlayerGroupKey Enum")) {
-                ScriptGenerator.GenerateSoundPlayerGroupKeyScript(target as SoundManagerConfig);
-            }
             base.OnInspectorGUI();
         }
     }
