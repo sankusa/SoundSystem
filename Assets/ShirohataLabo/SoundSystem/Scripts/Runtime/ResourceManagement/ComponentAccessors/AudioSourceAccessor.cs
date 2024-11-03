@@ -125,22 +125,22 @@ namespace SoundSystem {
         }
 
         void CopyToOld() {
-            _muteOld = Mute;
-            _bypassEffectsOld = BypassEffects;
-            _bypassListenerEffectsOld = BypassListenerEffects;
-            _bypassReverbZonesOld = BypassReverbZones;
-            _volumeOld = Volume;
-            _pitchOld = Pitch;
-            _stereoPanOld = StereoPan;
-            _spatialBlendOld = SpatialBlend;
-            _reverbZoneMixOld = ReverbZoneMix;
-            _dopplerLevelOld = DopplerLevel;
-            _spreadOld = Spread;
-            _volumeRolloffOld = VolumeRolloff;
-            _minDistanceOld = MinDistance;
-            _maxDistanceOld = MaxDistance;
-            _ignoreListenerPauseOld = IgnoreListenerPause;
-            _ignoreListenerVolumeOld = IgnoreListenerVolume;
+            if (Mute != _muteOld) _muteOld = Mute;
+            if (BypassEffects != _bypassEffectsOld) _bypassEffectsOld = BypassEffects;
+            if (BypassListenerEffects != _bypassListenerEffectsOld) _bypassListenerEffectsOld = BypassListenerEffects;
+            if (BypassReverbZones != _bypassReverbZonesOld) _bypassReverbZonesOld = BypassReverbZones;
+            if (Volume != _volumeOld) _volumeOld = Volume;
+            if (Pitch != _pitchOld) _pitchOld = Pitch;
+            if (StereoPan != _stereoPanOld) _stereoPanOld = StereoPan;
+            if (SpatialBlend != _spatialBlendOld) _spatialBlendOld = SpatialBlend;
+            if (ReverbZoneMix != _reverbZoneMixOld) _reverbZoneMixOld = ReverbZoneMix;
+            if (DopplerLevel != _dopplerLevelOld) _dopplerLevelOld = DopplerLevel;
+            if (Spread != _spreadOld) _spreadOld = Spread;
+            if (VolumeRolloff != _volumeRolloffOld) _volumeRolloffOld = VolumeRolloff;
+            if (MinDistance != _minDistanceOld) _minDistanceOld = MinDistance;
+            if (MaxDistance != _maxDistanceOld) _maxDistanceOld = MaxDistance;
+            if (IgnoreListenerPause != _ignoreListenerPauseOld) _ignoreListenerPauseOld = IgnoreListenerPause;
+            if (IgnoreListenerVolume != _ignoreListenerVolumeOld) _ignoreListenerVolumeOld = IgnoreListenerVolume;
         }
     }
 }

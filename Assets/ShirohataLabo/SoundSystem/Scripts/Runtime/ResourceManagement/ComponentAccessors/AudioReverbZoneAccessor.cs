@@ -1,10 +1,7 @@
 using UnityEngine;
 
 namespace SoundSystem {
-    public class AudioReverbZoneAccessor {
-        GameObject GameObject { get; }
-        public AudioReverbZone Filter { get; private set; }
-
+    public class AudioReverbZoneAccessor : ComponentAccessorBase<AudioReverbZone> {
         bool _enableOld;
         public bool Enable { get; set; }
 
@@ -56,53 +53,29 @@ namespace SoundSystem {
         float _densityOld;
         public float Density { get; set; }
 
-        public AudioReverbZoneAccessor(GameObject gameObject) {
-            GameObject = gameObject;
+        public AudioReverbZoneAccessor(GameObject gameObject) : base(gameObject) {}
+
+        protected override void ApplyIfChangedMain() {
+            if (Enable != _enableOld) Component.enabled = Enable;
+            if (MinDistance != _minDistance) Component.minDistance = MinDistance;
+            if (MaxDistance != _maxDistance) Component.maxDistance = MaxDistance;
+            if (ReverbPreset != _reverbPresetOld) Component.reverbPreset = ReverbPreset;
+            if (Room != _roomOld) Component.room = Room;
+            if (RoomHF != _roomHFOld) Component.roomHF = RoomHF;
+            if (RoomLF != _roomLFOld) Component.roomLF = RoomLF;
+            if (DecayTime != _decayTimeOld) Component.decayTime = DecayTime;
+            if (DecayHFRatio != _decayHFRatioOld) Component.decayHFRatio = DecayHFRatio;
+            if (Reflections != _reflectionsOld) Component.reflections = Reflections;
+            if (ReflectionsDelay != _reflectionsDelayOld) Component.reflectionsDelay = ReflectionsDelay;
+            if (Reverb != _reverbOld) Component.reverb = Reverb;
+            if (ReverbDelay != _reverbDelayOld) Component.reverbDelay = ReverbDelay;
+            if (HFReference != _hfReferenceOld) Component.HFReference = HFReference;
+            if (LFReference != _lfReferenceOld) Component.LFReference = LFReference;
+            if (Diffusion != _diffusionOld) Component.diffusion = Diffusion;
+            if (Density != _densityOld) Component.density = Density;
         }
 
-        public void CreateFilterIfNull() {
-            if (Filter == null) {
-                Filter = GameObject.AddComponent<AudioReverbZone>();
-                SetDefault();
-                Apply();
-            }
-        }
-
-        public void Reset() {
-            if (Filter == null) return;
-            SetDefault();
-        }
-
-        public void ApplyIfChanged() {
-            if (Filter != null) {
-                if (Enable != _enableOld) Filter.enabled = Enable;
-                if (MinDistance != _minDistance) Filter.minDistance = MinDistance;
-                if (MaxDistance != _maxDistance) Filter.maxDistance = MaxDistance;
-                if (ReverbPreset != _reverbPresetOld) Filter.reverbPreset = ReverbPreset;
-                if (Room != _roomOld) Filter.room = Room;
-                if (RoomHF != _roomHFOld) Filter.roomHF = RoomHF;
-                if (RoomLF != _roomLFOld) Filter.roomLF = RoomLF;
-                if (DecayTime != _decayTimeOld) Filter.decayTime = DecayTime;
-                if (DecayHFRatio != _decayHFRatioOld) Filter.decayHFRatio = DecayHFRatio;
-                if (Reflections != _reflectionsOld) Filter.reflections = Reflections;
-                if (ReflectionsDelay != _reflectionsDelayOld) Filter.reflectionsDelay = ReflectionsDelay;
-                if (Reverb != _reverbOld) Filter.reverb = Reverb;
-                if (ReverbDelay != _reverbDelayOld) Filter.reverbDelay = ReverbDelay;
-                if (HFReference != _hfReferenceOld) Filter.HFReference = HFReference;
-                if (LFReference != _lfReferenceOld) Filter.LFReference = LFReference;
-                if (Diffusion != _diffusionOld) Filter.diffusion = Diffusion;
-                if (Density != _densityOld) Filter.density = Density;
-            }
-            CopyToOld();
-        }
-
-        public void Clear() {
-            DestroyAudioDistortionFilter();
-            SetDefault();
-            CopyToOld();
-        }
-
-        void SetDefault() {
+        protected override void SetDefault() {
             Enable = false;
             MinDistance = 10;
             MaxDistance = 15;
@@ -122,51 +95,44 @@ namespace SoundSystem {
             Density = 100;
         }
 
-        void Apply() {
-            if (Filter != null) {
-                Filter.enabled = Enable;
-                Filter.minDistance = MinDistance;
-                Filter.maxDistance = MaxDistance;
-                Filter.reverbPreset = ReverbPreset;
-                Filter.room = Room;
-                Filter.roomHF = RoomHF;
-                Filter.roomLF = RoomLF;
-                Filter.decayTime = DecayTime;
-                Filter.decayHFRatio = DecayHFRatio;
-                Filter.reflections = Reflections;
-                Filter.reflectionsDelay = ReflectionsDelay;
-                Filter.reverb = Reverb;
-                Filter.reverbDelay = ReverbDelay;
-                Filter.HFReference = HFReference;
-                Filter.LFReference = LFReference;
-                Filter.diffusion = Diffusion;
-                Filter.density = Density;
-            }
-            CopyToOld();
+        protected override void ApplyMain() {
+            Component.enabled = Enable;
+            Component.minDistance = MinDistance;
+            Component.maxDistance = MaxDistance;
+            Component.reverbPreset = ReverbPreset;
+            Component.room = Room;
+            Component.roomHF = RoomHF;
+            Component.roomLF = RoomLF;
+            Component.decayTime = DecayTime;
+            Component.decayHFRatio = DecayHFRatio;
+            Component.reflections = Reflections;
+            Component.reflectionsDelay = ReflectionsDelay;
+            Component.reverb = Reverb;
+            Component.reverbDelay = ReverbDelay;
+            Component.HFReference = HFReference;
+            Component.LFReference = LFReference;
+            Component.diffusion = Diffusion;
+            Component.density = Density;
         }
 
-        void CopyToOld() {
-            _enableOld = Enable;
-            _minDistance = MinDistance;
-            _maxDistance = MaxDistance;
-            _reverbPresetOld = ReverbPreset;
-            _roomOld = Room;
-            _roomHFOld = RoomHF;
-            _roomLFOld = RoomLF;
-            _decayTimeOld = DecayTime;
-            _decayHFRatioOld = DecayHFRatio;
-            _reflectionsOld = Reflections;
-            _reflectionsDelayOld = ReflectionsDelay;
-            _reverbOld = Reverb;
-            _reverbDelayOld = ReverbDelay;
-            _hfReferenceOld = HFReference;
-            _lfReferenceOld = LFReference;
-            _diffusionOld = Diffusion;
-            _densityOld = Density;
-        }
-
-        void DestroyAudioDistortionFilter() {
-            Filter.DestroyFlexible();
+        protected override void CopyToOld() {
+            if (Enable != _enableOld) _enableOld = Enable;
+            if (MinDistance != _minDistance) _minDistance = MinDistance;
+            if (MaxDistance != _maxDistance) _maxDistance = MaxDistance;
+            if (ReverbPreset != _reverbPresetOld) _reverbPresetOld = ReverbPreset;
+            if (Room != _roomOld) _roomOld = Room;
+            if (RoomHF != _roomHFOld) _roomHFOld = RoomHF;
+            if (RoomLF != _roomLFOld) _roomLFOld = RoomLF;
+            if (DecayTime != _decayTimeOld) _decayTimeOld = DecayTime;
+            if (DecayHFRatio != _decayHFRatioOld) _decayHFRatioOld = DecayHFRatio;
+            if (Reflections != _reflectionsOld) _reflectionsOld = Reflections;
+            if (ReflectionsDelay != _reflectionsDelayOld) _reflectionsDelayOld = ReflectionsDelay;
+            if (Reverb != _reverbOld) _reverbOld = Reverb;
+            if (ReverbDelay != _reverbDelayOld) _reverbDelayOld = ReverbDelay;
+            if (HFReference != _hfReferenceOld) _hfReferenceOld = HFReference;
+            if (LFReference != _lfReferenceOld) _lfReferenceOld = LFReference;
+            if (Diffusion != _diffusionOld) _diffusionOld = Diffusion;
+            if (Density != _densityOld) _densityOld = Density;
         }
     }
 }

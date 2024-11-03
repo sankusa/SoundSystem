@@ -1,10 +1,7 @@
 using UnityEngine;
 
 namespace SoundSystem {
-    public class AudioChorusFilterAccessor {
-        GameObject GameObject { get; }
-        public AudioChorusFilter Filter { get; private set; }
-
+    public class AudioChorusFilterAccessor : ComponentAccessorBase<AudioChorusFilter> {
         bool _enableOld;
         public bool Enable { get; set; }
 
@@ -29,44 +26,20 @@ namespace SoundSystem {
         float _depthOld;
         public float Depth { get; set; }
 
-        public AudioChorusFilterAccessor(GameObject gameObject) {
-            GameObject = gameObject;
+        public AudioChorusFilterAccessor(GameObject gameObject) : base(gameObject) {}
+
+        protected override void ApplyIfChangedMain() {
+            if (Enable != _enableOld) Component.enabled = Enable;
+            if (DryMix != _dryMixOld) Component.dryMix = DryMix;
+            if (WetMix1 != _wetMix1Old) Component.wetMix1 = WetMix1;
+            if (WetMix2 != _wetMix2Old) Component.wetMix2 = WetMix2;
+            if (WetMix3 != _wetMix3Old) Component.wetMix3 = WetMix3;
+            if (Delay != _delayOld) Component.delay = Delay;
+            if (Rate != _rateOld) Component.rate = Rate;
+            if (Depth != _depthOld) Component.depth = Depth;
         }
 
-        public void CreateFilterIfNull() {
-            if (Filter == null) {
-                Filter = GameObject.AddComponent<AudioChorusFilter>();
-                SetDefault();
-                Apply();
-            }
-        }
-
-        public void Reset() {
-            if (Filter == null) return;
-            SetDefault();
-        }
-
-        public void ApplyIfChanged() {
-            if (Filter != null) {
-                if (Enable != _enableOld) Filter.enabled = Enable;
-                if (DryMix != _dryMixOld) Filter.dryMix = DryMix;
-                if (WetMix1 != _wetMix1Old) Filter.wetMix1 = WetMix1;
-                if (WetMix2 != _wetMix2Old) Filter.wetMix2 = WetMix2;
-                if (WetMix3 != _wetMix3Old) Filter.wetMix3 = WetMix3;
-                if (Delay != _delayOld) Filter.delay = Delay;
-                if (Rate != _rateOld) Filter.rate = Rate;
-                if (Depth != _depthOld) Filter.depth = Depth;
-            }
-            CopyToOld();
-        }
-
-        public void Clear() {
-            DestroyAudioDistortionFilter();
-            SetDefault();
-            CopyToOld();
-        }
-
-        void SetDefault() {
+        protected override void SetDefault() {
             Enable = false;
             DryMix = 0.5f;
             WetMix1 = 0.5f;
@@ -77,33 +50,26 @@ namespace SoundSystem {
             Depth = 0.03f;
         }
 
-        void Apply() {
-            if (Filter != null) {
-                Filter.enabled = Enable;
-                Filter.dryMix = DryMix;
-                Filter.wetMix1 = WetMix1;
-                Filter.wetMix2 = WetMix2;
-                Filter.wetMix3 = WetMix3;
-                Filter.delay = Delay;
-                Filter.rate = Rate;
-                Filter.depth = Depth;
-            }
-            CopyToOld();
+        protected override void ApplyMain() {
+            Component.enabled = Enable;
+            Component.dryMix = DryMix;
+            Component.wetMix1 = WetMix1;
+            Component.wetMix2 = WetMix2;
+            Component.wetMix3 = WetMix3;
+            Component.delay = Delay;
+            Component.rate = Rate;
+            Component.depth = Depth;
         }
 
-        void CopyToOld() {
-            _enableOld = Enable;
-            _dryMixOld = DryMix;
-            _wetMix1Old = WetMix1;
-            _wetMix2Old = WetMix2;
-            _wetMix3Old = WetMix3;
-            _delayOld = Delay;
-            _rateOld = Rate;
-            _depthOld = Depth;
-        }
-
-        void DestroyAudioDistortionFilter() {
-            Filter.DestroyFlexible();
+        protected override void CopyToOld() {
+            if (Enable != _enableOld) _enableOld = Enable;
+            if (DryMix != _dryMixOld) _dryMixOld = DryMix;
+            if (WetMix1 != _wetMix1Old) _wetMix1Old = WetMix1;
+            if (WetMix2 != _wetMix2Old) _wetMix2Old = WetMix2;
+            if (WetMix3 != _wetMix3Old) _wetMix3Old = WetMix3;
+            if (Delay != _delayOld) _delayOld = Delay;
+            if (Rate != _rateOld) _rateOld = Rate;
+            if (Depth != _depthOld) _depthOld = Depth;
         }
     }
 }

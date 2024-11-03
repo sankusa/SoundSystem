@@ -1,10 +1,7 @@
 using UnityEngine;
 
 namespace SoundSystem {
-    public class AudioLowPassFilterAccessor {
-        GameObject GameObject { get; }
-        public AudioLowPassFilter Filter { get; private set; }
-
+    public class AudioLowPassFilterAccessor : ComponentAccessorBase<AudioLowPassFilter> {
         bool _enableOld;
         public bool Enable { get; set; }
 
@@ -14,61 +11,30 @@ namespace SoundSystem {
         float _lowpassResonanceQOld;
         public float LowpassResonanceQ { get; set; }
 
-        public AudioLowPassFilterAccessor(GameObject gameObject) {
-            GameObject = gameObject;
+        public AudioLowPassFilterAccessor(GameObject gameObject) : base(gameObject) {}
+
+        protected override void ApplyIfChangedMain() {
+            if (Enable != _enableOld) Component.enabled = Enable;
+            if (CutoffFrequency != _cutoffFrequencyOld) Component.cutoffFrequency = CutoffFrequency;
+            if (LowpassResonanceQ != _lowpassResonanceQOld) Component.lowpassResonanceQ = LowpassResonanceQ;
         }
 
-        public void CreateFilterIfNull() {
-            if (Filter == null) {
-                Filter = GameObject.AddComponent<AudioLowPassFilter>();
-                SetDefault();
-                Apply();
-            }
-        }
-
-        public void Reset() {
-            if (Filter == null) return;
-            SetDefault();
-        }
-
-        public void ApplyIfChanged() {
-            if (Filter != null) {
-                if (Enable != _enableOld) Filter.enabled = Enable;
-                if (CutoffFrequency != _cutoffFrequencyOld) Filter.cutoffFrequency = CutoffFrequency;
-                if (LowpassResonanceQ != _lowpassResonanceQOld) Filter.lowpassResonanceQ = LowpassResonanceQ;
-            }
-            CopyToOld();
-        }
-
-        public void Clear() {
-            DestroyAudioDistortionFilter();
-            SetDefault();
-            CopyToOld();
-        }
-
-        void SetDefault() {
+        protected override void SetDefault() {
             Enable = false;
             CutoffFrequency = 5007.7f;
             LowpassResonanceQ = 1;
         }
 
-        void Apply() {
-            if (Filter != null) {
-                Filter.enabled = Enable;
-                Filter.cutoffFrequency = CutoffFrequency;
-                Filter.lowpassResonanceQ = LowpassResonanceQ;
-            }
-            CopyToOld();
+        protected override void ApplyMain() {
+            Component.enabled = Enable;
+            Component.cutoffFrequency = CutoffFrequency;
+            Component.lowpassResonanceQ = LowpassResonanceQ;
         }
 
-        void CopyToOld() {
-            _enableOld = Enable;
-            _cutoffFrequencyOld = CutoffFrequency;
-            _lowpassResonanceQOld = LowpassResonanceQ;
-        }
-
-        void DestroyAudioDistortionFilter() {
-            Filter.DestroyFlexible();
+        protected override void CopyToOld() {
+            if (Enable != _enableOld) _enableOld = Enable;
+            if (CutoffFrequency != _cutoffFrequencyOld) _cutoffFrequencyOld = CutoffFrequency;
+            if (LowpassResonanceQ != _lowpassResonanceQOld) _lowpassResonanceQOld = LowpassResonanceQ;
         }
     }
 }
