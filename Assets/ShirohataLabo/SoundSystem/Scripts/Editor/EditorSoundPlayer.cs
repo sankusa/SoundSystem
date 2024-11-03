@@ -144,6 +144,7 @@ namespace SoundSystem {
         }
 
         public void Play() {
+            if (EditorApplication.isPlaying) return;
             if (_audioClip != null) {
                 Player.SetAudioClip(_audioClip).SetLoop(_loop).Play();
             }
