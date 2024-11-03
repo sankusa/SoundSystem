@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,12 +10,15 @@ namespace SoundSystem {
             Rect labelRect = new Rect(position) {width = label == GUIContent.none ? 0 : EditorGUIUtility.labelWidth};
             EditorGUI.LabelField(labelRect, label);
 
-            SerializedProperty typeProp = property.FindPropertyRelative("_type");
-            SerializedProperty audioClipProp = property.FindPropertyRelative("_audioClip");
-            SerializedProperty customClipProp = property.FindPropertyRelative("_customClip");
+            SerializedProperty typeProp = ClipSlot.GetTypeProp(property);
+            SerializedProperty audioClipProp = ClipSlot.GetAudioClipProp(property);
+            SerializedProperty customClipProp = ClipSlot.GetCustomClipProp(property);
 
             using (new IndentLevelScope(0)) {
-                Rect typePopupRect = new Rect(position) {xMin = labelRect.xMax + EditorGUIUtility.standardVerticalSpacing, width = 36};
+                Rect typePopupRect = new Rect(position) {
+                    xMin = labelRect.xMax + EditorGUIUtility.standardVerticalSpacing,
+                    width = 36,
+                };
                 GUIContent buttonLabel = null;
 
                 buttonLabel = (ClipSlot.SlotType)typeProp.enumValueIndex switch {
@@ -25,9 +27,9 @@ namespace SoundSystem {
                     _ => throw new ArgumentOutOfRangeException($"Invalid {typeof(ClipSlot.SlotType).Name}"),
                 };
                 if (GUI.Button(typePopupRect, buttonLabel, EditorStyles.popup)) {
-                    GenericMenu menu = new GenericMenu();
+                    GenericMenu menu = new();
                     menu.AddItem(
-                        new GUIContent("AudioClip"),
+                        new GUIContent($"{nameof(AudioClip)}"),
                         false,
                         () => {
                             property.serializedObject.Update();
@@ -37,7 +39,7 @@ namespace SoundSystem {
                         }
                     );
                     menu.AddItem(
-                        new GUIContent("CustomClip"),
+                        new GUIContent($"{nameof(CustomClip)}"),
                         false,
                         () => {
                             property.serializedObject.Update();

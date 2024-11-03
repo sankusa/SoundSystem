@@ -1,14 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(Sound))]
     public class SoundDrawer : PropertyDrawer {
-        Dictionary<string, EditorSoundPlayerGUIForPropertyDrawer> _soundPlayerGUIDic = new();
+        readonly Dictionary<string, EditorSoundPlayerGUIForPropertyDrawer> _soundPlayerGUIDic = new();
 
         static float _editorPlayerHeight = EditorGUIUtility.singleLineHeight + 8;
         static readonly float _sideSpace = 0;

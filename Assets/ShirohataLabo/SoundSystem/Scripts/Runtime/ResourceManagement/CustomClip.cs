@@ -44,6 +44,10 @@ namespace SoundSystem {
         }
 
 #if UNITY_EDITOR
+        public static SerializedProperty GetAudioClipProp(SerializedObject serializedObject) {
+            return serializedObject.FindProperty(nameof(_audioClip));
+        }
+
         public static SerializedProperty GetVolumeMultiplierProp(SerializedObject serializedObject) {
             return serializedObject.FindProperty(nameof(_volumeMultiplier));
         }

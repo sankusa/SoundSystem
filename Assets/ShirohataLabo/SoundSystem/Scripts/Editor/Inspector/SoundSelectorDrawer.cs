@@ -12,13 +12,7 @@ namespace SoundSystem {
             Rect selectTypeRect = new(position) {height = EditorGUI.GetPropertyHeight(selectTypeProp, true)};
             position.yMin += selectTypeRect.height + EditorGUIUtility.standardVerticalSpacing;
 
-            EditorGUI.BeginChangeCheck();
             EditorGUI.PropertyField(selectTypeRect, selectTypeProp, label);
-            if (EditorGUI.EndChangeCheck()) {
-                // if (selectTypeProp.enumValueIndex != (int)SoundSelector.SelectType.Sound) {
-                //     ClipSlot.ClearObjectReferences(Sound.GetClipProp(soundProp));
-                // }
-            }
 
             EditorGUI.indentLevel++;
 

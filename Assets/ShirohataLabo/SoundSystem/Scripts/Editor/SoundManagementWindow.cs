@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace SoundSystem {
@@ -18,7 +15,6 @@ namespace SoundSystem {
         [SerializeField] bool _showSoundContainerView = true;
 
         LayoutSplitter _splitter1;
-        LayoutSplitter _splitter2;
 
         void OnEnable() {
             titleContent = new GUIContent(nameof(SoundSystem), Skin.Instance.MainIcon);
@@ -27,11 +23,6 @@ namespace SoundSystem {
             _soundContainerView.OnEnable();
 
             _splitter1 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter1") {
-                ResizeHandleMouseAcceptRectOffset = new RectOffset(2, 2, 0, 0),
-                HandleColor = new Color(0.1f, 0.1f, 0.1f),
-                HandleWidth = 1,
-            };
-            _splitter2 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter2") {
                 ResizeHandleMouseAcceptRectOffset = new RectOffset(2, 2, 0, 0),
                 HandleColor = new Color(0.1f, 0.1f, 0.1f),
                 HandleWidth = 1,

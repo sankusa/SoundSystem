@@ -3,6 +3,8 @@ using System.Reflection;
 using UnityEditor;
 
 namespace SoundSystem {
+    // スクリプトにアイコンを設定した場合、シーン上のオブジェクトにアタッチするとシーンビューにアイコンが表示されてしまう。
+    // が、邪魔なので本アセットインポート直後にアイコンを表示しない設定にする。
     [InitializeOnLoad]
     public static class ScriptGizmoDisabler {
         const int monoBehaviourClassId = 114; // https://docs.unity3d.com/Manual/ClassIDReference.html
@@ -32,7 +34,7 @@ namespace SoundSystem {
             SetGizmoIconEnabled(typeof(SoundCacheRegistrar), false);
             SetGizmoIconEnabled(typeof(SoundManager), false);
             SetGizmoIconEnabled(typeof(VolumeSlider), false);
-            SetGizmoIconEnabled(typeof(BaseSoundRegistrar), false);
+            SetGizmoIconEnabled(typeof(BaseSoundBehaviourRegistrar), false);
         }
 
         public static void SetGizmoIconEnabled( Type type, bool on ) {

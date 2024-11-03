@@ -26,11 +26,6 @@ namespace SoundSystem {
             }
         }
 
-        public void Bind(CustomClip customClip) {
-            _editorPlayer.Bind(customClip);
-            if (_playAuto) _editorPlayer.Play();
-        }
-
         public void DrawGUILayout() {
             _editorPlayer.Update();
 

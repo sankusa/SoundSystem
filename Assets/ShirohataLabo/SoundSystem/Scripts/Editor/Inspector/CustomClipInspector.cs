@@ -19,7 +19,7 @@ namespace SoundSystem {
             serializedObject.Update();
 
             // メンバ取得
-            var audioClipProp = serializedObject.FindProperty("_audioClip");
+            var audioClipProp = CustomClip.GetAudioClipProp(serializedObject);
 
             var volumeMultiplierProp = CustomClip.GetVolumeMultiplierProp(serializedObject);
             var volumeMultiplierCurveProp = CustomClip.GetVolumeMultiplierCurveProp(serializedObject);
@@ -43,7 +43,6 @@ namespace SoundSystem {
                 CustomClip.ResetValueBasedOnAudioClip(serializedObject);
             }
 
-            // 音量
             GUIUtil.Separator();
 
             EditorGUILayout.PropertyField(volumeMultiplierProp);

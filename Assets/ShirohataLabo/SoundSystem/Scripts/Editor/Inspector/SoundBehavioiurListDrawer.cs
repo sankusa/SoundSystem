@@ -13,15 +13,14 @@ namespace SoundSystem {
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             SerializedProperty behavioursProp = SoundBehaviourList.GetBehavioursProp(property);
-            // Rect behavioursHeaderRect = new Rect(position) {xMin = position.xMin + 4, height = EditorGUIUtility.singleLineHeight};
-            // position.yMin += behavioursHeaderRect.height;
-            
-            // DrawBehavioursHeader(behavioursHeaderRect, property, behavioursProp);
-
             ReorderableList soundBehaviourList = PrepareReorderableList(property, behavioursProp);
             float listHeight = soundBehaviourList.GetHeight();
-            soundBehaviourList.DoList(new Rect(position) {width = position.width, height = listHeight, xMin = position.xMin + EditorGUI.indentLevel * 14});
-
+            Rect listRect = new Rect(position) {
+                width = position.width,
+                height = listHeight,
+                xMin = position.xMin + EditorGUI.indentLevel * 14
+            };
+            soundBehaviourList.DoList(listRect);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
@@ -64,17 +63,21 @@ namespace SoundSystem {
                 
             Rect itemButtonRect = new Rect(rect) {xMin = rect.xMax - 20};
             if (GUI.Button(itemButtonRect, Icons.PlusIcon)) {
-                GenericMenu menu = new GenericMenu();
+                GenericMenu menu = new();
                 int previousPriority = int.MinValue;
-                foreach (Type type in TypeCache
+                IEnumerable<Type> sortedSoundBehaviourTypes = TypeCache
                     .GetTypesDerivedFrom<SoundBehaviour>()
-                    .OrderBy(x => {
-                        SoundBehaviourMenuItemAttribute menuItemAttribute = x.GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true).FirstOrDefault() as SoundBehaviourMenuItemAttribute;
+                    .OrderBy(type => {
+                        SoundBehaviourMenuItemAttribute menuItemAttribute = type
+                            .GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true)
+                            .FirstOrDefault()
+                            as SoundBehaviourMenuItemAttribute;
                         if (menuItemAttribute == null) return int.MaxValue;
                         return menuItemAttribute.Priority;
 
-                    })
-                ) {
+                    });
+
+                foreach (Type type in sortedSoundBehaviourTypes) {
                     SoundBehaviourMenuItemAttribute menuItemAttribute = type
                         .GetCustomAttributes(typeof(SoundBehaviourMenuItemAttribute), true)
                         .FirstOrDefault()

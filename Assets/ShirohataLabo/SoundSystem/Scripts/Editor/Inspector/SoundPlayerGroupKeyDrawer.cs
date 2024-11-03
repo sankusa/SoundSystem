@@ -6,7 +6,7 @@ using System.Linq;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(SoundPlayerGroupKeyAttribute))]
     public class SoundPlayerGroupKeyDrawer : PropertyDrawer {
-        PopupFromScriptableObject<SoundManagerConfig> _keyPopup = new(x => x.SelectMany(y => y.PlayerGroupSettings.Select(z => z.Key)));
+        readonly PopupFromScriptableObject<SoundManagerConfig> _keyPopup = new(x => x.SelectMany(y => y.PlayerGroupSettings.Select(z => z.Key)));
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             if (property.propertyType != SerializedPropertyType.String) {

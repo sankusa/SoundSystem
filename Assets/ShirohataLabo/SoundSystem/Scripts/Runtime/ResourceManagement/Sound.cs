@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using SoundSystem.SoundBehaviours;
 using SoundSystem.ClipResolvers;
 
 #if UNITY_EDITOR
