@@ -15,10 +15,10 @@ namespace SoundSystem {
         [SerializeField] SlotType _type;
         public SlotType Type => _type;
 
-        [SerializeField] AudioClip _audioClip;
+        [SerializeField, InspectorButton] AudioClip _audioClip;
         public AudioClip AudioClip => _audioClip;
 
-        [SerializeField] CustomClip _customClip; 
+        [SerializeField, InspectorButton] CustomClip _customClip; 
         public CustomClip CustomClip => _customClip;
 
         public bool HasClip() {

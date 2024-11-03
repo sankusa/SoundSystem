@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -54,7 +55,9 @@ namespace SoundSystem {
                     _ => throw new ArgumentOutOfRangeException($"Invalid {typeof(ClipSlot.SlotType).Name}"),
                 };
 
-                Rect objectRect = new Rect(position) {xMin = typePopupRect.xMax + EditorGUIUtility.standardVerticalSpacing};
+                Rect objectRect = new Rect(position) {
+                    xMin = typePopupRect.xMax + EditorGUIUtility.standardVerticalSpacing,
+                };
                 EditorGUI.PropertyField(objectRect, clipProp, GUIContent.none);
             }
 

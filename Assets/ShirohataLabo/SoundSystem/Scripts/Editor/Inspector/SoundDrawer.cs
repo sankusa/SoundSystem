@@ -48,7 +48,7 @@ namespace SoundSystem {
             position.yMin += EditorGUIUtility.standardVerticalSpacing; 
 
             SerializedProperty clipProp = Sound.GetClipProp(property);
-            Rect clipRect = new(position) {height = EditorGUI.GetPropertyHeight(clipProp)};
+            Rect clipRect = new(position) {height = EditorGUI.GetPropertyHeight(clipProp), xMax = position.xMax - 4};
             position.yMin += clipRect.height + EditorGUIUtility.standardVerticalSpacing;
             EditorGUI.PropertyField(clipRect, clipProp, true);
 

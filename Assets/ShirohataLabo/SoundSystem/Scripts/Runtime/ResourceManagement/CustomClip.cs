@@ -12,7 +12,7 @@ namespace SoundSystem {
             Curve = 1,
         }
 
-        [SerializeField] AudioClip _audioClip;
+        [SerializeField, InspectorButton] AudioClip _audioClip;
         public AudioClip AudioClip {
             get => _audioClip;
             set => _audioClip = value;

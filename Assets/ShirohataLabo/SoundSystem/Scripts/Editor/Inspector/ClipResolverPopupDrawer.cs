@@ -8,16 +8,22 @@ using UnityEngine;
 namespace SoundSystem {
     [CustomPropertyDrawer(typeof(ClipResolverPopupAttribute))]
     public class ClipResolverDrawer : PropertyDrawer {
+        const float indentWidthPerLevel = 14;
+        const float popupWidth = 20;
+        const float popupHeight = 20;
+        const float leftSpace = 4;
+
         List<Type> _subclasses;
         string[] _subclassFullNames;
         string[] _subclassDisplayNames;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             InitializeIfNeeded(property);
 
-            position.xMin += EditorGUI.indentLevel * 14 + 4;
+            position.xMin += EditorGUI.indentLevel * indentWidthPerLevel + leftSpace;
 
+            using (new LabelWidthScope(EditorGUIUtility.labelWidth - EditorGUI.indentLevel * indentWidthPerLevel - popupWidth - leftSpace)) {
             using (new IndentLevelScope(0)) {
-                Rect popupRect = new(position) {height = 20, width = 20};
+                Rect popupRect = new(position) {height = popupHeight, width = popupWidth};
                 position.xMin += popupRect.width + EditorGUIUtility.standardVerticalSpacing;
 
                 int currentIndex = Array.IndexOf(_subclassFullNames, property.managedReferenceFullTypename);
@@ -29,6 +35,7 @@ namespace SoundSystem {
                 }
 
                 EditorGUI.PropertyField(position, property, selectedType == null ? GUIContent.none : new GUIContent(selectedType.Name), true);
+            }
             }
         }
 

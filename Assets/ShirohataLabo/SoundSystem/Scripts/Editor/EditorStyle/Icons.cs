@@ -43,6 +43,16 @@ namespace SoundSystem {
             }
         }
 
+        static Texture2D _inspectorIcon;
+        public static Texture2D InspectorIcon {
+            get {
+                if (_inspectorIcon == null) {
+                    _inspectorIcon = (Texture2D)EditorGUIUtility.IconContent("UnityEditor.InspectorWindow").image;
+                }
+                return _inspectorIcon;
+            }
+        }
+
         static Texture2D _okIcon;
         public static Texture2D OkIcon {
             get {
