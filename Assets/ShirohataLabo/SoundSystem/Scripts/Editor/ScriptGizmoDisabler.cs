@@ -32,6 +32,7 @@ namespace SoundSystem {
             SetGizmoIconEnabled(typeof(SoundCacheRegistrar), false);
             SetGizmoIconEnabled(typeof(SoundManager), false);
             SetGizmoIconEnabled(typeof(VolumeSlider), false);
+            SetGizmoIconEnabled(typeof(BaseSoundRegistrar), false);
         }
 
         public static void SetGizmoIconEnabled( Type type, bool on ) {

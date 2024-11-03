@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerGroupSettings:
   - _key: Bgm
-    _playerCount: 2
+    _playerCount: 100
     _outputAudioMixerGroup: {fileID: 3295476876179166976, guid: 7a2048eed356e694cad4ccf995bc1a17, type: 2}
     _defaultLoop: 1
     _defaultFadeDuration: 0.5
