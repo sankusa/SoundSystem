@@ -335,6 +335,9 @@ namespace SoundSystem {
             if (_audioSource.isPlaying == false) return;
             ClampTime();
             _fadeVolume.Update(deltaTime);
+            // フェード完了コールバックでStopが呼ばれた場合、以降は処理しない
+            if (IsPlayStarted == false) return;
+
             UpdateBehaviours(deltaTime);
             UpdatePosition();
             CheckAndHandleEndOfAudio();
