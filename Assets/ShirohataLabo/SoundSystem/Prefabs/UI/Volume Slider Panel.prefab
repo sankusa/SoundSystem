@@ -371,19 +371,22 @@ MonoBehaviour:
   _executeOnAwake: 1
   _soundCommand:
     _command:
-      rid: 1126683354508558401
+      rid: 7700467155173638152
   references:
     version: 2
     RefIds:
-    - rid: 1126683354508558401
-      type: {class: Play, ns: SoundSystem, asm: SoundSystem}
+    - rid: 7700467155173638152
+      type: {class: Play, ns: SoundSystem.SoundCommands, asm: SoundSystem}
       data:
         _groupKey: Se
         _sound:
           _selectType: 0
           _sound:
-            _customClip: {fileID: 0}
-            _behaviours: []
+            _clip:
+              rid: 7700467155173638153
+            _soundBehaviourList:
+              _active: 1
+              _behaviours: []
           _soundKey: 
         _duplicationHandling: 0
         _spawnPoint: {fileID: 0}
@@ -391,6 +394,13 @@ MonoBehaviour:
         _onComplete:
           m_PersistentCalls:
             m_Calls: []
+    - rid: 7700467155173638153
+      type: {class: Clip, ns: SoundSystem.ClipResolvers, asm: SoundSystem}
+      data:
+        _clip:
+          _type: 0
+          _audioClip: {fileID: 0}
+          _customClip: {fileID: 0}
 --- !u!1 &4580785454409788744
 GameObject:
   m_ObjectHideFlags: 0
