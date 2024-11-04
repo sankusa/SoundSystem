@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace SoundSystem {
     [DefaultExecutionOrder(-50)]
+    [AddComponentMenu(nameof(SoundSystem) + "/" + nameof(BaseSoundBehaviourRegistrar))]
     public class BaseSoundBehaviourRegistrar : MonoBehaviour {
         [SerializeField] bool _autoRegister = true;
         [SerializeField, SoundPlayerGroupKey] string _soundPlayerGroup;

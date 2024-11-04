@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace SoundSystem {
+    [AddComponentMenu(nameof(SoundSystem) + "/" + nameof(VolumeSlider))]
     public class VolumeSlider : MonoBehaviour {
         [SerializeField] Slider _slider;
         [SerializeField] TMP_Text _text;

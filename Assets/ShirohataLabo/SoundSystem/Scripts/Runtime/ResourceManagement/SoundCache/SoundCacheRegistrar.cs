@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem {
     [DefaultExecutionOrder(-100)]
+    [AddComponentMenu(nameof(SoundSystem) + "/" + nameof(SoundCacheRegistrar))]
     public class SoundCacheRegistrar : MonoBehaviour {
         [SerializeField] List<SoundContainer> _containers;
 

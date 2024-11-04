@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem {
     public class SoundManagementWindow : EditorWindow {
-        [MenuItem(nameof(SoundSystem) + "/" + nameof(SoundManagementWindow))]
+        [MenuItem("ShirohataLabo/" +  nameof(SoundSystem) + "/" + nameof(SoundManagementWindow))]
         static void Open() {
             GetWindow<SoundManagementWindow>();
         }
