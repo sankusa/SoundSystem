@@ -30,30 +30,20 @@ namespace SoundSystem {
             _editorPlayer.Update();
 
             using (new EditorGUILayout.VerticalScope(GUIStyles.SimpleBox)) {
-                if (_editorPlayer.AudioClip != null) {
-                    string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.AudioClip);
-                    Texture icon = AssetDatabase.GetCachedIcon(assetPath);
-                    EditorGUILayout.LabelField(new GUIContent(_editorPlayer.AudioClip.name, icon));
-                }
-                else if (_editorPlayer.CustomClip != null) {
-                    string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.CustomClip);
-                    Texture icon = AssetDatabase.GetCachedIcon(assetPath);
-                    EditorGUILayout.LabelField(new GUIContent(_editorPlayer.CustomClip.name, icon));
-                }
-                else {
-                    EditorGUILayout.LabelField("Not Selected");
-                }
-
-                
                 using (new EditorGUILayout.HorizontalScope()) {
-                    
-                    _editorPlayer.DrawLayoutPlayButton(GUILayout.Width(19), GUILayout.Height(19));
-                    _editorPlayer.DrawLayoutPauseButton(GUILayout.Width(19), GUILayout.Height(19));
-                    _editorPlayer.DrawLayoutLoopButton(GUILayout.Width(19), GUILayout.Height(19));
-
-                    _editorPlayer.DrawLayoutTimeSlider(GUILayout.MinWidth(100));
-
-                    _editorPlayer.DrawLayoutPlayerGroupSelectPopup(GUILayout.Width(100));
+                    if (_editorPlayer.AudioClip != null) {
+                        string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.AudioClip);
+                        Texture icon = AssetDatabase.GetCachedIcon(assetPath);
+                        EditorGUILayout.LabelField(new GUIContent(_editorPlayer.AudioClip.name, icon));
+                    }
+                    else if (_editorPlayer.CustomClip != null) {
+                        string assetPath = AssetDatabase.GetAssetPath(_editorPlayer.CustomClip);
+                        Texture icon = AssetDatabase.GetCachedIcon(assetPath);
+                        EditorGUILayout.LabelField(new GUIContent(_editorPlayer.CustomClip.name, icon));
+                    }
+                    else {
+                        EditorGUILayout.LabelField("Not Selected");
+                    }
 
                     EditorGUI.BeginChangeCheck();
                     _playAuto = GUILayout.Toggle(_playAuto, "", "Button", GUILayout.Width(19));
@@ -63,6 +53,18 @@ namespace SoundSystem {
                             _editorPlayer.Play();
                         }
                     }
+                }
+
+                using (new EditorGUILayout.HorizontalScope()) {
+                    _editorPlayer.DrawLayoutPlayButton(GUILayout.Width(19), GUILayout.Height(19));
+                    _editorPlayer.DrawLayoutPauseButton(GUILayout.Width(19), GUILayout.Height(19));
+                    _editorPlayer.DrawLayoutLoopButton(GUILayout.Width(19), GUILayout.Height(19));
+
+                    _editorPlayer.DrawLayoutTimeSlider(GUILayout.MinWidth(100));
+
+                    _editorPlayer.DrawLayoutPlayerGroupSelectPopup(GUILayout.Width(80));
+
+                    _editorPlayer.DrawLayoutVolumeField(GUILayout.Width(52));
                 }
             }
         }

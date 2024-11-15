@@ -7,6 +7,9 @@ using Object = UnityEngine.Object;
 
 namespace SoundSystem {
     public class EditorSoundPlayer : IDisposable {
+        const string volumeSessionStateKey = nameof(EditorSoundPlayer) + nameof(_sharedVolume);
+        static Volume _sharedVolume = new(new VolumeSetting());
+
         // PropertyDrawer等、Disposeを呼べない場合にGameObjectを破棄するための対応
         // ファイナライザからUnityAPIは呼べないらしいので、ファイナライザでStatic領域にGameObjectを渡してUpdateのタイミングで破棄
         static EditorSoundPlayer() {
@@ -16,6 +19,8 @@ namespace SoundSystem {
                 }
                 _objectsToDestroy.Clear();
             };
+
+            _sharedVolume.Value = SessionState.GetFloat(volumeSessionStateKey, 1);
         }
         static List<GameObject> _objectsToDestroy = new();
 
@@ -105,7 +110,7 @@ namespace SoundSystem {
             };
             _players = new();
             foreach (SoundPlayerGroupSetting setting in _soundManagerConfig.PlayerGroupSettings) {
-                _players.Add(new SoundPlayer(_playerRoot, new SoundPlayerGroupStatus(setting, new List<Volume>())));
+                _players.Add(new SoundPlayer(_playerRoot, new SoundPlayerGroupStatus(setting, new List<Volume>(){_sharedVolume})));
             }
         }
 
@@ -202,6 +207,21 @@ namespace SoundSystem {
 
         public void DrawLayoutTimeSlider(params GUILayoutOption[] options) {
             DrawTimeSlider(EditorGUILayout.GetControlRect(options));
+        }
+
+        public void DrawVolumeField(Rect rect) {
+            using (new LabelWidthScope(16)) {
+                EditorGUI.BeginChangeCheck();
+                _sharedVolume.Value = Mathf.Clamp01(
+                    EditorGUI.FloatField(rect, new GUIContent(Icons.VolumeIcon), _sharedVolume.Value)
+                );
+                if (EditorGUI.EndChangeCheck()) {
+                    SessionState.SetFloat(volumeSessionStateKey, _sharedVolume.Value);
+                }
+            }
+        }
+        public void DrawLayoutVolumeField(params GUILayoutOption[] options) {
+            DrawVolumeField(EditorGUILayout.GetControlRect(options));
         }
     }
 }

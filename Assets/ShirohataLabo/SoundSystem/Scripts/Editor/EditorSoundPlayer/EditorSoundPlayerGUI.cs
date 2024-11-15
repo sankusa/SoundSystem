@@ -9,6 +9,7 @@ namespace SoundSystem {
             new(19, RectUtil.LayoutType.Fixed),
             new(1, RectUtil.LayoutType.Expand),
             new(80, RectUtil.LayoutType.Fixed),
+            new(52, RectUtil.LayoutType.Fixed),
         };
 
         EditorSoundPlayer _player;
@@ -52,6 +53,7 @@ namespace SoundSystem {
                     _player.DrawLayoutLoopButton(GUILayout.Width(19), GUILayout.Height(19));
                     _player.DrawLayoutTimeSlider();
                     _player.DrawLayoutPlayerGroupSelectPopup(GUILayout.Width(80));
+                    _player.DrawLayoutVolumeField(GUILayout.Width(52));
                 }
             }
         }
@@ -69,6 +71,7 @@ namespace SoundSystem {
                 _player.DrawLoopButton(rects[2]);
                 _player.DrawTimeSlider(RectUtil.Margin(rects[3], 4, 4));
                 _player.DrawPlayerGroupSelectPopup(rects[4]);
+                _player.DrawVolumeField(rects[5]);
             }
         }
     }

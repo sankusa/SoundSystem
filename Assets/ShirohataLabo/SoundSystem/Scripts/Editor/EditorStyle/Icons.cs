@@ -132,5 +132,15 @@ namespace SoundSystem {
                 return _autoPlayIcon;
             }
         }
+
+        static Texture2D _volumeIcon;
+        public static Texture2D VolumeIcon {
+            get {
+                if (_volumeIcon == null) {
+                    _volumeIcon = (Texture2D)EditorGUIUtility.Load("d_Profiler.Audio");
+                }
+                return _volumeIcon;
+            }
+        }
     }
 }
