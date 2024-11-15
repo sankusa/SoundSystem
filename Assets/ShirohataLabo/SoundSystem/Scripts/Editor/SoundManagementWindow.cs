@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SoundSystem {
     public class SoundManagementWindow : EditorWindow {
-        [MenuItem("ShirohataLabo/" +  nameof(SoundSystem) + "/" + nameof(SoundManagementWindow))]
+        // [MenuItem("ShirohataLabo/" +  nameof(SoundSystem) + "/" + nameof(SoundManagementWindow))]
         static void Open() {
             GetWindow<SoundManagementWindow>();
         }
@@ -19,7 +19,7 @@ namespace SoundSystem {
         void OnEnable() {
             titleContent = new GUIContent(nameof(SoundSystem), Skin.Instance.MainIcon);
 
-            _clipView.OnEnable();
+            _clipView.OnEnable(TargetFolders.Instance);
             _soundContainerView.OnEnable();
 
             _splitter1 = new(true, sessionStateKey: nameof(SoundManagementWindow) + "_splitter1") {

@@ -30,8 +30,6 @@ namespace SoundSystem {
             var playRange_FromSamplesProp = playRangeProp.FindPropertyRelative("_fromSamples");
             var playrange_ToSamplesProp = playRangeProp.FindPropertyRelative("_toSamples");
 
-            var descriptionProp = serializedObject.FindProperty("_description");
-
             _editorSoundPlayer.DrawGUILayout();
 
             AudioClip clip = (AudioClip)audioClipProp.objectReferenceValue;
@@ -125,8 +123,6 @@ namespace SoundSystem {
             }
 
             GUIUtil.Separator();
-
-            EditorGUILayout.PropertyField(descriptionProp);
 
             serializedObject.ApplyModifiedProperties();
         }

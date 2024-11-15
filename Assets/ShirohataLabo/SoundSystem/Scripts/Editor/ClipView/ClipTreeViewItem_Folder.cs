@@ -20,7 +20,7 @@ namespace SoundSystem {
         public ClipTreeViewItem_Folder(string folderPath) : base(0, 0, "") {
             _folderPath = folderPath;
             _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(folderPath);
-            _standardImportSettings = EditorUtil.LoadAllAsset<StandardAudioClipImportSettings>(_folderPath).FirstOrDefault();
+            _standardImportSettings = EditorUtil.LoadAllAssetFromTargetFolder<StandardAudioClipImportSettings>(_folderPath).FirstOrDefault();
             id = _folderAsset.GetInstanceID();
         }
 

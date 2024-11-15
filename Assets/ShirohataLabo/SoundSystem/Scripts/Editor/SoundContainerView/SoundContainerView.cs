@@ -12,6 +12,8 @@ namespace SoundSystem {
         [SerializeField] TreeViewState _soundContainerTreeViewState = new();
         SoundContainerTreeView _soundContainerTreeView;
 
+        SearchField _searchField;
+
         public void OnEnable() {
             var containerColumn = new MultiColumnHeaderState.Column() {
                 headerContent = new GUIContent("Label"),
@@ -38,19 +40,25 @@ namespace SoundSystem {
             _soundContainerTreeView = new SoundContainerTreeView(_soundContainerTreeViewState, multiColumnHeader);
 
             Undo.undoRedoPerformed += _soundContainerTreeView.Reload;
+
+            _searchField = new();
         }
 
         public void OnDisable() {
-            Undo.undoRedoPerformed += _soundContainerTreeView.Reload;
+            Undo.undoRedoPerformed -= _soundContainerTreeView.Reload;
         }
         
         public void OnGUI() {
             using (new EditorGUILayout.VerticalScope()) {
-                using (new EditorGUILayout.HorizontalScope(GUIStyles.DarkToolbar)) {
-                    EditorGUILayout.LabelField($"{nameof(SoundContainer)}", GUIStyles.CaptionLabel, GUILayout.Width(120));
-                    GUILayout.FlexibleSpace();
-                    if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton)) {
+                using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar)) {
+                    _soundContainerTreeView.searchString = _searchField.OnToolbarGUI(EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true)), _soundContainerTreeView.searchString);
+                    if (GUILayout.Button(new GUIContent(Icons.RefleshIcon, "Reflesh"), EditorStyles.toolbarButton, GUILayout.Width(26))) {
                         _soundContainerTreeView.Reload();
+                    }
+                    if (GUILayout.Button(Icons.CommandIcon, EditorStyles.toolbarButton, GUILayout.Width(26))) {
+                        GenericMenu menu = new GenericMenu();
+                        menu.AddItem(new GUIContent("Generate SoundKey Class"), false, () => ScriptGenerator.GenerateSoundKeyScript());
+                        menu.ShowAsContext();
                     }
                 }
 

@@ -18,6 +18,21 @@ namespace SoundSystem {
             return asset;
         }
 
+        public static int CountAllAsset(Type[] targetTypes, string[] searchInFolders) {
+            string filter = string.Join(' ', targetTypes.Select(type => $"t:{type.Name}"));
+            return AssetDatabase
+                .FindAssets(filter, searchInFolders)
+                .Count();
+        }
+
+        public static IEnumerable<Object> LoadAllAsset(Type[] targetTypes, string[] searchInFolders) {
+            string filter = string.Join(' ', targetTypes.Select(type => $"t:{type.Name}"));
+            return AssetDatabase
+                .FindAssets(filter, searchInFolders)
+                .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
+                .Select(assetPath => AssetDatabase.LoadAssetAtPath<Object>(assetPath));
+        }
+
         public static IEnumerable<T> LoadAllAsset<T>() where T : UnityEngine.Object {
             string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).FullName}");
             return guids.Select(guid => 
@@ -25,9 +40,9 @@ namespace SoundSystem {
             );
         }
 
-        public static IEnumerable<T> LoadAllAsset<T>(string folderPath) where T : UnityEngine.Object {
+        public static IEnumerable<T> LoadAllAssetFromTargetFolder<T>(string folderPath) where T : UnityEngine.Object {
             return AssetDatabase
-                .FindAssets($"t:{typeof(T).FullName}", new[]{folderPath})
+                .FindAssets($"t:{typeof(T).Name}", new[]{folderPath})
                 .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
                 .Where(assetPath => GetFolderPath(assetPath) == folderPath)
                 .Select(assetPath => AssetDatabase.LoadAssetAtPath<T>(assetPath));
@@ -35,7 +50,7 @@ namespace SoundSystem {
 
         public static bool ExistsTargetTypeAsset<T>(string folderPath) where T : UnityEngine.Object {
             return AssetDatabase
-                .FindAssets($"t:{typeof(T).FullName}", new[]{folderPath})
+                .FindAssets($"t:{typeof(T).Name}", new[]{folderPath})
                 .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
                 .Where(assetPath => GetFolderPath(assetPath) == folderPath)
                 .Any();
@@ -58,7 +73,7 @@ namespace SoundSystem {
         public static T FindAssetInNearestAncestorDirectory<T>(string folderPath) where T : UnityEngine.Object {
             while (true) {
                 if (ExistsTargetTypeAsset<T>(folderPath)) {
-                    return LoadAllAsset<T>(folderPath).First();
+                    return LoadAllAssetFromTargetFolder<T>(folderPath).First();
                 }
                 folderPath = GetParentFolderPath(folderPath);
                 if (folderPath == null) break;
@@ -79,6 +94,19 @@ namespace SoundSystem {
                     AssetDatabase.MoveAsset(oldPath, newPath);
                     AssetDatabase.Refresh();
                 }
+            }
+        }
+
+        public static void DeleteAssetWithDialog(Object asset) {
+            string assetPath = AssetDatabase.GetAssetPath(asset);
+            bool confirm = EditorUtility.DisplayDialog(
+                "Delete selected asset?",
+                $"{assetPath}\n\nYou cannot undo the delete assets action.",
+                "Delete",
+                "Cancel"
+            );
+            if (confirm) {
+                AssetDatabase.DeleteAsset(assetPath);
             }
         }
     }

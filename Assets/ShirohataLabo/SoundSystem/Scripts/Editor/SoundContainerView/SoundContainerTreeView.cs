@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
@@ -26,23 +25,17 @@ namespace SoundSystem {
                 depth = -1,
                 children = new List<TreeViewItem>()
             };
-            return root;
-        }
-
-        protected override IList<TreeViewItem> BuildRows(TreeViewItem root) {
-            var rows = GetRows() ?? new List<TreeViewItem>();
-            rows.Clear();
 
             if (_containers != null) {
                 foreach (SoundContainer container in _containers) {
                     var item = new SoundContainerTreeViewItem_SoundContainer(container);
                     root.AddChild(item);
-                    rows.Add(item);
                 }
             }
 
             SetupDepthsFromParentsAndChildren(root);
-            return rows;
+
+            return root;
         }
 
         protected override void BeforeRowsGUI() {

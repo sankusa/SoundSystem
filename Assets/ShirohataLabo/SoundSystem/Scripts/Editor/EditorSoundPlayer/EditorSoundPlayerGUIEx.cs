@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace SoundSystem {
-    public class EditorSoundPlayerGUIForClipView {
+    public class EditorSoundPlayerGUIEx {
         EditorSoundPlayer _editorPlayer;
 
         bool _playAuto;

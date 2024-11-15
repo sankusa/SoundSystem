@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f45a635caa01fb4baa3be28346a3f65, type: 3}
-  m_Name: SoundSystemSetting
+  m_Script: {fileID: 11500000, guid: b9af1cf67d4107a4a8a8405972ecaabf, type: 3}
+  m_Name: ObjectDatabaseColumnDefinition
   m_EditorClassIdentifier: 
-  _clipFolderRoot: {fileID: 102900000, guid: 0f43ee94a3b71e94db7f27097431ae0e, type: 3}
+  _columns:
+  - _columnId: memo
+    _columnName: Memo

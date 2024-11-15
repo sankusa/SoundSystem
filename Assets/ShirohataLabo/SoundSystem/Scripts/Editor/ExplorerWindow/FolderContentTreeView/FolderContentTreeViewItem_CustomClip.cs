@@ -1,30 +1,21 @@
 using UnityEditor;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace SoundSystem {
-    public class ClipTreeViewItem_CustomClip : TreeViewItem {
+    public class FolderContentTreeViewItem_CustomClip : FolderContentTreeViewItemBase {
         public CustomClip CustomClip { get; }
-
         public string Label => CustomClip.name;
 
-        public ClipTreeViewItem_CustomClip(CustomClip customClip) : base(0, 0) {
-            CustomClip = customClip;
-            displayName = customClip.name;
-            id = customClip.GetInstanceID();
-            displayName = customClip != null ? customClip.name : null;
+        public FolderContentTreeViewItem_CustomClip(ObjectDatabaseRecord record) : base(record) {
+            CustomClip = record.Asset as CustomClip;
         }
 
-        public void OnSingleClick() {
-            
-        }
-
-        public void OnDoubleClick() {
+        public override void OnDoubleClick() {
             AssetDatabase.OpenAsset(CustomClip);
             EditorGUIUtility.PingObject(CustomClip);
         }
 
-        public void OnContextClick() {
+        public override void OnContextClick() {
             GenericMenu menu = new();
             menu.AddItem(
                 new GUIContent("Delete"),

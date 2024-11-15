@@ -13,12 +13,15 @@ namespace SoundSystem {
 
         public Action<IEnumerable<Object>> OnSelectionChanged { get; set; }
 
-        public ClipTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader) : base(state, multiColumnHeader) {
+        TargetFolders _targetFolders;
+
+        public ClipTreeView(TreeViewState state, MultiColumnHeader multiColumnHeader, TargetFolders targetFolders) : base(state, multiColumnHeader) {
             rowHeight = 16;
             // showAlternatingRowBackgrounds = true;
             // showBorder = true;
             // enableItemHovering = true;
             // depthIndentWidth = 18;
+            _targetFolders = targetFolders;
         }
 
         public void Reload(bool showAudioClip, bool showCustomClip) {
@@ -28,13 +31,16 @@ namespace SoundSystem {
         }
 
         protected override TreeViewItem BuildRoot() {
-            TreeViewItem root = new() {depth = -1};
+            TreeViewItem root = new() {
+                depth = -1,
+                children = new List<TreeViewItem>()
+            };
 
-            string folderPath = SoundSystemSetting.Instance.ClipFolderRoot;
-            ClipTreeViewItem_Folder folderItem = new ClipTreeViewItem_Folder(folderPath);
-            root.AddChild(folderItem);
-
-            BuildItemRecursive(folderItem);
+            foreach (string folderPath in _targetFolders.SafeGetFolderPaths()) {
+                ClipTreeViewItem_Folder folderItem = new ClipTreeViewItem_Folder(folderPath);
+                root.AddChild(folderItem);
+                BuildItemRecursive(folderItem);
+            }
 
             SetupDepthsFromParentsAndChildren(root);
             return root;
@@ -148,9 +154,6 @@ namespace SoundSystem {
                             break;
                         case 1:
                             EditorGUI.LabelField(cellRect, "");
-                            break;
-                        case 2:
-                            EditorGUI.LabelField(cellRect, customClipItem.CustomClip.Description);
                             break;
                     }
                 }
@@ -304,11 +307,8 @@ namespace SoundSystem {
             IEnumerable<DefaultAsset> folders = droppedObjects.OfType<DefaultAsset>().Where(x => AssetDatabase.IsValidFolder(AssetDatabase.GetAssetPath(x)));
             EditorUtil.MoveAssetsWithUndo(folders, folderPath);
 
-            IEnumerable<AudioClip> clips = droppedObjects.OfType<AudioClip>();
-            EditorUtil.MoveAssetsWithUndo(clips, folderPath);
-
-            IEnumerable<CustomClip> customClips = droppedObjects.OfType<CustomClip>();
-            EditorUtil.MoveAssetsWithUndo(customClips, folderPath);
+            IEnumerable<Object> playableObjects = droppedObjects.Where(x => PlayableObjectTypes.Types.Contains(x.GetType()));
+            EditorUtil.MoveAssetsWithUndo(playableObjects, folderPath);
 
             IEnumerable<StandardAudioClipImportSettings> importSettings = droppedObjects.OfType<StandardAudioClipImportSettings>();
             EditorUtil.MoveAssetsWithUndo(importSettings, folderPath);

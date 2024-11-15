@@ -11,12 +11,12 @@ namespace SoundSystem {
 
         SearchField _searchField;
 
-        EditorSoundPlayerGUIForClipView _editorSoundPlayerGUI = new();
+        EditorSoundPlayerGUIEx _editorSoundPlayerGUI = new();
 
         [SerializeField] bool _showAudioClip = true;
         [SerializeField] bool _showcustomClip = true;
 
-        public void OnEnable() {
+        public void OnEnable(TargetFolders targetFolders) {
             _searchField = new();
 
             var captionColumn = new MultiColumnHeaderState.Column() {
@@ -29,16 +29,11 @@ namespace SoundSystem {
                 canSort = false,
                 width = 8,
             };
-            var descriptionColumn = new MultiColumnHeaderState.Column() {
-                headerContent = new GUIContent("Description"),
-                canSort = false,
-                autoResize = true,
-            };
-            var headerState = new MultiColumnHeaderState(new MultiColumnHeaderState.Column[] {captionColumn, importSettingColumn, descriptionColumn});
+            var headerState = new MultiColumnHeaderState(new MultiColumnHeaderState.Column[] {captionColumn, importSettingColumn});
             var multiColumnHeader = new MultiColumnHeader(headerState);
             multiColumnHeader.ResizeToFit();
 
-            _treeView = new ClipTreeView(_treeViewState, multiColumnHeader);
+            _treeView = new ClipTreeView(_treeViewState, multiColumnHeader, targetFolders);
             _treeView.OnSelectionChanged = selections => {_editorSoundPlayerGUI.Bind(selections.FirstOrDefault());};
 
             _editorSoundPlayerGUI.OnEnable();
