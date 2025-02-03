@@ -321,7 +321,6 @@ namespace SoundSystem {
             AudioSource.Stop();
             AudioSource.clip = null;
             AudioSource.loop = _groupStatus.Setting.DefaultLoop;
-            AudioSource.timeSamples = 0;
 
             IsUsing = false;
         }
